@@ -16,6 +16,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "deploy": "wrangler deploy",
     "lint": "eslint",
     "types:check": "next typegen && tsc --noEmit"
   },
@@ -34,7 +35,8 @@
     "eslint": "^9",
     "eslint-config-next": "16.3.1",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "wrangler": "4.124.0"
   },
   "packageManager": "bun@1.3.14",
   "ignoreScripts": [
