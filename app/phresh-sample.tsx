@@ -60,6 +60,25 @@ export default function PhreshSample() {
                 </a>
               </Flex>
 
+              <section className="installation" aria-labelledby="installation-title">
+                <div className="installation-heading">
+                  <h2 id="installation-title">Start from a clean machine.</h2>
+                  <p>One native command installs the runtime, CLI, and PhreshOS.</p>
+                </div>
+
+                <div className="installation-commands">
+                  <article className="installation-command">
+                    <span>Linux and macOS</span>
+                    <code>curl -fsSL https://install.phreshos.com/sh | bash</code>
+                  </article>
+
+                  <article className="installation-command">
+                    <span>Windows</span>
+                    <code>{'powershell -c "irm https://install.phreshos.com/ps1 | iex"'}</code>
+                  </article>
+                </div>
+              </section>
+
               <Grid className="principles" gap="medium">
                 {principles.map(([title, description]) => (
                   <section className="principle" key={title}>

@@ -199,9 +199,73 @@ h1 {
   background: color-mix(in oklch, white 64%, transparent);
 }
 
+.installation {
+  display: grid;
+  gap: calc(var(--site-spacing) * 1.1);
+  border-top: 1px solid color-mix(in oklch, var(--site-foreground) 12%, transparent);
+  padding-top: calc(var(--site-spacing) * 1.5);
+}
+
+.installation-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: var(--site-spacing);
+}
+
+.installation-heading h2,
+.installation-heading p {
+  margin: 0;
+}
+
+.installation-heading h2 {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+.installation-heading p {
+  color: color-mix(in oklch, var(--site-foreground) 62%, transparent);
+  font-size: 0.8rem;
+}
+
+.installation-commands {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--site-spacing);
+}
+
+.installation-command {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid color-mix(in oklch, var(--site-foreground) 13%, transparent);
+  border-radius: var(--site-radius);
+  background: color-mix(in oklch, white 42%, transparent);
+}
+
+.installation-command span {
+  display: block;
+  padding: 0.7rem 0.85rem 0.55rem;
+  color: color-mix(in oklch, var(--site-foreground) 62%, transparent);
+  font-size: 0.72rem;
+  font-weight: 650;
+}
+
+.installation-command code {
+  display: block;
+  border-top: 1px solid color-mix(in oklch, var(--site-foreground) 9%, transparent);
+  padding: 0.8rem 0.85rem;
+  background: color-mix(in oklch, var(--site-foreground) 6%, transparent);
+  color: var(--site-foreground);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.76rem;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+  user-select: all;
+}
+
 .principles {
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  margin-top: calc(var(--site-spacing) * 1.25);
   border-top: 1px solid color-mix(in oklch, var(--site-foreground) 12%, transparent);
   padding-top: calc(var(--site-spacing) * 1.5);
 }
@@ -236,6 +300,15 @@ footer {
   }
 
   .principles {
+    grid-template-columns: 1fr;
+  }
+
+  .installation-heading {
+    align-items: start;
+    flex-direction: column;
+  }
+
+  .installation-commands {
     grid-template-columns: 1fr;
   }
 
