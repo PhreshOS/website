@@ -1,7 +1,7 @@
 "use client";
 
 import { standardTheme } from "@phreshos/core";
-import { Flex, GlassSurface, Grid, ThemeProvider } from "@phreshos/react-ui";
+import { Flex, Grid, Surface, ThemeProvider } from "@phreshos/react-ui";
 import type { CSSProperties } from "react";
 
 const principles = [
@@ -42,7 +42,7 @@ export default function PhreshSample() {
         </nav>
 
         <section id="top" className="hero">
-          <GlassSurface className="hero-surface" radius="large">
+          <Surface className="hero-surface">
             <Flex direction="column" gap="large">
               <p className="eyebrow">A web-native operating system</p>
               <h1>Software, with a place to belong.</h1>
@@ -88,7 +88,7 @@ export default function PhreshSample() {
                 ))}
               </Grid>
             </Flex>
-          </GlassSurface>
+          </Surface>
         </section>
 
         <footer>
