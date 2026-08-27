@@ -1,7 +1,7 @@
 "use client";
 
-import { standardTheme } from "@phreshos/core";
-import { Flex, Grid, Surface, ThemeProvider } from "@phreshos/react-ui";
+import { standardAppearance } from "@phreshos/core";
+import { AppearanceProvider, Flex, Grid, Surface } from "@phreshos/react-ui";
 import type { CSSProperties } from "react";
 
 const principles = [
@@ -11,16 +11,16 @@ const principles = [
 ] as const;
 
 const themeStyle = {
-  "--site-background": standardTheme.background,
-  "--site-foreground": standardTheme.foreground,
-  "--site-accent": standardTheme.accent,
-  "--site-radius": `${standardTheme.radius}px`,
-  "--site-spacing": `${standardTheme.spacing}px`,
+  "--site-background": standardAppearance.background.light,
+  "--site-foreground": standardAppearance.foreground.light,
+  "--site-accent": standardAppearance.accent.light,
+  "--site-radius": `${standardAppearance.radius.light}px`,
+  "--site-spacing": `${standardAppearance.spacing.light}px`,
 } as CSSProperties;
 
 export default function PhreshSample() {
   return (
-    <ThemeProvider theme={standardTheme}>
+    <AppearanceProvider appearance={standardAppearance} theme="light">
       <main className="site" style={themeStyle}>
         <div className="light light-one" />
         <div className="light light-two" />
@@ -96,6 +96,6 @@ export default function PhreshSample() {
           <span>PhreshOS</span>
         </footer>
       </main>
-    </ThemeProvider>
+    </AppearanceProvider>
   );
 }
