@@ -5,7 +5,7 @@
     "": {
       "name": "phresh-website",
       "dependencies": {
-        "@phreshos/core": "^0.1.26",
+        "@phreshos/core": "^0.1.28",
         "@phreshos/react-ui": "^0.1.12",
         "next": "16.3.1",
         "react": "19.2.8",
@@ -265,7 +265,7 @@
 
     "@nolyfill/is-core-module": ["@nolyfill/is-core-module@1.0.39", "", {}, "sha512-nn5ozdjYQpUCZlWGuxcJY/KpxkWQs4DcbMCmKojjyrYDEAGy4Ce19NN4v5MduafTwJlbKc99UA8YhSVqq9yPZA=="],
 
-    "@phreshos/core": ["@phreshos/core@0.1.26", "", {}, "sha512-AelOw8LmWpgC5tXkORG10z32FJQufN63Pl3pdqGyN+oDfNWWRg4nAj13BsuisCdzD7ckzKPZzZUJeFvBhImK2w=="],
+    "@phreshos/core": ["@phreshos/core@0.1.28", "", {}, "sha512-leqXoxdC+xLQs2lEs0fj7T96ammpw9WNRiUpsBS75C2wgnhg8Zwv9u+48LUablW2Yb/1eEvtIOfxFpyWEwjGmQ=="],
 
     "@phreshos/react-ui": ["@phreshos/react-ui@0.1.12", "", { "dependencies": { "react-aria-components": "^1.20.0" }, "peerDependencies": { "@phreshos/core": "^0.1.22", "react": "^19.2.0", "react-dom": "^19.2.0" } }, "sha512-vD5jfhW09HHE/POJ1pc9LZaq3AjkmA82qyXpg6o5yBII9NKI1Grdd8H0KoMhmPl5XdtMawuwK0N33OTkPd4pzw=="],
 
