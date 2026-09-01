@@ -1,17 +1,20 @@
 # PhreshOS Website
 
-The public presentation website for PhreshOS. It is a statically exported
-Next.js application that uses the published `@phreshos/react-ui` package for
-the same Theme, material, and layout language as PhreshOS Programs.
+The public presentation website for PhreshOS.
+
+The site introduces PhreshOS and directs people to the product,
+documentation, source repositories, and installation paths. It uses the
+published React UI package so its visual language remains aligned with PhreshOS
+without importing another repository's source.
 
 ## Development
 
 ```sh
-bun install
+bun install --frozen-lockfile
 bun run dev
 ```
 
-Verify the project before committing:
+Verify the source and production export:
 
 ```sh
 bun run lint
@@ -19,13 +22,22 @@ bun run types:check
 bun run build
 ```
 
-The production build is emitted to `out/` and deployed as assets by an
-assets-only Cloudflare Worker:
+The static site is emitted to `out/`.
+
+## Deployment
 
 ```sh
-bun run build
 bun run deploy
 ```
 
-Workers Builds uses `bun run build` as its build command and `bun run deploy`
-as its deploy command. Set the build variable `BUN_VERSION` to `1.3.14`.
+Cloudflare Workers serves the static export produced by Next.js.
+
+## Repository boundary
+
+This repository owns the public presentation website and its deployment. The
+documentation repository owns technical documentation, while product contracts
+and runtime behavior remain in their respective repositories.
+
+## License
+
+Licensed under the [MIT License](LICENSE). Copyright © 2026 Zohayr SLILEH.
