@@ -21,8 +21,8 @@
     "types:check": "next typegen && tsc --noEmit"
   },
   "dependencies": {
-    "@phreshos/core": "^0.1.36",
-    "@phreshos/react-ui": "^0.1.14",
+    "@phreshos/core": "^0.1.37",
+    "@phreshos/react-ui": "^0.1.15",
     "next": "16.3.1",
     "react": "19.2.8",
     "react-dom": "19.2.8"
