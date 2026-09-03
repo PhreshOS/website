@@ -2,24 +2,24 @@
 
 The public presentation website for PhreshOS.
 
-The site introduces PhreshOS and directs people to the product,
-documentation, source repositories, and installation paths. It uses the
-published React UI package so its visual language remains aligned with PhreshOS
-without importing another repository's source.
+[Website](https://phreshos.com) ·
+[Documentation](https://docs.phreshos.com) ·
+[Source](https://github.com/PhreshOS/website)
+
+## Role
+
+The website introduces PhreshOS and directs people to its documentation,
+installation, and source repositories. It consumes published packages and does
+not define product contracts, technical documentation, or runtime behavior.
 
 ## Development
 
 ```sh
 bun install --frozen-lockfile
-bun run dev
-```
-
-Verify the source and production export:
-
-```sh
 bun run lint
 bun run types:check
 bun run build
+bun run dev
 ```
 
 The static site is emitted to `out/`.
@@ -32,11 +32,16 @@ bun run deploy
 
 Cloudflare Workers serves the static export produced by Next.js.
 
-## Repository boundary
+## Related repositories
 
-This repository owns the public presentation website and its deployment. The
-documentation repository owns technical documentation, while product contracts
-and runtime behavior remain in their respective repositories.
+- [PhreshOS Documentation](https://github.com/PhreshOS/docs) owns all technical
+  documentation linked by the website.
+- [PhreshOS Install](https://github.com/PhreshOS/install) owns the clean-machine
+  installation endpoint presented by the website.
+- [PhreshOS System](https://github.com/PhreshOS/system) owns the product runtime
+  represented by the website.
+- [`@phreshos/react-ui`](https://github.com/PhreshOS/react-ui) provides the
+  published visual primitives used by the site.
 
 ## License
 
