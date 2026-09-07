@@ -13,7 +13,7 @@ const principles = [
 const themeStyle = {
   "--site-background": standardAppearance.background.light,
   "--site-foreground": standardAppearance.foreground.light,
-  "--site-accent": standardAppearance.accent.light,
+  "--site-primary": standardAppearance.primary.light,
   "--site-radius": `${standardAppearance.radius.light}px`,
   "--site-spacing": `${standardAppearance.spacing.light}px`,
 } as CSSProperties;

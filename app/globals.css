@@ -34,7 +34,7 @@ a {
   flex-direction: column;
   overflow: hidden;
   background:
-    radial-gradient(circle at 12% 20%, color-mix(in oklch, var(--site-accent) 18%, transparent), transparent 34%),
+    radial-gradient(circle at 12% 20%, color-mix(in oklch, var(--site-primary) 18%, transparent), transparent 34%),
     linear-gradient(145deg, color-mix(in oklch, var(--site-background) 92%, white), var(--site-background));
   color: var(--site-foreground);
 }
@@ -52,7 +52,7 @@ a {
   right: -6rem;
   width: 24rem;
   height: 24rem;
-  background: color-mix(in oklch, var(--site-accent) 42%, white);
+  background: color-mix(in oklch, var(--site-primary) 42%, white);
 }
 
 .light-two {
@@ -60,7 +60,7 @@ a {
   left: 8%;
   width: 28rem;
   height: 28rem;
-  background: color-mix(in oklch, var(--site-accent) 18%, #b8ffd8);
+  background: color-mix(in oklch, var(--site-primary) 18%, #b8ffd8);
 }
 
 .navigation,
@@ -90,8 +90,8 @@ footer {
   width: 0.8rem;
   height: 0.8rem;
   border-radius: 50%;
-  background: var(--site-accent);
-  box-shadow: 0 0 0 0.3rem color-mix(in oklch, var(--site-accent) 18%, transparent);
+  background: var(--site-primary);
+  box-shadow: 0 0 0 0.3rem color-mix(in oklch, var(--site-primary) 18%, transparent);
 }
 
 .navigation-link {
@@ -122,11 +122,11 @@ footer {
 .eyebrow {
   width: fit-content;
   margin: 0;
-  border: 1px solid color-mix(in oklch, var(--site-accent) 36%, transparent);
+  border: 1px solid color-mix(in oklch, var(--site-primary) 36%, transparent);
   border-radius: 999px;
   padding: 0.42rem 0.72rem;
-  background: color-mix(in oklch, var(--site-accent) 10%, transparent);
-  color: color-mix(in oklch, var(--site-accent) 68%, var(--site-foreground));
+  background: color-mix(in oklch, var(--site-primary) 10%, transparent);
+  color: color-mix(in oklch, var(--site-primary) 68%, var(--site-foreground));
   font-size: 0.75rem;
   font-weight: 650;
   letter-spacing: 0.04em;
@@ -176,18 +176,18 @@ h1 {
 .action:focus-visible,
 .navigation-link:focus-visible,
 .wordmark:focus-visible {
-  outline: 2px solid var(--site-accent);
+  outline: 2px solid var(--site-primary);
   outline-offset: 3px;
 }
 
 .action-primary {
-  background: var(--site-accent);
+  background: var(--site-primary);
   color: white;
-  box-shadow: 0 0.75rem 2rem color-mix(in oklch, var(--site-accent) 34%, transparent);
+  box-shadow: 0 0.75rem 2rem color-mix(in oklch, var(--site-primary) 34%, transparent);
 }
 
 .action-primary:hover {
-  background: color-mix(in oklch, var(--site-accent) 84%, black);
+  background: color-mix(in oklch, var(--site-primary) 84%, black);
 }
 
 .action-secondary {
