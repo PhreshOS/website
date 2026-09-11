@@ -11,9 +11,9 @@ const principles = [
 ] as const;
 
 const themeStyle = {
-  "--site-background": defaultAppearance.background.light,
-  "--site-foreground": defaultAppearance.foreground.light,
-  "--site-primary": defaultAppearance.primary.light,
+  "--site-background": defaultAppearance.colors.background.light,
+  "--site-foreground": defaultAppearance.colors.foreground.light,
+  "--site-primary": defaultAppearance.colors.primary.light,
   "--site-radius": `${defaultAppearance.radius.light}px`,
   "--site-spacing": `${defaultAppearance.spacing.light}px`,
 } as CSSProperties;
