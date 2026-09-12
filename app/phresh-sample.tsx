@@ -11,11 +11,11 @@ const principles = [
 ] as const;
 
 const themeStyle = {
-  "--site-background": defaultAppearance.colors.background.light,
-  "--site-foreground": defaultAppearance.colors.foreground.light,
-  "--site-primary": defaultAppearance.colors.primary.light,
-  "--site-radius": `${defaultAppearance.radius.light}px`,
-  "--site-spacing": `${defaultAppearance.spacing.light}px`,
+  "--site-background": defaultAppearance.colors.light.background,
+  "--site-foreground": defaultAppearance.colors.light.foreground,
+  "--site-primary": defaultAppearance.colors.light.primary,
+  "--site-radius": `${defaultAppearance.radius}px`,
+  "--site-spacing": `${defaultAppearance.spacing}px`,
 } as CSSProperties;
 
 export default function PhreshSample() {
