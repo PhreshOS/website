@@ -5,7 +5,7 @@
     "": {
       "name": "phresh-website",
       "dependencies": {
-        "@phreshos/core": "^0.1.44",
+        "@phreshos/core": "^0.1.45",
         "@phreshos/react-ui": "^0.1.19",
         "next": "16.3.1",
         "react": "19.2.8",
@@ -289,7 +289,7 @@
 
     "@oxc-project/types": ["@oxc-project/types@0.149.0", "", {}, "sha512-Efcc+iF0j3Bf67YjEqIqWXbX5XddXoK/Mw4K1/JuXwRCZ8N16VR7iT23nlCc9XrveFVh/E5Rqs2StT0V8v9LdA=="],
 
-    "@phreshos/core": ["@phreshos/core@0.1.44", "", {}, "sha512-0Qo4SlNg9fi2xfpDMbMucHQrDhzE8hhzOy7n5rQPjpj4UIWPUU5ZuEGEON6bfQM6nKJ4ogNJF7KFp4RhMxf5PA=="],
+    "@phreshos/core": ["@phreshos/core@0.1.45", "", {}, "sha512-u/P6GJynoC8IaOjIHGCzsA1a2Mhwkg5qstuAKN70PsiHQ/ioE2inOUpEuL2JPhmvjcQslZnbLpZhfwMYIUW0+A=="],
 
     "@phreshos/react-ui": ["@phreshos/react-ui@0.1.19", "", { "dependencies": { "@phreshos/core": "^0.1.43", "colorjs.io": "^0.7.1", "motion": "^13.2.0", "react-aria-components": "^1.20.0" }, "peerDependencies": { "react": "^19.2.0", "react-dom": "^19.2.0" } }, "sha512-F4xiDGvOrgEomSSy3HwieFOI3eiyhDQAbJeQNWHVXXVekT1lUonr86z0crEQigXEIqdFWBQg+GKf9mkcjlYKOw=="],
 
@@ -1176,6 +1176,8 @@
     "@img/sharp-wasm32/@emnapi/runtime": ["@emnapi/runtime@1.11.3", "", { "dependencies": { "tslib": "^2.4.0" } }, "sha512-Xz4Tpyki7XyrpbUK1jR1AhdAdaXyhhY4lZ3neLodmhpuWfy2PAQN5B46sAiU4liOXGLkHypn/qU+jvfWSCYYLA=="],
 
     "@next/eslint-plugin-next/@eslint-community/eslint-utils": ["@eslint-community/eslint-utils@4.9.1", "", { "dependencies": { "eslint-visitor-keys": "^3.4.3" }, "peerDependencies": { "eslint": "^6.0.0 || ^7.0.0 || >=8.0.0" } }, "sha512-phrYmNiYppR7znFEdqgfWHXR6NCkZEK7hwWDHZUjit/2/U0r6XvkDl0SYnoM51Hq7FhCGdLDT6zxCCOY1hexsQ=="],
+
+    "@phreshos/react-ui/@phreshos/core": ["@phreshos/core@0.1.44", "", {}, "sha512-0Qo4SlNg9fi2xfpDMbMucHQrDhzE8hhzOy7n5rQPjpj4UIWPUU5ZuEGEON6bfQM6nKJ4ogNJF7KFp4RhMxf5PA=="],
 
     "@poppinss/dumper/supports-color": ["supports-color@10.2.2", "", {}, "sha512-SS+jx45GF1QjgEXQx4NJZV9ImqmO2NPz5FNsIHrsDjh2YsHnawpan7SNQ1o8NuhrbHZy9AZhIoCUiCeaW/C80g=="],
 
