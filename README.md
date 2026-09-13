@@ -17,7 +17,7 @@ not define product contracts, technical documentation, or runtime behavior.
 ```sh
 bun install --frozen-lockfile
 bun run lint
-bun run types:check
+bun run check
 bun run build
 bun run dev
 ```
@@ -31,6 +31,12 @@ bun run deploy
 ```
 
 Cloudflare Workers serves the static export produced by Next.js.
+
+`check` performs static checks, `build` creates distributable output, and `test`
+runs Vitest assertions from `tests/`. Run `build` before testing built artifacts.
+`verify` runs `check`, `build`, and `test` in order. Operational tooling belongs
+in `scripts/`; tests and their fixtures belong in `tests/`. Verification uses
+the committed dependency graph without local package substitutions.
 
 ## Related repositories
 

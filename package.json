@@ -18,11 +18,13 @@
     "build": "next build",
     "deploy": "wrangler deploy",
     "lint": "eslint",
-    "types:check": "next typegen && tsc --noEmit"
+    "check": "next typegen && tsc --noEmit && eslint .",
+    "test": "vitest run --project default",
+    "verify": "node --run check && node --run build && node --run test"
   },
   "dependencies": {
-    "@phreshos/core": "^0.1.42",
-    "@phreshos/react-ui": "^0.1.18",
+    "@phreshos/core": "^0.1.43",
+    "@phreshos/react-ui": "^0.1.19",
     "next": "16.3.1",
     "react": "19.2.8",
     "react-dom": "19.2.8"
@@ -36,7 +38,9 @@
     "eslint-config-next": "16.3.1",
     "tailwindcss": "^4",
     "typescript": "^5",
-    "wrangler": "4.124.0"
+    "wrangler": "4.124.0",
+    "vitest": "^4.1.10",
+    "jsdom": "^30.0.1"
   },
   "packageManager": "bun@1.3.14",
   "ignoreScripts": [
@@ -46,5 +50,6 @@
   "trustedDependencies": [
     "sharp",
     "unrs-resolver"
-  ]
+  ],
+  "type": "module"
 }
