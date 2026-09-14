@@ -23,8 +23,8 @@
     "verify": "node --run check && node --run build && node --run test"
   },
   "dependencies": {
-    "@phreshos/core": "^0.1.45",
-    "@phreshos/react-ui": "^0.1.19",
+    "@phreshos/core": "^0.1.47",
+    "@phreshos/react-ui": "^0.1.20",
     "next": "16.3.1",
     "react": "19.2.8",
     "react-dom": "19.2.8"
