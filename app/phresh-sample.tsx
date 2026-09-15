@@ -1,7 +1,7 @@
 "use client";
 
 import { defaultAppearance } from "@phreshos/core";
-import { AppearanceProvider, Flex, Grid, Surface } from "@phreshos/react-ui";
+import { AppearanceProvider, Flex, Grid, Surface, useBrowserPreferences } from "@phreshos/react-ui";
 import type { CSSProperties } from "react";
 
 const principles = [
@@ -19,8 +19,10 @@ const themeStyle = {
 } as CSSProperties;
 
 export default function PhreshSample() {
+  const browserPreferences = useBrowserPreferences();
+
   return (
-    <AppearanceProvider appearance={defaultAppearance} theme="light">
+    <AppearanceProvider appearance={defaultAppearance} preferences={{ ...browserPreferences, theme: "light" }}>
       <main className="site" style={themeStyle}>
         <div className="light light-one" />
         <div className="light light-two" />
