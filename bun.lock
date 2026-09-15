@@ -5,8 +5,8 @@
     "": {
       "name": "phresh-website",
       "dependencies": {
-        "@phreshos/core": "^0.1.49",
-        "@phreshos/react-ui": "^0.1.23",
+        "@phreshos/core": "^0.1.52",
+        "@phreshos/react-ui": "^0.1.24",
         "next": "16.3.1",
         "react": "19.2.8",
         "react-dom": "19.2.8",
@@ -303,9 +303,9 @@
 
     "@oxc-project/types": ["@oxc-project/types@0.149.0", "", {}, "sha512-Efcc+iF0j3Bf67YjEqIqWXbX5XddXoK/Mw4K1/JuXwRCZ8N16VR7iT23nlCc9XrveFVh/E5Rqs2StT0V8v9LdA=="],
 
-    "@phreshos/core": ["@phreshos/core@0.1.49", "", {}, "sha512-WRVvFag4L2c/ooflnbyrB3WmFROMF6yF6Cz3ABt0UeyEZ2UIccQHJR125OvM5imVJNv+buTZIryXA5yooMn21Q=="],
+    "@phreshos/core": ["@phreshos/core@0.1.52", "", {}, "sha512-FXndIP8YMYdRqSD2itQ766XjXf/9XmMt2sjegftS/tOmzGx66Dt9AfW4DdGYtSaDDRrmFm02ljH6TN7dqCBOaA=="],
 
-    "@phreshos/react-ui": ["@phreshos/react-ui@0.1.23", "", { "dependencies": { "@base-ui/react": "^1.7.0", "@phreshos/core": "^0.1.49", "colorjs.io": "^0.7.1", "motion": "^13.2.0", "react-aria-components": "^1.20.0" }, "peerDependencies": { "react": "^19.2.0", "react-dom": "^19.2.0" } }, "sha512-ajmii1CiYVLRlWGy2XLAMwFWYXFbOvsEgN11B7AcTQpA05Y8CCT5ARRHckDkP5BIGZ+wA3mRppVcDlXJBugd2w=="],
+    "@phreshos/react-ui": ["@phreshos/react-ui@0.1.24", "", { "dependencies": { "@base-ui/react": "^1.7.0", "@phreshos/core": "^0.1.51", "colorjs.io": "^0.7.1", "motion": "^13.2.0", "react-aria-components": "^1.20.0" }, "peerDependencies": { "react": "^19.2.0", "react-dom": "^19.2.0" } }, "sha512-kEZEIkskOok2FFSBBs4Z06FVLlHy25JJ8EyzIKy3K7svzC0jHVsuekAytmjvBCyHCr98NahO9IM6qjoFHkBUrw=="],
 
     "@poppinss/colors": ["@poppinss/colors@4.1.6", "", { "dependencies": { "kleur": "^4.1.5" } }, "sha512-H9xkIdFswbS8n1d6vmRd8+c10t2Qe+rZITbbDHHkQixH5+2x1FDGmi/0K+WgWiqQFKPSlIYB7jlH6Kpfn6Fleg=="],
 
