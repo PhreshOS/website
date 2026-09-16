@@ -6,7 +6,7 @@
       "name": "phresh-website",
       "dependencies": {
         "@phreshos/core": "^0.1.52",
-        "@phreshos/react-ui": "^0.1.25",
+        "@phreshos/react-ui": "^0.1.26",
         "next": "16.3.1",
         "react": "19.2.8",
         "react-dom": "19.2.8",
@@ -305,7 +305,7 @@
 
     "@phreshos/core": ["@phreshos/core@0.1.52", "", {}, "sha512-FXndIP8YMYdRqSD2itQ766XjXf/9XmMt2sjegftS/tOmzGx66Dt9AfW4DdGYtSaDDRrmFm02ljH6TN7dqCBOaA=="],
 
-    "@phreshos/react-ui": ["@phreshos/react-ui@0.1.25", "", { "dependencies": { "@base-ui/react": "^1.7.0", "@phreshos/core": "^0.1.52", "colorjs.io": "^0.7.1", "motion": "^13.2.0", "react-aria-components": "^1.20.0" }, "peerDependencies": { "react": "^19.2.0", "react-dom": "^19.2.0" } }, "sha512-OelKCOXi4f4txBNhrP/V+KttWrIRBCtomlyRrlPZCpO7UezeJUTXw5BnowfaJp+O1enDM52xx9KxNVbqvzG55A=="],
+    "@phreshos/react-ui": ["@phreshos/react-ui@0.1.26", "", { "dependencies": { "@base-ui/react": "^1.7.0", "@phreshos/core": "^0.1.52", "colorjs.io": "^0.7.1", "motion": "^13.2.0", "react-aria-components": "^1.20.0" }, "peerDependencies": { "react": "^19.2.0", "react-dom": "^19.2.0" } }, "sha512-4/ecoY+16i1TiKAyQyHSAHgNcySeDMWsG+/ugpUrcAUYNebkmFKTfSkxUUft8yA4QPngkwMupWeeMFB1b77HKQ=="],
 
     "@poppinss/colors": ["@poppinss/colors@4.1.6", "", { "dependencies": { "kleur": "^4.1.5" } }, "sha512-H9xkIdFswbS8n1d6vmRd8+c10t2Qe+rZITbbDHHkQixH5+2x1FDGmi/0K+WgWiqQFKPSlIYB7jlH6Kpfn6Fleg=="],
 
