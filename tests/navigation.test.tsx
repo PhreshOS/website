@@ -8,7 +8,7 @@ test("the landing page exposes working destinations for documentation and source
   const navigation = document.querySelector('nav[aria-label="Primary navigation"]')
   expect(navigation).not.toBeNull()
   const destinations = [...navigation!.querySelectorAll<HTMLAnchorElement>("a")].map(link => link.getAttribute("href"))
-  expect(destinations).toContain("https://github.com/PhreshOS/docs")
+  expect(destinations).toContain("https://docs.phreshos.com")
   expect(destinations).toContain("https://github.com/PhreshOS")
   expect(document.querySelector("#top")).not.toBeNull()
 })
