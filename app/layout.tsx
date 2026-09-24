@@ -8,8 +8,8 @@ const geistSans = Geist({
 });
 
 export const metadata: Metadata = {
-  title: "PhreshOS · Software, with a place to belong",
-  description: "Your own web-native system: the same Desktop, programs, and state from any browser.",
+  title: "PhreshOS · A place for software to belong",
+  description: "A web-native operating system with explicit Program boundaries and one coherent desktop.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
