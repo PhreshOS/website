@@ -1,268 +1,157 @@
 "use client";
 
 import { defaultAppearance } from "@phreshos/core";
-import {
-  Flex,
-  Grid,
-  Surface,
-  UIProvider,
-  useBrowserPreferences,
-} from "@phreshos/react-ui";
-import type { CSSProperties } from "react";
-
-const benefits = [
-  ["Always there", "Your programs keep running on your System, even after the browser closes."],
-  ["Open anywhere", "Reach the same Desktop, software, and state from any modern browser."],
-  ["Yours to shape", "Install independent Programs and choose how your environment looks and works."],
-] as const;
-
-const foundations = [
-  ["One home for software", "Programs own their processes, storage, permissions, and identity."],
-  ["A Desktop, not a container", "The browser presents your System; it does not keep it alive."],
-  ["Clear boundaries", "Programs communicate through explicit capabilities instead of hidden shared state."],
-] as const;
+import { Flex, Surface, UIProvider, useBrowserPreferences } from "@phreshos/react-ui";
+import type { CSSProperties, ReactNode } from "react";
 
 const themeStyle = {
-  "--site-background": defaultAppearance.colors.light.background,
-  "--site-foreground": defaultAppearance.colors.light.foreground,
-  "--site-primary": defaultAppearance.colors.light.primary,
+  "--site-background": defaultAppearance.colors.dark.background,
+  "--site-foreground": defaultAppearance.colors.dark.foreground,
+  "--site-primary": defaultAppearance.colors.dark.primary,
+  "--site-secondary": defaultAppearance.colors.dark.secondary,
+  "--site-success": defaultAppearance.colors.dark.success,
   "--site-radius": `${defaultAppearance.radius}px`,
-  "--site-spacing": `${defaultAppearance.spacing}px`,
 } as CSSProperties;
 
-function DesktopPreview() {
-  return (
-    <div className="desktop-preview" aria-label="A PhreshOS Desktop with two open programs">
-      <div className="preview-statusbar">
-        <span className="preview-brand">
-          <span className="preview-brand-mark" aria-hidden="true" />
-          PhreshOS
-        </span>
-        <span className="preview-online">
-          <span aria-hidden="true" /> System online
-        </span>
-      </div>
+const programs = [
+  { name: "Flambo", role: "Browser", state: "running", color: "primary" },
+  { name: "Notes", role: "Workspace", state: "ready", color: "secondary" },
+  { name: "Terminal", role: "Tools", state: "idle", color: "success" },
+] as const;
 
-      <div className="preview-workspace">
-        <article className="preview-window preview-window-main">
-          <header className="preview-window-header">
-            <span className="preview-app-icon preview-app-primary">N</span>
-            <span>Notes</span>
-            <span className="preview-window-actions" aria-hidden="true">— □ ×</span>
-          </header>
-          <div className="preview-note">
-            <span>Today</span>
-            <strong>Your work is right where you left it.</strong>
-            <i className="preview-line preview-line-long" />
-            <i className="preview-line" />
-            <i className="preview-line preview-line-short" />
-          </div>
-        </article>
+function Mark() {
+  return <span className="mark" aria-hidden="true"><i /><i /></span>;
+}
 
-        <article className="preview-window preview-window-side">
-          <header className="preview-window-header">
-            <span className="preview-app-icon">F</span>
-            <span>Files</span>
-            <span className="preview-window-actions" aria-hidden="true">— □ ×</span>
-          </header>
-          <div className="preview-files">
-            <div><span className="file-icon">▰</span><span>Projects</span><small>12 items</small></div>
-            <div><span className="file-icon">▰</span><span>Documents</span><small>28 items</small></div>
-            <div><span className="file-icon">▰</span><span>Shared</span><small>6 items</small></div>
-          </div>
-        </article>
+function Dot({ tone = "primary" }: Readonly<{ tone?: "primary" | "secondary" | "success" }>) {
+  return <span className={`dot dot-${tone}`} aria-hidden="true" />;
+}
 
-        <div className="preview-message">
-          <span className="preview-message-icon">✓</span>
-          <span><strong>Everything is still here</strong><small>Synced with your System</small></span>
-        </div>
-      </div>
+function MaterialLink({ children, className, href }: Readonly<{ children: ReactNode; className?: string; href: string }>) {
+  return <Surface as="a" className={className} href={href} material="extended" color="primary:base" radius="medium" shadow={false}>{children}</Surface>;
+}
 
-      <div className="preview-taskbar">
-        <span className="preview-launcher" aria-hidden="true" />
-        <span className="preview-task preview-task-active">N</span>
-        <span className="preview-task">F</span>
-        <span className="preview-task">T</span>
-        <span className="preview-taskbar-copy">3 Programs running</span>
-      </div>
+function ContinuityField() {
+  return <div className="continuity-field" aria-label="One PhreshOS System continuing across three browsers">
+    <span className="signal signal-left" aria-hidden="true" />
+    <span className="signal signal-right" aria-hidden="true" />
+    <div className="device-state device-state-left">
+      <span className="device-outline device-laptop" aria-hidden="true"><i /></span>
+      <div><small>Office browser</small><strong>Closed</strong></div>
     </div>
-  );
+    <Surface className="system-node" material="full" color="background:base" radius="large">
+      <span className="system-orbit orbit-one" aria-hidden="true" />
+      <span className="system-orbit orbit-two" aria-hidden="true" />
+      <Mark />
+      <strong>System</strong>
+      <span className="system-state"><Dot tone="success" /> stays online</span>
+    </Surface>
+    <div className="device-state device-state-right">
+      <span className="device-outline device-tablet" aria-hidden="true"><i /></span>
+      <div><small>Home browser</small><strong>Continue</strong></div>
+    </div>
+  </div>;
+}
+
+function ProgramStream() {
+  return <div className="program-stream" aria-label="Programs running inside one PhreshOS System">
+    <div className="stream-caption"><span>System / Programs</span><span>03 available</span></div>
+    {programs.map((program, index) => <div className="program-row" key={program.name}>
+      <span className="program-index">0{index + 1}</span>
+      <Dot tone={program.color} />
+      <strong>{program.name}</strong>
+      <span>{program.role}</span>
+      <small>{program.state}</small>
+    </div>)}
+  </div>;
 }
 
 export default function PhreshSample() {
   const browserPreferences = useBrowserPreferences();
+  return <UIProvider appearance={defaultAppearance} preferences={{ ...browserPreferences, theme: "dark" }}>
+    <main className="site" id="top" style={themeStyle}>
+      <div className="site-glow" aria-hidden="true" />
 
-  return (
-    <UIProvider appearance={defaultAppearance} preferences={{ ...browserPreferences, theme: "light" }}>
-      <main className="site" style={themeStyle}>
-        <div className="ambient ambient-top" aria-hidden="true" />
-        <div className="ambient ambient-middle" aria-hidden="true" />
-
-        <nav className="navigation" aria-label="Primary navigation">
-          <a className="wordmark" href="#top" aria-label="PhreshOS home">
-            <span className="wordmark-mark" aria-hidden="true" />
-            PhreshOS
-          </a>
-
-          <Flex className="navigation-sections" align="center" gap="large">
-            <a className="navigation-link" href="#experience">Experience</a>
-            <a className="navigation-link" href="#system">How it works</a>
-            <a className="navigation-link" href="#install">Install</a>
-          </Flex>
-
-          <Flex className="navigation-destinations" align="center" gap="large">
-            <a className="navigation-link" href="https://docs.phreshos.com">Docs</a>
-            <a className="navigation-link source-link" href="https://github.com/PhreshOS">
-              GitHub <span aria-hidden="true">↗</span>
-            </a>
-          </Flex>
+      <header className="topbar">
+        <a className="brand" href="#top" aria-label="PhreshOS home"><Mark /><span>PhreshOS</span></a>
+        <span className="topbar-state"><Dot tone="success" /> System available</span>
+        <nav aria-label="Primary navigation">
+          <a href="#continuity">Experience</a>
+          <a href="#programs">Programs</a>
+          <a href="#install">Install</a>
+          <a href="https://docs.phreshos.com">Docs</a>
+          <a href="https://github.com/PhreshOS">GitHub ↗</a>
         </nav>
+      </header>
 
-        <section id="top" className="hero">
-          <div className="hero-copy">
-            <p className="eyebrow">
-              <span className="eyebrow-light" aria-hidden="true" />
-              Your system. In the browser.
-            </p>
-            <h1>Software, with a place to belong.</h1>
-            <p className="introduction">
-              PhreshOS gives your software one home on your own machine—then brings the same Desktop, programs, and state to any screen with a browser.
-            </p>
-
-            <Flex className="hero-actions" align="center" gap="medium" wrap>
-              <a className="action action-primary" href="#install">
-                Get PhreshOS <span aria-hidden="true">→</span>
-              </a>
-              <a className="action action-secondary" href="https://docs.phreshos.com">
-                See how it works
-              </a>
-            </Flex>
-
-            <div className="hero-details" aria-label="Product characteristics">
-              <span>Open source</span>
-              <span>Self-hosted</span>
-              <span>Web-native</span>
-            </div>
-          </div>
-
-          <div className="hero-preview">
-            <DesktopPreview />
-            <span className="preview-label preview-label-system">One System</span>
-            <span className="preview-label preview-label-browser">Any browser</span>
-          </div>
-        </section>
-
-        <section id="experience" className="section experience" aria-labelledby="experience-title">
-          <div className="section-intro">
-            <p className="section-label">A continuous environment</p>
-            <h2 id="experience-title">Close the tab. Your world keeps running.</h2>
-            <p>
-              A browser window is only one view into PhreshOS. The System keeps your programs and their work alive, ready for the next screen you open.
-            </p>
-          </div>
-
-          <Grid className="benefit-grid" gap="large">
-            {benefits.map(([title, description], index) => (
-              <article className="benefit" key={title}>
-                <span className="benefit-number">0{index + 1}</span>
-                <div className="benefit-mark" aria-hidden="true">
-                  <span />
-                </div>
-                <h3>{title}</h3>
-                <p>{description}</p>
-              </article>
-            ))}
-          </Grid>
-        </section>
-
-        <section id="system" className="section system-section" aria-labelledby="system-title">
-          <Surface className="system-surface" color="background:base">
-            <div className="system-visual" aria-label="One PhreshOS System reached by a laptop, tablet, and phone">
-              <span className="orbit orbit-outer" aria-hidden="true" />
-              <span className="orbit orbit-inner" aria-hidden="true" />
-              <div className="system-core">
-                <span className="system-core-mark" aria-hidden="true" />
-                <strong>Your System</strong>
-                <small>always available</small>
-              </div>
-              <span className="device device-laptop">Laptop</span>
-              <span className="device device-tablet">Tablet</span>
-              <span className="device device-phone">Phone</span>
-            </div>
-
-            <div className="system-copy">
-              <p className="section-label">One place, every screen</p>
-              <h2 id="system-title">Your Desktop follows you.</h2>
-              <p>
-                Sign in from another browser and continue with the same environment. Your software runs in one place instead of being rebuilt around every device.
-              </p>
-              <a className="text-link" href="https://docs.phreshos.com/what-is-phreshos">
-                Discover PhreshOS <span aria-hidden="true">→</span>
-              </a>
-            </div>
-          </Surface>
-        </section>
-
-        <section className="section foundations" aria-labelledby="foundations-title">
-          <div className="section-intro section-intro-compact">
-            <p className="section-label">Made for better software</p>
-            <h2 id="foundations-title">Independent programs. Shared foundations.</h2>
-          </div>
-
-          <div className="foundation-list">
-            {foundations.map(([title, description], index) => (
-              <article className="foundation" key={title}>
-                <span>0{index + 1}</span>
-                <h3>{title}</h3>
-                <p>{description}</p>
-              </article>
-            ))}
-          </div>
-
-          <p className="developer-note">
-            Building for PhreshOS? The SDKs give Client and Server code the same Program, Process, Endpoint, and Service model.
-            <a href="https://docs.phreshos.com/sdks"> Explore the SDKs →</a>
-          </p>
-        </section>
-
-        <section id="install" className="section install-section" aria-labelledby="install-title">
-          <div className="install-copy">
-            <p className="section-label">Start on your machine</p>
-            <h2 id="install-title">A home for your software is one command away.</h2>
-            <p>Install the System, open the Desktop address, and create the owner account. Everything else starts from there.</p>
-          </div>
-
-          <div className="installation-commands">
-            <article className="installation-command">
-              <header>
-                <span className="terminal-controls" aria-hidden="true"><i /><i /><i /></span>
-                Linux and macOS
-              </header>
-              <code>curl -fsSL https://install.phreshos.com/sh | bash</code>
-            </article>
-
-            <article className="installation-command">
-              <header>
-                <span className="terminal-controls" aria-hidden="true"><i /><i /><i /></span>
-                Windows
-              </header>
-              <code>{'powershell -c "irm https://install.phreshos.com/ps1 | iex"'}</code>
-            </article>
-          </div>
-        </section>
-
-        <footer>
-          <a className="wordmark" href="#top">
-            <span className="wordmark-mark" aria-hidden="true" />
-            PhreshOS
-          </a>
-          <p>Software should have a place to belong.</p>
-          <Flex align="center" gap="large">
-            <a href="https://docs.phreshos.com">Documentation</a>
-            <a href="https://github.com/PhreshOS">Source</a>
+      <section className="opening" aria-labelledby="opening-title">
+        <div className="opening-index" aria-hidden="true">01 / YOUR SYSTEM</div>
+        <div className="opening-copy">
+          <p className="kicker"><Dot /> PhreshOS is a place for software</p>
+          <h1 id="opening-title">Your computer<br />can be<br /><em>somewhere else.</em></h1>
+          <p className="opening-description">Your browser is a way in—not the place your work lives. PhreshOS keeps your Desktop and programs together on your own System, ready whenever you return.</p>
+          <Flex className="opening-actions" gap="medium" wrap>
+            <MaterialLink className="material-link material-link-primary" href="#install">Create your System <span>↘</span></MaterialLink>
+            <a className="quiet-link" href="https://docs.phreshos.com/what-is-phreshos">Understand the idea <span>→</span></a>
           </Flex>
-        </footer>
-      </main>
-    </UIProvider>
-  );
+        </div>
+        <ContinuityField />
+        <div className="scroll-note"><span aria-hidden="true" /> Follow the session</div>
+      </section>
+
+      <section className="handoff" id="continuity" aria-labelledby="handoff-title">
+        <div className="section-code">02 / CONTINUITY</div>
+        <div className="handoff-heading">
+          <p>Nothing to move. Nothing to rebuild.</p>
+          <h2 id="handoff-title">Close here.<br /><span>Continue there.</span></h2>
+        </div>
+        <div className="session-route">
+          <div className="route-device"><span className="route-time">09:42</span><span className="route-screen" aria-hidden="true"><i /><i /></span><strong>Leave the office</strong><small>The browser closes.</small></div>
+          <div className="route-transit" aria-hidden="true"><span /><i>Session remains</i><span /></div>
+          <Surface className="route-system" material="full" color="background:base" radius="large"><Mark /><span><strong>3 programs</strong><small>still running</small></span></Surface>
+          <div className="route-transit" aria-hidden="true"><span /><i>Same state</i><span /></div>
+          <div className="route-device"><span className="route-time">19:18</span><span className="route-screen route-screen-small" aria-hidden="true"><i /><i /></span><strong>Open at home</strong><small>The work is already there.</small></div>
+        </div>
+      </section>
+
+      <section className="programs" id="programs" aria-labelledby="programs-title">
+        <div className="section-code">03 / PROGRAMS</div>
+        <div className="programs-copy">
+          <p className="kicker"><Dot tone="secondary" /> Software with a real home</p>
+          <h2 id="programs-title">Programs do more than fill a window.</h2>
+          <p>Every Program has its own identity, processes, storage, and permissions. It can keep working on the System while its interface comes and goes.</p>
+          <a className="quiet-link" href="https://docs.phreshos.com/programs">How Programs work <span>→</span></a>
+        </div>
+        <Surface className="programs-surface" material="full" color="background:base" radius="large">
+          <ProgramStream />
+          <div className="program-boundary"><span>One clear boundary</span><p>Interface</p><i /><p>Processes</p><i /><p>Storage</p><i /><p>Permissions</p></div>
+        </Surface>
+      </section>
+
+      <section className="ownership" aria-labelledby="ownership-title">
+        <div className="section-code">04 / OWNERSHIP</div>
+        <p className="ownership-lead">The cloud should not own the room your software lives in.</p>
+        <h2 id="ownership-title"><span>Your machine.</span><span>Your software.</span><span>Your rules.</span></h2>
+        <div className="ownership-notes">
+          <p><strong>Self-hosted</strong><span>The System runs where you choose.</span></p>
+          <p><strong>Open source</strong><span>The contracts and implementation are visible.</span></p>
+          <p><strong>Web-native</strong><span>Every modern browser becomes a way in.</span></p>
+        </div>
+      </section>
+
+      <section className="install" id="install" aria-labelledby="install-title">
+        <div className="install-heading"><span className="section-code">05 / BEGIN</span><h2 id="install-title">Make a place.</h2><p>Install PhreshOS on your machine, then open your System from the browser.</p></div>
+        <div className="command-stack">
+          <Surface className="command" material="extended" color="background:base" radius="medium"><header><span><i /><i /><i /></span>Linux and macOS</header><code>curl -fsSL https://install.phreshos.com/sh | bash</code></Surface>
+          <Surface className="command" material="extended" color="background:base" radius="medium"><header><span><i /><i /><i /></span>Windows</header><code>{'powershell -c "irm https://install.phreshos.com/ps1 | iex"'}</code></Surface>
+        </div>
+      </section>
+
+      <footer>
+        <a className="brand" href="#top"><Mark /><span>PhreshOS</span></a>
+        <p>A place for software to belong.</p>
+        <Flex gap="large"><a href="https://docs.phreshos.com">Documentation</a><a href="https://github.com/PhreshOS">Source</a></Flex>
+      </footer>
+    </main>
+  </UIProvider>;
 }
