@@ -8,7 +8,7 @@ const geistSans = Geist({
 });
 
 export const metadata: Metadata = {
-  title: "PhreshOS · Your computer can be somewhere else",
+  title: "PhreshOS · Software, with a place to belong",
   description: "Your own web-native system: the same Desktop, programs, and state from any browser.",
 };
 
