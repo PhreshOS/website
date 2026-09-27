@@ -1,0 +1,29 @@
+---
+title: Badge
+description: A short label for a state, such as running or stopped.
+---
+
+<BadgeShowcase />
+
+A Badge names a state. It is not a control: it cannot be pressed or focused.
+
+```tsx
+<Badge color="success" dot>running</Badge>
+<Badge color="danger" dot>stopped</Badge>
+<Badge>idle</Badge>
+```
+
+It is painted in the `subtle` level of its color, like a selection, with its
+text in the `strong` level. `dot` adds a dot in the full color, for a live
+state. Its text is one control step smaller than its `size`.
+
+For labels a person can select or remove, use a
+[TagGroup](/docs/sdks/react-ui/components/tag-group).
+
+## Props
+
+| Prop | Default | Sets |
+| --- | --- | --- |
+| `color` | `"foreground"`, neutral | Its color role |
+| `dot` | `false` | A leading dot in the full color |
+| `size` | `"medium"` | Its size |

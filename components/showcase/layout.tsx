@@ -267,6 +267,7 @@ export function AppLayoutShowcase() {
 
   return (
     <Showcase code={`<AppLayout>
+  <AppLayout.Title>Settings</AppLayout.Title>
   <AppLayout.Sidebar aria-label="Settings">
     <nav aria-label="Settings">
       <Tree aria-label="Sections" selectionMode="single" value={section} onChange={setSection}>…</Tree>
@@ -276,8 +277,9 @@ export function AppLayoutShowcase() {
   <AppLayout.Content>…</AppLayout.Content>
   <AppLayout.Footer><Button>Discard</Button><Button color="primary">Save</Button></AppLayout.Footer>
 </AppLayout>`}>
-      <WindowScene title="Settings" contentStyle={{ padding: 0, height: 320 }}>
+      <WindowScene title="Settings" contentStyle={{ padding: 0, height: 360, alignContent: 'stretch' }}>
         <AppLayout sidebarWidth={150}>
+          <AppLayout.Title>Settings</AppLayout.Title>
           <AppLayout.Sidebar aria-label="Settings">
             <nav aria-label="Settings">
               <Tree aria-label="Sections" selectionMode="single" value={section} onChange={setSection} expanded={expanded} onExpandedChange={setExpanded}>

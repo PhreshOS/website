@@ -1,0 +1,30 @@
+---
+title: Meter
+description: A quantity within a known range, such as disk usage.
+---
+
+<MeterShowcase />
+
+A Meter reads a level: disk usage, memory, load. Use a
+[ProgressBar](/docs/sdks/react-ui/components/progress-bar) for work that moves
+toward an end.
+
+```tsx
+<Meter label="Disk" value={72} warning={0.7} danger={0.9} />
+```
+
+`warning` and `danger` are shares of the range, from 0 to 1. Once the value
+reaches one, the Meter takes that color. Without thresholds it keeps its
+`color`. It uses the same recessed rail as a ProgressBar.
+
+## Props
+
+| Prop | Default | Sets |
+| --- | --- | --- |
+| `value` | `0` | The current value |
+| `minValue`, `maxValue` | `0`, `100` | The range |
+| `label` | — | Its visible label |
+| `color` | `"info"` | Its color below the thresholds |
+| `warning`, `danger` | — | Where it turns `warning` or `danger` |
+| `size` | `"medium"` | Its size |
+| `formatOptions`, `valueLabel` | — | How the value is shown |

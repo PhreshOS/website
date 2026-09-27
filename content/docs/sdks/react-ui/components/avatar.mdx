@@ -1,0 +1,29 @@
+---
+title: Avatar
+description: A person or an agent.
+---
+
+<AvatarShowcase />
+
+```tsx
+<Avatar name="Ada Lovelace" />
+<Avatar name="Ada Lovelace" src="/ada.png" />
+<Avatar name="Lemo" color="info"><Bot /></Avatar>
+```
+
+An Avatar is a circle as tall as a control of its `size`. It shows `src`, or
+the initials of `name` on the `soft` level of a color. `name` also labels it
+for assistive technology. Children replace the initials, for example with an
+icon for an agent.
+
+Without `color`, the color is chosen from the name, so the same name always
+gets the same color.
+
+## Props
+
+| Prop | Default | Sets |
+| --- | --- | --- |
+| `name` | — | Who it shows, and its label |
+| `src` | — | A picture |
+| `color` | Chosen from the name | Its color role |
+| `size` | `"medium"` | Its size |

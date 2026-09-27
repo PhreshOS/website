@@ -1,0 +1,24 @@
+---
+title: Search Field
+description: A text field for searching.
+---
+
+<SearchFieldShowcase />
+
+```tsx
+<SearchField label="Search" onSubmit={query => search(query)} />
+```
+
+A SearchField leads with a search mark. Once it holds text, a clear button
+appears at its end. Escape also clears it, and Enter calls `onSubmit`. It
+shares the recessed well and sizes of [Input](/docs/sdks/react-ui/components/input).
+
+## Props
+
+| Prop | Default | Sets |
+| --- | --- | --- |
+| `value`, `defaultValue`, `onChange` | — | Its text |
+| `onSubmit` | — | Called with the text on Enter |
+| `onClear` | — | Called when it is cleared |
+| `placeholder` | — | Hint text while empty |
+| Field props | — | `label`, `description`, `errorMessage`, `disabled`, `size` |

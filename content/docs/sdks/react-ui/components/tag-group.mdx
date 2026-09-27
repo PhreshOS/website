@@ -1,0 +1,31 @@
+---
+title: Tag Group
+description: A set of labels a person can select or remove.
+---
+
+<TagGroupShowcase />
+
+```tsx
+<TagGroup label="Filters" onRemove={keys => remove(keys)}>
+  <TagGroup.Tag id="running">running</TagGroup.Tag>
+  <TagGroup.Tag id="stopped">stopped</TagGroup.Tag>
+</TagGroup>
+```
+
+Tags are items of a collection: arrow keys move between them. With
+`onRemove`, each Tag gets a remove button, and Backspace or Delete remove the
+focused Tag. With `selectionMode`, Tags can be selected like other collection
+items, and take the selection color.
+
+Tags are one control step smaller than the group's `size`. At rest they are
+painted in the `subtle` level of `color`.
+
+## Props
+
+| Part | Prop | Sets |
+| --- | --- | --- |
+| `TagGroup` | `onRemove` | Called with the keys to remove |
+| `TagGroup` | `selectionMode`, `selectedKeys`, `onSelectionChange` | Selection |
+| `TagGroup` | `color`, `size` | Paint and size of every Tag |
+| `TagGroup` | Field props | `label`, `description`, `errorMessage` |
+| `TagGroup.Tag` | `id` | Its key |

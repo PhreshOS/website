@@ -8,3 +8,4 @@ export * from './colors';
 export * from './icons';
 export * from './overlays';
 export * from './files';
+export * from './content';

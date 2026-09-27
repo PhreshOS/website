@@ -1,0 +1,48 @@
+---
+title: Text
+description: Headings, running text, keys, and inline code.
+---
+
+<TypographyShowcase />
+
+These components set text in the scale and tone of the interface, so
+Programs read alike.
+
+```tsx
+<Heading level={2}>Appearance</Heading>
+<Text tone="secondary">Colors, spacing, and material.</Text>
+<Text>Press <Kbd>⌘</Kbd> <Kbd>K</Kbd> or run <Code>phresh dev</Code>.</Text>
+```
+
+## Heading
+
+A heading is sized relative to the text around it. Each `level` has a size;
+`size` overrides it without changing the document level.
+
+| Size | Font size |
+| --- | --- |
+| `xsmall` | 1.125em |
+| `small` | 1.25em |
+| `medium` | 1.5em |
+| `large` | 1.75em |
+| `xlarge` | 2em |
+
+Sizes follow the same scale as Appearance values, anchored at its `large`
+step. Levels 1 to 6 default to `xlarge`, `large`, `medium`, `small`, `xsmall`,
+and `xsmall`.
+
+## Text
+
+`Text` keeps the size around it unless you give it a `size` from the control
+text scale. `tone="secondary"` lowers it to the strength of descriptions.
+Inside a field or item, `slot="description"` connects it as the description.
+
+## Kbd
+
+A key to press, drawn as a small raised keycap the height of an `xsmall`
+control.
+
+## Code
+
+Code inside text, in the system monospace font on a shallow recessed surface.
+For blocks of code, use a `<pre>` in your own layout.

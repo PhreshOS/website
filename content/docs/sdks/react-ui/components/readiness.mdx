@@ -1,0 +1,154 @@
+---
+title: Readiness
+description: Holds interaction with part of an interface until everything inside it is ready.
+---
+
+<ReadinessShowcase />
+
+Wrap the part of the interface that waits in `Readiness`. Any component
+inside it declares what it needs with `useRequirement(ready)`. While one
+requirement is not ready, the part cannot be clicked, focused, or reached by
+assistive technology. When all are ready, it can be used again.
+
+```tsx
+import { Readiness, useRequirement } from "@phreshos/react-ui"
+
+<Readiness>
+  <Notes />
+</Readiness>
+
+function Notes() {
+  const notes = useNotes() // undefined until loaded
+  useRequirement(notes !== undefined)
+  return <NoteList notes={notes ?? []} />
+}
+```
+
+Readiness draws nothing. It wraps the children in one element with
+`display: contents`, which adds no layout box and carries `inert` while
+waiting. How the waiting looks is up to you.
+
+To have the System's loading drawn for you, use
+[Loading](/docs/sdks/react-ui/components/loading).
+
+## Requirements
+
+A requirement is one `useRequirement` call in one mounted component. It has no
+name and is not defined ahead of time. Pass its current condition on every
+render. It follows the condition both ways: when a connection drops, the
+boundary waits again; when it returns, the boundary is released. When the
+component unmounts, its requirement is removed.
+
+```tsx
+useRequirement(connection.open, "Connecting…")
+```
+
+The second argument, `detail`, is any value you want to read back, such as a
+message. Readiness never reads it. It is compared by identity, so pass a stable
+value such as a string.
+
+A component can exist only to declare a requirement and render nothing.
+
+Declare a requirement in a component that is mounted from the start, such as
+the one that loads the data. A component that appears only after the data
+arrives cannot hold the boundary before that.
+
+## Status
+
+Show the waiting with `status`. It is rendered next to the children, outside
+the held part, so it stays interactive. It can offer actions such as Cancel or
+Skip.
+
+Pass a node that reads the boundary with `useReadiness()`, or a function that
+receives the same value:
+
+```tsx
+<Readiness status={<Cover />}>
+  <Editor />
+</Readiness>
+
+<Readiness status={({ ready }) => <LoadingCover visible={!ready} />}>
+  <Editor />
+</Readiness>
+```
+
+`useReadiness()` returns `ready` and `requirements`, every requirement of the
+boundary in the order it was declared, with its `ready` and `detail`:
+
+```tsx
+function Cover() {
+  const { ready, requirements } = useReadiness<string>()
+  if (ready) return null
+  const message = requirements.find(requirement => !requirement.ready)?.detail
+  return <Text tone="secondary">{message}</Text>
+}
+```
+
+`useReadiness<string>()` states the type of `detail`. If some requirements pass
+no detail, state that too: `useReadiness<string | undefined>()`.
+
+Requirements declared inside `status` belong to the boundary around this one,
+not to this one.
+
+## Delay
+
+`delay` keeps the boundary held for that many milliseconds after its
+requirements are ready. Use it for work the requirements cannot see, such as
+an animation that runs after the content loads. During the delay every
+requirement is ready but `ready` is still `false`. If a requirement stops being
+ready, the delay starts again when it is ready.
+
+## Nested boundaries
+
+A requirement belongs to its nearest boundary only. A boundary inside another
+holds just its own part, so a part that starts loading while the interface is
+running does not hold the rest:
+
+```tsx
+<Readiness>
+  <Sidebar />
+  <Readiness status={<PageCover />}>
+    <Page />
+  </Readiness>
+</Readiness>
+```
+
+While the outer boundary waits, everything inside it is held, including the
+inner boundary. When the outer one is ready, the inner one may still be
+waiting on its own. For the outer boundary to wait for something, declare the
+requirement in a component outside the inner boundary.
+
+## First render
+
+A boundary starts held. React runs the effects of children before their
+parent, so by the time the boundary settles after its first render, every
+requirement mounted with it is known. If all are ready, the boundary is
+released before the browser paints, so it is never usable for a frame by
+mistake. Server HTML is held too, until the page hydrates.
+
+Readiness does not see a component that has not mounted yet, such as one
+waiting in `Suspense`. Place the boundary inside the `Suspense` boundary, or
+declare the requirement outside it.
+
+## What it does not do
+
+- It does not draw a loading state. `status` only gives yours a place.
+- It does not hide the interface. Cover it yourself if you want to.
+- It does not time out. A requirement that never becomes ready keeps the
+  boundary waiting.
+- It does not report readiness outside the page.
+
+## Reference
+
+| Prop | Does |
+| --- | --- |
+| `children` | The part of the interface that waits |
+| `status` | A node or `(state) => node` rendered outside the held part |
+| `delay` | Milliseconds to stay held after ready, `0` by default |
+
+| Hook | Does |
+| --- | --- |
+| `useRequirement(ready, detail?)` | Declares one requirement of the nearest boundary while mounted |
+| `useReadiness()` | Returns `{ ready, requirements }` for the nearest boundary |
+
+Both hooks throw outside a `Readiness` boundary.

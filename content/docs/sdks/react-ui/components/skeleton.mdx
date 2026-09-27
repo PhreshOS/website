@@ -1,0 +1,26 @@
+---
+title: Skeleton
+description: A placeholder for content that is still loading.
+---
+
+<SkeletonShowcase />
+
+```tsx
+<Skeleton lines={3} />
+<Skeleton style={{ width: 48, height: 48 }} radius="full" />
+```
+
+With `lines`, a Skeleton holds the place of text. The last line is shorter,
+like the end of a paragraph. Without `lines`, it is one block, sized by
+`style`, and as tall as a control by default.
+
+It uses the separator paint and pulses while animations are on. It is hidden
+from assistive technology; mark the loading region with `aria-busy`.
+
+## Props
+
+| Prop | Default | Sets |
+| --- | --- | --- |
+| `lines` | — | Lines of text to hold the place of |
+| `radius` | `"small"` | Its corners |
+| `style` | — | Its size, as a block |

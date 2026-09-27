@@ -1,0 +1,71 @@
+---
+title: Loading
+description: A Readiness boundary drawn the way the System draws loading.
+---
+
+<LoadingShowcase />
+
+`Loading` is a [Readiness](/docs/sdks/react-ui/components/readiness) boundary
+with the System's own loading drawn over it, so a Program does not design its
+own. Wrap the interface that waits, and declare what it needs with
+`useRequirement`. The detail of a requirement is its message:
+
+```tsx
+import { Loading, useRequirement } from "@phreshos/react-ui"
+
+<Loading>
+  <Settings />
+</Loading>
+
+// inside Settings:
+useRequirement(connected, "Connecting…")
+useRequirement(settingsLoaded)
+```
+
+It shows a Spinner with the message of the first requirement that is waiting.
+A requirement without a string detail is waited for, but not shown. There is
+no default message.
+
+The loading is drawn on a Surface that covers the waiting interface and fills
+the nearest positioned ancestor. It appears at once and fades out with the
+Appearance transaction when everything is ready, then leaves the page. When a
+requirement stops being ready, it appears again.
+
+## Surface
+
+The cover is a [Surface](/docs/sdks/react-ui/components/surface), and
+`Loading` takes its props: `color`, `depth`, `material`, `radius`, `shadow`,
+`className`, and `style`. It is `flat` and has no radius by default, because
+the container it fills owns the shape. A Window already clips it to its
+corners.
+
+```tsx
+<Loading material="full">…</Loading>          // frosted over the Desktop
+<Loading color="primary" depth="recessed">…</Loading>
+```
+
+## Steps
+
+With `steps`, every requirement that has a message gets its own line, with a
+Spinner while it waits and a check when it is ready. Use it when several
+things load at once and each is worth seeing.
+
+## Delay
+
+`delay` keeps the interface held and the loading shown for that many
+milliseconds after its requirements are ready, as with
+[Readiness](/docs/sdks/react-ui/components/readiness#delay). Use it for work the
+requirements cannot see, such as an animation that runs after the content
+loads.
+
+## Reference
+
+| Prop | Does |
+| --- | --- |
+| `children` | The interface that waits |
+| Surface props | Paint the cover, `flat` with no radius by default |
+| `steps` | Lists every step instead of one message |
+| `delay` | Milliseconds to stay held after ready, `0` by default |
+
+For a loading state of your own, use
+[Readiness](/docs/sdks/react-ui/components/readiness) with `status`.

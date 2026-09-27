@@ -1,0 +1,25 @@
+---
+title: Breadcrumbs
+description: Where a page sits in a hierarchy.
+---
+
+<BreadcrumbsShowcase />
+
+```tsx
+<Breadcrumbs>
+  <Breadcrumbs.Item href="/docs">Docs</Breadcrumbs.Item>
+  <Breadcrumbs.Item href="/docs/system">System</Breadcrumbs.Item>
+  <Breadcrumbs.Item>Permissions</Breadcrumbs.Item>
+</Breadcrumbs>
+```
+
+Each ancestor is a link, followed by a separator. The last item is the
+current page: it is not a link, and it is marked with `aria-current="page"`.
+Links inside your app go through the `navigate` you give `UIProvider`.
+
+## Props
+
+| Part | Prop | Sets |
+| --- | --- | --- |
+| `Breadcrumbs` | `size` | Its size |
+| `Breadcrumbs.Item` | `href` | Where the step goes |

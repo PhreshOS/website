@@ -1,0 +1,30 @@
+---
+title: Link
+description: A link inside text.
+---
+
+<LinkShowcase />
+
+Use `Link` for a link inside running text. For a link that looks like a
+button, give a [Button](/docs/sdks/react-ui/components/button#links) an `href`
+instead.
+
+```tsx
+<Text>Read the <Link href="/docs/system/security/permissions">permissions guide</Link> first.</Text>
+```
+
+A Link renders a native `<a>`. Its text takes the `strong` level of its color,
+so it stays readable on the canvas. The underline rests at the placeholder
+strength and fills in on hover. Focus draws the same ring as other controls.
+
+Links inside your app go through the `navigate` you give
+[`UIProvider`](/docs/sdks/react-ui/appearance#links-inside-your-app).
+
+## Props
+
+| Prop | Default | Sets |
+| --- | --- | --- |
+| `href` | — | Where it goes |
+| `color` | `"primary"` | Its color role |
+| `disabled` | `false` | Off |
+| Link attributes | — | `target`, `rel`, `download`, and the others |

@@ -126,7 +126,7 @@ export default function LivingDesktop() {
                 <Window.Header.Close onPress={() => close(id)} />
               </Window.Header.Actions>
             </Window.Header>
-            <Window.Content style={{ overflow: "hidden" }}>
+            <Window.Content>
               <Content />
             </Window.Content>
           </Window>

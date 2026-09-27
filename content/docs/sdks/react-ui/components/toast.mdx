@@ -1,0 +1,39 @@
+---
+title: Toast
+description: A brief message that does not interrupt, such as Saved.
+---
+
+<ToastShowcase />
+
+Render one `ToastRegion`, then show messages from anywhere with `toast.show()`:
+
+```tsx
+import { ToastRegion, toast } from "@phreshos/react-ui"
+
+<ToastRegion />
+
+toast.show({ title: "Saved", description: "Your Appearance is in place.", color: "success" }, { timeout: 5000 })
+```
+
+Toasts stack at the bottom end of the viewport, above the interface. Each
+leads with the icon of its meaning, like an
+[Alert](/docs/sdks/react-ui/components/alert), and has a close button. Without
+a `timeout` it stays until closed. Keep a timeout of at least five seconds so
+it can be read.
+
+`toast.show()` returns a key; `toast.close(key)` closes that Toast early.
+
+For a message that must stay in place, use an Alert.
+
+## Reference
+
+| Call | Does |
+| --- | --- |
+| `toast.show(content, options)` | Shows a Toast and returns its key |
+| `toast.close(key)` | Closes one Toast |
+
+| Content | Sets |
+| --- | --- |
+| `title` | Its message |
+| `description` | More detail |
+| `color` | Its meaning, `info` by default |
