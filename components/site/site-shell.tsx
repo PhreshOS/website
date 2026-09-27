@@ -21,7 +21,8 @@ function usePalette(): CSSProperties {
 }
 
 function Page({ theme, onTheme, children }: Readonly<{ theme: Theme, onTheme: () => void, children: ReactNode }>) {
-  return <div className="page" style={usePalette()}>
+  // `data-theme` lets plain CSS follow the switch, such as highlighted code in a post.
+  return <div className="page" data-theme={theme} style={usePalette()}>
     <Navigation theme={theme} onTheme={onTheme} />
     <main>{children}</main>
     <Footer />

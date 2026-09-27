@@ -1,0 +1,109 @@
+---
+title: How an AI agent can use your apps the way you do
+description: On PhreshOS, apps are built to be used by people and AI agents alike. Your agent calls the same features your windows use, on the same running apps, with no browser automation in between.
+date: 2026-09-27
+author: Zohayr Slileh
+---
+
+AI agents are good at reasoning and poor at reaching things. When an agent
+needs to use an app, it usually gets there the hard way: it drives a browser
+and clicks buttons meant for eyes, it scrapes pages, or someone writes a
+separate adapter for each app. It works until a layout changes.
+
+The problem is not the agent. It is that the apps were never built for it.
+
+PhreshOS is an open-source operating system for programs built with web
+technology, running on your own machine. It is built on a different starting
+point: a person and an agent use the same apps, through the same System.
+
+## The short answer
+
+On PhreshOS, an app usually keeps its features in its Server, and its window
+asks the Server for them. Your agent asks the same Server, through the `phresh` command
+line or the SDK. It reaches the same running app you see on your desktop, with
+the same data, using features the app was built to offer, not buttons it has to
+find.
+
+## One feature, two users
+
+Take a notes app. Its Server answers one question:
+
+```ts
+import { context } from "@phreshos/server"
+
+context.answer("notes.list", () => loadNotes())
+```
+
+Its window asks for the notes to show them:
+
+```ts
+const notes = await context.server.ask("notes.list")
+```
+
+Your agent asks the very same question from a terminal:
+
+```sh
+phresh endpoint ask --program notes --process main --endpoint server --event notes.list --json
+```
+
+There is no second API to maintain and no screen to read. When the author adds
+a feature for the window, the agent can use it too, and both see the same
+result, because they reach the same running process.
+
+## How an agent finds its way
+
+An agent that meets a PhreshOS System for the first time can learn it without
+guessing:
+
+1. **What is installed.** `phresh program list` lists the Programs.
+2. **What an app is for.** An app can ship an agent document, a Markdown file
+   its author writes for AI agents. `phresh program agent --program notes`
+   returns it.
+3. **What the command line can do.** `phresh describe --all --json` returns
+   every command as data: its options, choices, and examples. The agent reads a
+   contract instead of help text.
+4. **The results.** Add `--json` to any command for its full result. Code that
+   cannot hold SDK handles, such as a script or a tool, can call the same
+   operations as plain JSON through `system.execute()`.
+
+## The same desktop, too
+
+An agent does not only call features. It works in the same environment you do.
+It can start an app, open its window, and move or resize it with
+`phresh window` commands, so what it opens appears on your desktop, next to
+your own work. When you and the agent use an app, you are looking at one app,
+not two copies of it.
+
+## For app authors
+
+Building an app for both people and agents is the same work as building it for
+people:
+
+- Put each feature in your Server, and let your window ask for it.
+- Offer a [Service](/docs/runtime/services) when other apps should reach it by
+  a stable name.
+- Add an agent document in your
+  [configuration](/docs/sdks/core/program-configuration), so agents know what
+  your app offers and how to ask for it.
+
+## Worth knowing
+
+An agent that uses the `phresh` command line or a Node script acts as you, the
+owner of the machine. It is trusted the way a terminal you hand it is trusted.
+Use PhreshOS with agents you would trust on that machine.
+
+What an agent can do is also what each app offers. PhreshOS gives every app the
+same way to be reached; each app decides which features it has.
+
+## Try it
+
+PhreshOS installs for your own user account, without administrator access, on
+macOS, Linux, or Windows with Node.js 24.15 or newer:
+
+```sh
+npm install --global @phreshos/cli
+phresh system install
+```
+
+Then point your agent at `phresh describe`, and build your
+[first Program](/docs/first-program). Plant one app, and both of you can use it.

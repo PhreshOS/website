@@ -12,6 +12,7 @@ export default function Footer() {
     <span className="muted">Open source under the MIT License.</span>
     <Flex gap="medium">
       <a href={site.documentation}>Documentation</a>
+      <a href={site.blog}>Blog</a>
       <a href={site.source}>GitHub</a>
     </Flex>
   </footer>

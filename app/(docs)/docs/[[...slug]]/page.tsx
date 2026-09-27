@@ -13,6 +13,7 @@ import { getMDXComponents } from '@/components/mdx';
 import type { Metadata } from 'next';
 import { createRelativeLink } from 'fumadocs-ui/mdx';
 import { gitConfig } from '@/lib/shared';
+import { StructuredData, docsPageData } from '@/components/structured-data';
 
 export const dynamicParams = false;
 
@@ -26,6 +27,7 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
 
   return (
     <DocsPage toc={page.data.toc} full={page.data.full}>
+      <StructuredData data={docsPageData({ title: page.data.title, description: page.data.description, url: page.url, lastModified: page.data.lastModified })} />
       <DocsTitle>{page.data.title}</DocsTitle>
       <DocsDescription className="mb-0">{page.data.description}</DocsDescription>
       <div className="mb-4 flex flex-row items-center gap-2 border-b pb-6">

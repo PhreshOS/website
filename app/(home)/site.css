@@ -719,3 +719,130 @@ h1 em,
     color: color-mix(in oklab, var(--peach) 60%, var(--foreground));
     font-family: var(--display);
 }
+
+/* ——— Blog ——— */
+
+.blog-list {
+    display: grid;
+    gap: 40px;
+    max-width: 44rem;
+    margin: 56px 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.blog-list h3 {
+    margin: 4px 0 6px;
+    font-size: clamp(24px, 3vw, 32px);
+    line-height: 1.15;
+}
+
+.blog-list h3 a {
+    text-decoration: none;
+}
+
+.blog-list p,
+.blog-empty {
+    margin: 0;
+}
+
+.blog-empty {
+    margin-top: 56px;
+}
+
+/* An article reads as one comfortable column. */
+.article {
+    max-width: 44rem;
+}
+
+.article-meta {
+    margin: 0 0 20px;
+    font-size: 14px;
+}
+
+.article-meta a {
+    text-decoration: none;
+}
+
+.article h1 {
+    max-width: none;
+    margin: 0;
+    font-size: clamp(36px, 5.6vw, 60px);
+    line-height: 1.05;
+}
+
+.article-lede {
+    margin: 20px 0 0;
+    color: var(--muted);
+    font-size: 20px;
+}
+
+.article-body {
+    margin-top: 40px;
+    font-size: 18px;
+    line-height: 1.7;
+}
+
+.article-body h2 {
+    margin: 56px 0 12px;
+    font-size: 32px;
+    line-height: 1.15;
+}
+
+.article-body h3 {
+    margin: 40px 0 8px;
+    font-size: 24px;
+}
+
+.article-body p,
+.article-body ul,
+.article-body ol {
+    margin: 0 0 20px;
+}
+
+.article-body a {
+    color: color-mix(in oklab, var(--peach) 55%, var(--foreground));
+}
+
+.article-body code {
+    font-family: var(--mono);
+    font-size: 0.85em;
+}
+
+.article-body :not(pre) > code {
+    padding: 2px 6px;
+    border-radius: 6px;
+    background: color-mix(in oklab, var(--foreground) 6%, transparent);
+}
+
+.article-body pre {
+    margin: 0 0 24px;
+    padding: 16px 20px;
+    overflow-x: auto;
+    border-radius: 12px;
+    background: color-mix(in oklab, var(--foreground) 6%, transparent);
+    line-height: 1.6;
+}
+
+/* Highlighted code carries both themes' colors; the page's theme picks one. */
+.article-body pre span {
+    color: var(--shiki-light);
+}
+
+.page[data-theme="dark"] .article-body pre span {
+    color: var(--shiki-dark);
+}
+
+.article-body table {
+    width: 100%;
+    margin: 0 0 24px;
+    border-collapse: collapse;
+    font-size: 16px;
+}
+
+.article-body th,
+.article-body td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--line);
+    text-align: start;
+}

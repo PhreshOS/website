@@ -2,5 +2,6 @@
 export const site = {
   url: "https://phreshos.com",
   documentation: "/docs",
+  blog: "/blog",
   source: "https://github.com/PhreshOS"
 } as const

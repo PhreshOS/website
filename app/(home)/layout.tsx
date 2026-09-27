@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next"
 import { Fraunces, Geist, Geist_Mono } from "next/font/google"
 import SiteShell from "@/components/site/site-shell"
 import { site } from "@/components/site/links"
+import { phreshosDescription as description } from "@/components/structured-data"
 import "./site.css"
 
 const sans = Geist({ variable: "--font-sans", subsets: ["latin"] })
@@ -12,9 +13,6 @@ const display = Fraunces({
   style: ["normal", "italic"],
   axes: ["opsz", "SOFT"]
 })
-
-const description =
-  "An open-source operating system for programs built with web technology, used by you and your AI agents from one desktop in the browser."
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),

@@ -4,6 +4,9 @@
 # generated content
 .source
 
+# blog drafts stay on the writer's machine; move a post up to content/blog to publish it
+/content/blog/drafts/
+
 # test & build
 /coverage
 /.next/

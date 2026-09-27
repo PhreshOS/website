@@ -44,3 +44,40 @@ test("the home page loads no documentation styles", async () => {
   expect(sheets(docs).length).toBeGreaterThan(0)
   for (const sheet of sheets(docs)) expect(sheets(home)).not.toContain(sheet)
 })
+
+test("the home page describes PhreshOS as structured data", async () => {
+  const html = await built("index.html")
+  const script = html.match(/<script type="application\/ld\+json">(.*?)<\/script>/)?.[1]
+  const graph = JSON.parse(script ?? "{}")["@graph"] as { "@type": string }[]
+  const software = graph.find(node => node["@type"] === "SoftwareApplication") as Record<string, unknown>
+  expect(software.name).toBe("PhreshOS")
+  expect(software.license).toBe("https://opensource.org/licenses/MIT")
+  expect(software.operatingSystem).toBe("macOS, Linux, Windows")
+})
+
+test("a documentation page is a technical article about PhreshOS", async () => {
+  const html = await built("docs/installation.html")
+  const script = html.match(/<script type="application\/ld\+json">(.*?)<\/script>/)?.[1]
+  const article = JSON.parse(script ?? "{}")
+  expect(article["@type"]).toBe("TechArticle")
+  expect(article.about["@id"]).toBe("https://phreshos.com/#software")
+})
+
+test("the blog has a feed and lists it for readers", async () => {
+  const feed = await built("blog/feed.xml")
+  expect(feed).toMatch(/^<\?xml version="1.0" encoding="UTF-8"\?>\n<rss version="2.0">/)
+  expect(feed).toContain("<link>https://phreshos.com/blog</link>")
+  const index = await built("blog.html")
+  expect(index).toContain('type="application/rss+xml"')
+})
+
+test("every post describes itself as an article about PhreshOS", async () => {
+  const feed = await built("blog/feed.xml")
+  const posts = [...feed.matchAll(/<link>https:\/\/phreshos\.com\/blog\/(.+?)<\/link>/g)].map(match => match[1])
+  for (const post of posts) {
+    const html = await built(`blog/${post}.html`)
+    const data = JSON.parse(html.match(/<script type="application\/ld\+json">(.*?)<\/script>/)?.[1] ?? "{}")
+    expect(data["@type"]).toBe("BlogPosting")
+    expect(data.about["@id"]).toBe("https://phreshos.com/#software")
+  }
+})

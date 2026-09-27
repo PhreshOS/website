@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import Landing from "@/components/landing/landing"
+import { StructuredData, homeData } from "@/components/structured-data"
 
 export const metadata: Metadata = {
   title: { absolute: "PhreshOS · The operating system for web programs" },
@@ -9,5 +10,5 @@ export const metadata: Metadata = {
 }
 
 export default function Home() {
-  return <Landing />
+  return <><StructuredData data={homeData} /><Landing /></>
 }
