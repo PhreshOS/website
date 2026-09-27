@@ -77,6 +77,32 @@ right.
 With `animations: false`, every change happens immediately. The Appearance is
 unchanged.
 
+### Give the page the theme
+
+`DocumentTheme` writes the theme of the nearest `UIProvider` into the page's
+`<meta name="color-scheme">`, before the browser paints, and follows every
+change. It renders nothing. Place it once, where the theme that owns the page
+is provided:
+
+```tsx
+import { DocumentTheme, UIProvider } from "@phreshos/react-ui"
+
+<UIProvider preferences={preferences}>
+  <DocumentTheme />
+  <App />
+</UIProvider>
+```
+
+A Program needs it: the browser paints a frame opaque when the color scheme of
+the page inside differs from the frame's, instead of letting the Desktop show
+through. The System serves a Program's page already declaring the Desktop's
+theme, so the page is right from its first paint; `DocumentTheme` keeps it
+right when the theme changes. A page that declares its own `color-scheme` keeps
+it, so a Program's `index.html` leaves it out.
+
+Without a `UIProvider` above it, it follows the browser's theme, like every
+component.
+
 ## Set the text direction
 
 ```tsx

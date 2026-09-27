@@ -122,6 +122,13 @@ The Client is the Program's interface. Each run is a web page shown in a
 Desktop Window, in a sandboxed iframe unless the Program declares
 `sandbox: false`.
 
+The System serves the page declaring the Desktop's theme: it adds
+`<meta name="color-scheme">` to the page's `<head>` unless the page declares
+one itself. The page is then in the Desktop's theme from its first paint, and
+the Desktop shows through wherever the page is transparent. To keep following
+the theme after it changes, use React UI's
+[`DocumentTheme`](/docs/sdks/react-ui/appearance#give-the-page-the-theme).
+
 `process.client.window` is a permanent handle, like the Endpoint handle
 itself. Its values are not: each run starts with a fresh Window, set from the
 Program's declaration and the settings passed to `start()`. A restarted Client
