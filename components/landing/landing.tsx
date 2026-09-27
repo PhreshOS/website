@@ -1,12 +1,11 @@
 "use client"
 
-import { useEffect, useState, type CSSProperties, type ReactNode } from "react"
-import { Button, Flex, Grid, Link, Surface, Tabs, Window } from "@phreshos/react-ui"
+import type { CSSProperties, ReactNode } from "react"
+import { Button, Flex, Grid, Link, Snippet, Surface, Tabs, Window } from "@phreshos/react-ui"
 import {
   BookOpen,
   Bot,
   Check,
-  Copy,
   Cpu,
   HardDrive,
   KeyRound,
@@ -16,7 +15,6 @@ import {
   User,
   Workflow
 } from "@phreshos/react-ui/icons"
-import { widerButton } from "../site/button-style"
 import { site } from "../site/links"
 import LivingDesktop from "./living-desktop"
 import Reveal from "./reveal"
@@ -277,24 +275,6 @@ const managers = {
   yarn: "yarn global add @phreshos/cli"
 } as const
 
-function CopyCommand({ command }: Readonly<{ command: string }>) {
-  const [copied, setCopied] = useState(false)
-
-  useEffect(() => {
-    if (!copied) return
-    const timer = setTimeout(() => setCopied(false), 1800)
-    return () => clearTimeout(timer)
-  }, [copied])
-
-  return <Flex align="center" gap="small" className="command">
-    <code>{command}</code>
-    <Button size="small" aria-label="Copy command" style={widerButton} color={copied ? "success:base" : "default:base"}
-      onPress={async () => { await navigator.clipboard.writeText(command); setCopied(true) }}>
-      {copied ? <Check /> : <Copy />}
-    </Button>
-  </Flex>
-}
-
 function Install() {
   return <section className="section install" id="install">
     <Roots seed={23} className="install-roots" />
@@ -312,13 +292,13 @@ function Install() {
                 {(Object.keys(managers) as (keyof typeof managers)[]).map(key => <Tabs.Tab key={key} id={key}>{key}</Tabs.Tab>)}
               </Tabs.List>
               {(Object.keys(managers) as (keyof typeof managers)[]).map(key => <Tabs.Panel key={key} id={key}>
-                <CopyCommand command={managers[key]} />
+                <Snippet code copyLabel="Copy command" className="command">{managers[key]}</Snippet>
               </Tabs.Panel>)}
             </Tabs>
           </li>
           <li>
             <span>Install and start the System</span>
-            <CopyCommand command="phresh system install" />
+            <Snippet code copyLabel="Copy command" className="command">phresh system install</Snippet>
           </li>
           <li>
             <span>Open the desktop address it prints, usually <code>http://localhost:4300</code>, and create the owner account.</span>

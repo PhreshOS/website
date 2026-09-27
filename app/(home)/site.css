@@ -440,20 +440,6 @@ h1 em,
 
 .command {
     margin-top: 14px;
-    padding: 6px 6px 6px 16px;
-    border-radius: 12px;
-    /* Controls size from the text around them; a fixed size keeps every command's button the same. */
-    font-size: 16px;
-    background: color-mix(in oklab, var(--foreground) 6%, transparent);
-}
-
-.command code {
-    flex: 1;
-    min-width: 0;
-    overflow-x: auto;
-    font-family: var(--mono);
-    font-size: 14px;
-    white-space: nowrap;
 }
 
 .footer {
