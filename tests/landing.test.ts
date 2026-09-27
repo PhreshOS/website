@@ -23,6 +23,7 @@ test("every destination is a link search engines can follow", async () => {
   const html = await built("index.html")
   const links = [...html.matchAll(/<a [^>]*href="([^"]+)"/g)].map(match => match[1])
   expect(links).toContain("/docs")
+  expect(links).toContain("https://demo.phreshos.com")
   expect(links).toContain("https://github.com/PhreshOS")
   expect(links).toContain("#install")
   expect(links).toContain("/docs/what-is-phreshos")

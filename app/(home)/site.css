@@ -106,8 +106,14 @@ a:not(.phreshos-surface) {
 
 .hero {
     position: relative;
-    padding: clamp(48px, 9vw, 110px) 16px 0;
+    /* Short screens keep the hero's actions above the fold. */
+    padding: clamp(40px, min(9vw, 8vh), 110px) 16px 0;
     text-align: center;
+}
+
+.hero-more {
+    margin: 20px 0 0;
+    font-size: 16px;
 }
 
 .eyebrow {
@@ -131,7 +137,7 @@ h3 {
 h1 {
     max-width: 14ch;
     margin: 0 auto;
-    font-size: clamp(44px, 8.4vw, 104px);
+    font-size: clamp(44px, min(8.4vw, 12vh), 104px);
     line-height: 0.98;
 }
 

@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState, type CSSProperties, type ReactNode } from "react"
-import { Button, Flex, Grid, Surface, Tabs, Window } from "@phreshos/react-ui"
+import { Button, Flex, Grid, Link, Surface, Tabs, Window } from "@phreshos/react-ui"
 import {
   BookOpen,
   Bot,
@@ -42,10 +42,13 @@ function Hero() {
         <Button size="large" color="primary:base" href="#install">
           Install PhreshOS
         </Button>
-        <Button size="large" href={`${site.documentation}/what-is-phreshos`}>
-          How it works
+        <Button size="large" href={site.demo}>
+          Try the demo
         </Button>
       </Flex>
+      <p className="hero-more">
+        <Link color="primary" href={`${site.documentation}/what-is-phreshos`}>How it works</Link>
+      </p>
     </Reveal>
 
     <Reveal delay={0.36} className="hero-stage">
