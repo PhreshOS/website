@@ -575,6 +575,11 @@ h1 em,
 
 .comparison {
     margin-top: 48px;
+    overflow: hidden;
+}
+
+/* The table scrolls inside the card, so the card's paint covers all of it. */
+.comparison-scroll {
     overflow-x: auto;
 }
 
@@ -618,6 +623,26 @@ h1 em,
 .comparison tbody th {
     font-weight: 500;
     text-align: start;
+}
+
+/* On a phone the features stay in view while the projects scroll beside them. */
+@media (max-width: 720px) {
+    .comparison table {
+        min-width: 820px;
+        font-size: 14px;
+    }
+
+    .comparison :is(th, td):first-child {
+        position: sticky;
+        left: 0;
+        z-index: 1;
+        width: 168px;
+        min-width: 168px;
+        padding-inline-start: 18px;
+        /* The card's translucent paint over the page, so scrolled cells pass beneath. */
+        background: linear-gradient(var(--phreshos-surface-paint), var(--phreshos-surface-paint)), var(--background);
+        box-shadow: 1px 0 0 var(--line);
+    }
 }
 
 .mark-yes {
@@ -677,6 +702,8 @@ h1 em,
 
 .steps {
     display: grid;
+    /* A command never widens its step past the card; it scrolls instead. */
+    grid-template-columns: minmax(0, 1fr);
     gap: 22px;
     margin: 0;
     padding: 6px 6px 6px 22px;

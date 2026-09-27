@@ -215,6 +215,7 @@ function Comparison() {
     </Reveal>
     <Reveal delay={0.1}>
       <Surface className="comparison" radius="xlarge" material="full">
+        <div className="comparison-scroll">
         <table>
           <thead>
             <tr><th scope="col"><span className="visually-hidden">Feature</span></th>{products.map(product => <th key={product} scope="col">{product}</th>)}</tr>
@@ -226,6 +227,7 @@ function Comparison() {
             </tr>)}
           </tbody>
         </table>
+        </div>
       </Surface>
       <p className="footnote">Compared from each project’s public documentation, September 2026. A dash means we found no such feature documented.</p>
     </Reveal>
@@ -259,8 +261,8 @@ function Store() {
   return <section className="section store">
     <Reveal>
       <p className="eyebrow"><span className="pulse" /> Coming soon</p>
-      <h2 className="section-title">A store of programs,<br /><em>on its way.</em></h2>
-      <p className="section-lede">Official programs for running servers and automating work, installed in one step.</p>
+      <h2 className="section-title">A garden of programs,<br /><em>on its way.</em></h2>
+      <p className="section-lede">A store of official programs for running servers and automating work, each installed in one step.</p>
     </Reveal>
   </section>
 }
