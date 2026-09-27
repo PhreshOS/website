@@ -141,10 +141,20 @@ Processes:
 await program.store.set("draft", { title: "Untitled" })
 await program.store.set("session", token, 60_000)   // expires after 60 seconds
 await program.store.get("draft")                    // the value, or undefined
+await program.store.getOrSet("layout", "grid")         // keeps an existing value
+await program.store.update("visits", current => (Number(current) || 0) + 1)
+const stop = program.store.subscribe("draft", draft => { /* follow the value */ })
+stop()
 await program.store.has("draft")
 await program.store.delete(["draft", "session"])
 await program.store.clear()
 ```
+
+`getOrSet()` writes its initial value only if the key is absent, atomically.
+`subscribe()` reports the current value and subsequent changes to that key,
+including deletion and expiration. `update()` applies a pure read-modify-write
+atomically; its updater may run again if another writer changes the key. An
+update preserves an existing expiration deadline.
 
 ## SQLite database
 
@@ -205,6 +215,6 @@ See [Install and uninstall](/docs/runtime/programs#install-and-uninstall).
 | `file.write()`, `append()`, `delete()`, `copy()`, `move()` | Change a file |
 | `file.bytes()`, `text()`, `json()`, `stream()`, `stat()` | Read a file |
 | `name()`, `path()` | The last path part, or the absolute path |
-| `program.store.get()`, `set()`, `has()`, `delete()`, `clear()` | Key-value state |
+| `program.store.get()`, `getOrSet()`, `set()`, `update()`, `subscribe()`, `has()`, `delete()`, `clear()` | Persistent key-value state and observation |
 | `program.database.query(statement, values?)` | Run one SQL statement |
 | `system.uploads.write()`, `bytes()`, `text()`, `json()`, `stream()`, `stat()` | Uploads |

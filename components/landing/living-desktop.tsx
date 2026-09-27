@@ -75,30 +75,20 @@ export default function LivingDesktop() {
   const [running, setRunning] = useState<readonly ProgramId[]>(order)
   const [open, setOpen] = useState<readonly ProgramId[]>(order)
   const [focused, setFocused] = useState<ProgramId>("lemo")
-  const [notice, setNotice] = useState<Readonly<{ id: ProgramId, closed: boolean }> | null>(null)
-
-  useEffect(() => {
-    if (notice === null) return
-    const timer = setTimeout(() => setNotice(null), 3200)
-    return () => clearTimeout(timer)
-  }, [notice])
 
   function minimize(id: ProgramId) {
     setOpen(current => current.filter(item => item !== id))
-    setNotice({ id, closed: false })
   }
 
   function close(id: ProgramId) {
     setOpen(current => current.filter(item => item !== id))
     setRunning(current => current.filter(item => item !== id))
-    setNotice({ id, closed: true })
   }
 
   function show(id: ProgramId) {
     setRunning(current => current.includes(id) ? current : [...current, id])
     setOpen(current => current.includes(id) ? current : [...current, id])
     setFocused(id)
-    setNotice(null)
   }
 
   return <Surface className="desktop" radius="xlarge" material="none" color="background:soft">
@@ -134,21 +124,6 @@ export default function LivingDesktop() {
       })}
     </AnimatePresence>
 
-    <AnimatePresence>
-      {notice && <motion.div
-        key={`${notice.id}-${notice.closed}`}
-        className="desktop-notice"
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: 8 }}
-      >
-        <Surface material="full" radius="large">
-          {notice.closed
-            ? <>{programs[notice.id].title} was closed. Open it again from the taskbar.</>
-            : <><span className="pulse" /> {programs[notice.id].title} is minimized and still running.</>}
-        </Surface>
-      </motion.div>}
-    </AnimatePresence>
 
     <Surface className="taskbar" material="full" radius="full" style={{ position: "absolute" }}>
       {order.map(id => <Button

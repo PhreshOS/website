@@ -22,7 +22,8 @@ const process = await program?.createProcess({ client: true })
 
 ```ts
 await system.program.list()        // every Program you can see
-await system.program.list(true)    // installed Programs only
+await system.program.list({ installed: true }) // installed Programs only
+await system.program.list({ installed: false }) // uninstalled Programs only
 await system.program.find("notes") // one Program, or null
 ```
 
@@ -217,7 +218,7 @@ another Program requires the `programs` permission for it. See
 
 | Member | Result |
 | --- | --- |
-| `system.program.list(onlyInstalled?)` | Visible Programs |
+| `system.program.list({ installed? })` | Visible Programs, optionally filtered by installation state |
 | `system.program.find(identity)` | A Program, or `null` |
 | `system.program.create(source)` / `forceCreate(source)` | A new uninstalled Program |
 | `identity`, `name`, `version`, `description` | Declared identity |

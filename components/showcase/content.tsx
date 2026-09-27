@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import type { Color, MaterialMode, ScaleLevel } from '@phreshos/react-ui';
 import { Bot } from '@phreshos/react-ui/icons';
-import { Avatar, Badge, Breadcrumbs, Button, Code, Flex, Heading, Input, Kbd, Link, Loading, Meter, Readiness, SearchField, Skeleton, Slider, Spinner, TagGroup, Text, ToastRegion, toast, useRequirement } from '../react-ui';
+import { Avatar, Badge, Breadcrumbs, Button, Code, Flex, Heading, Input, Kbd, Link, Loading, Meter, Readiness, SearchField, Skeleton, Slider, Snippet, Spinner, TagGroup, Text, ToastRegion, toast, useRequirement } from '../react-ui';
 import type { ReadinessState } from '@phreshos/react-ui';
 import { WindowScene } from './frames';
 import { ControlSelect, ControlSwitch, Showcase, attribute, colorOptions, materialOptions, optional, sizeOptions, unset } from './showcase';
@@ -300,6 +300,21 @@ useRequirement(wallpaperLoaded, "Loading wallpaper")`}
           <Input label="Name" defaultValue="Ada" />
           <Button>Save</Button>
         </Loading>
+      </WindowScene>
+    </Showcase>
+  );
+}
+
+export function SnippetShowcase() {
+  const [code, setCode] = useState(true);
+  const text = code ? 'npm install --global @phreshos/cli' : 'PhreshOS is running on this machine. Run `phresh describe --all --json` to learn the CLI.';
+  return (
+    <Showcase
+      code={`<Snippet${code ? ' code' : ''}>${text}</Snippet>`}
+      controls={<ControlSwitch label="Code" checked={code} onChange={setCode} />}
+    >
+      <WindowScene title="Snippet">
+        <Snippet code={code}>{text}</Snippet>
       </WindowScene>
     </Showcase>
   );

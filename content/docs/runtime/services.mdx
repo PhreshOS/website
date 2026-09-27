@@ -61,7 +61,7 @@ whether the current run is a Service.
 When you do not know who provides a capability, search by name:
 
 ```ts
-const editors = await system.service.search("editor")
+const editors = await system.service.list({ name: "editor" })
 const all = await system.service.list()
 ```
 
@@ -172,8 +172,7 @@ See [Permissions](/docs/system/security/permissions).
 
 | Member | Result |
 | --- | --- |
-| `system.service.list()` | Available Services you can reach |
-| `system.service.search(name)` | Available Services with that name |
+| `system.service.list({ name? })` | Available Services you can reach, optionally filtered by Process name |
 | `system.service.prepare(address)` | A handle for that address |
 | `service.address()` | Its address |
 | `service.available()` | Whether it is available now |

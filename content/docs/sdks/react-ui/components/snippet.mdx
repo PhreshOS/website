@@ -1,0 +1,30 @@
+---
+title: Snippet
+description: A block of text meant to be copied whole, such as a command or a message to hand on.
+---
+
+<SnippetShowcase />
+
+`Snippet` shows text to copy, with a copy button in its corner:
+
+```tsx
+<Snippet code>npm install --global @phreshos/cli</Snippet>
+<Snippet>A message to give your agent.</Snippet>
+```
+
+It holds one value, like a field: it sits in a recess and pads as controls
+do, and its text reads at the size of a field's value. `code` sets the text in
+the monospace font. The text wraps to the width it has and can be selected
+whole.
+
+The button copies the text and turns into a check. `copyText(text)` is the
+same copy on its own, for a button of your own. It uses the Clipboard API,
+and the older copy command where a Program's frame refuses it.
+
+## Reference
+
+| Prop | Sets |
+| --- | --- |
+| `children` | The text, as a string |
+| `code` | The monospace font |
+| `copyLabel` | The button's name for assistive technology, `Copy` by default |

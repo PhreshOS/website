@@ -38,6 +38,20 @@ The first value is `undefined` while the initial read is pending. If the key
 does not exist, `initial` is inserted atomically. The updater uses the hook's
 live memory subscription and may run again after a concurrent write.
 
+`useProgramStore(key, initial)` follows persistent state owned by the current
+Program. It also inserts `initial` atomically when the key is absent and returns
+`undefined` while the first read is pending. The explicit form targets another
+accessible Program's store without a provider:
+
+```tsx
+const [draft, setDraft] = useProgramStore("draft", { title: "Untitled" })
+const [otherDraft] = useProgramStore(otherProgram.store, "draft", { title: "Untitled" })
+```
+
+Both forms follow writes from other Processes and observe deletion or expiry.
+The setter accepts a value or a pure updater that may run again after a
+concurrent write.
+
 A state hook reads the current state, then follows changes:
 
 ```tsx
@@ -57,6 +71,7 @@ return <p>{programState.processes.length} running · {serverState?.running ? "on
 | `useServiceState(service)` | `{ available }` |
 | `useWindowState(window)` | `{ title, header, position, size, minimized, maximized, front, layer }` |
 | `useClientMemory(key, initial)` or `useClientMemory(memory, key, initial)` | `[value, setValue]` for one Client run |
+| `useProgramStore(key, initial)` or `useProgramStore(store, key, initial)` | `[value, setValue]` for one Program's persistent store |
 | `useConnectionState(connection)` | `{ connected, session }` |
 | `useSessionState(session)` | `{ valid, connections }` |
 

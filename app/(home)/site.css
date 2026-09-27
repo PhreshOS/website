@@ -200,10 +200,11 @@ h1 em,
 .wallpaper {
     position: absolute;
     inset: 0;
+    /* Soft, wide light, so the whole wallpaper is lit rather than one corner glowing. */
     background:
-        radial-gradient(40% 55% at 18% 88%, color-mix(in oklab, var(--seed) 30%, transparent), transparent 70%),
-        radial-gradient(45% 60% at 85% 20%, color-mix(in oklab, var(--peach) 55%, transparent), transparent 70%),
-        radial-gradient(50% 70% at 60% 110%, color-mix(in oklab, var(--root) 30%, transparent), transparent 70%);
+        radial-gradient(70% 85% at 15% 90%, color-mix(in oklab, var(--seed) 18%, transparent), transparent 75%),
+        radial-gradient(75% 90% at 85% 15%, color-mix(in oklab, var(--peach) 28%, transparent), transparent 75%),
+        radial-gradient(80% 90% at 55% 115%, color-mix(in oklab, var(--root) 18%, transparent), transparent 75%);
 }
 
 .desktop-window {
@@ -240,23 +241,6 @@ h1 em,
     gap: 6px;
     padding: 5px;
     translate: -50% 0;
-}
-
-.desktop-notice {
-    position: absolute;
-    left: 50%;
-    bottom: 15%;
-    z-index: 6;
-    translate: -50% 0;
-    white-space: nowrap;
-}
-
-.desktop-notice > * {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 16px;
-    font-size: 13px;
 }
 
 .terminal-lines {

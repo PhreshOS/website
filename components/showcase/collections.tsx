@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { Activity, Copy, LayoutDashboard, Pencil, Settings, Trash2 } from '@phreshos/react-ui/icons';
-import { ComboBox, ListBox, Menu, ScrollArea, Select, Surface, Table, Tabs, Tree } from '../react-ui';
+import { ComboBox, GridList, ListBox, Menu, ScrollArea, Select, Surface, Table, Tabs, Text, Tree } from '../react-ui';
 import { WindowScene } from './frames';
 import { useFlag, usePaintControls } from './paint';
 import { ControlSelect, ControlSwitch, Showcase } from './showcase';
@@ -260,6 +260,44 @@ export function TreeShowcase() {
             <Tree.Content>archive</Tree.Content>
           </Tree.Item>
         </Tree>
+      </WindowScene>
+    </Showcase>
+  );
+}
+
+export function GridListShowcase() {
+  const [chosen, setChosen] = useState<readonly string[] | 'all'>(['terminal']);
+  const cards: readonly [string, string, string][] = [
+    ['settings', 'Settings', 'Configure PhreshOS.'],
+    ['terminal', 'Terminal', 'A shared terminal for people and agents.'],
+    ['flambo', 'Flambo', 'A shared browser for people and agents.'],
+  ];
+
+  return (
+    <Showcase
+      code={`<GridList aria-label="Programs" selectionMode="multiple" value={chosen} onChange={setChosen}>
+  <GridList.Section id="system">
+    <GridList.Header>System</GridList.Header>
+    <GridList.Item id="settings" textValue="Settings">
+      <Text>Settings</Text>
+      <Text tone="secondary" size="small">Configure PhreshOS.</Text>
+    </GridList.Item>
+    …
+  </GridList.Section>
+</GridList>`}
+    >
+      <WindowScene title="Grid List" contentStyle={{ width: '100%' }}>
+        <GridList aria-label="Programs" selectionMode="multiple" itemWidth="10em" value={chosen} onChange={setChosen}>
+          <GridList.Section id="system">
+            <GridList.Header>System</GridList.Header>
+            {cards.map(([id, name, description]) => (
+              <GridList.Item key={id} id={id} textValue={name}>
+                <Text>{name}</Text>
+                <Text tone="secondary" size="small">{description}</Text>
+              </GridList.Item>
+            ))}
+          </GridList.Section>
+        </GridList>
       </WindowScene>
     </Showcase>
   );

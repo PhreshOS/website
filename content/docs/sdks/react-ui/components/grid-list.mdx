@@ -1,0 +1,44 @@
+---
+title: Grid List
+description: A collection of cards in a grid, with sections, that people can choose from or only look at.
+---
+
+<GridListShowcase />
+
+`GridList` lays a collection out as a grid of cards. It fits as many columns
+as its width allows, each card at least `itemWidth` wide:
+
+```tsx
+<GridList aria-label="Programs" selectionMode="multiple" value={chosen} onChange={setChosen}>
+  <GridList.Section id="system">
+    <GridList.Header>System</GridList.Header>
+    <GridList.Item id="settings" textValue="Settings">…</GridList.Item>
+    <GridList.Item id="terminal" textValue="Terminal">…</GridList.Item>
+  </GridList.Section>
+</GridList>
+```
+
+A card holds whatever it is given. At rest it shows only its edge; once
+chosen it takes the selection color of the collection and a check in its
+corner. The arrow keys move between cards.
+
+## Selection
+
+Selection works as in [ListBox](/docs/sdks/react-ui/components/list-box):
+`single` by default, `multiple` for several, and `none` for cards that are
+only shown, such as the progress of work. `value` and `onChange` use the
+cards' `id`s.
+
+## Sections
+
+A `GridList.Section` spans the grid and lays its own cards out in the same
+columns, under a `GridList.Header`.
+
+## Reference
+
+| Part | Is |
+| --- | --- |
+| `GridList` | The grid. `selectionMode`, `value`, `onChange`, `itemWidth` (sixteen times the `spacing` by default), `color` |
+| `GridList.Item` | One card. `id`, `textValue`, `disabled`, `color` |
+| `GridList.Section` | A group of cards across the grid |
+| `GridList.Header` | A Section's heading |
