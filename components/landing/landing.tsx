@@ -184,20 +184,20 @@ type Marks = readonly [Mark, Mark, Mark, Mark, Mark, Mark]
 // "no" means the feature was not found in the project's public documentation.
 const comparison: readonly Readonly<{ feature: string, marks: Marks }>[] = [
   { feature: "A desktop with windows in the browser", marks: ["yes", "yes", "yes", "no", "no", "yes"] },
-  { feature: "A program's interface and server start and stop on their own", marks: ["yes", "no", "no", "no", "no", "no"] },
-  { feature: "Programs can replace the desktop itself: wallpaper, taskbar, shell", marks: ["yes", "no", "no", "no", "no", "no"] },
-  { feature: "Programs reach the system itself: other programs, windows, sessions", marks: ["yes", "Other apps' declared APIs", "Files, launching and messaging apps", "no", "Other documents, when shared", "no"] },
-  { feature: "A UI toolkit so programs look like part of the system", marks: ["yes", "no", "System dialogs", "no", "no", "no"] },
-  { feature: "AI agents use each program's own features", marks: ["yes", "Manage apps", "Files and hosting", "Manage apps", "no", "no"] },
-  { feature: "Build and install programs from inside the system", marks: ["yes", "Through Studio", "Web apps", "no", "no", "no"] },
-  { feature: "The owner grants each program's permissions", marks: ["yes", "Declared in the manifest", "yes", "no", "yes", "no"] },
-  { feature: "Programs run isolated", marks: ["Optional sandbox", "Per container", "Own folder and storage", "Per container", "Per document", "Per namespace"] },
+  { feature: "An app's interface and server start and stop on their own", marks: ["yes", "no", "no", "no", "yes", "yes"] },
+  { feature: "Apps can replace the desktop itself: wallpaper, taskbar, shell", marks: ["yes", "no", "no", "no", "no", "no"] },
+  { feature: "Apps reach the system itself: other apps, windows, sessions", marks: ["yes", "Other apps' declared APIs", "Files, launching and messaging apps", "no", "Other documents, when shared", "no"] },
+  { feature: "A UI toolkit so apps look like part of the system", marks: ["yes", "no", "System dialogs", "no", "no", "no"] },
+  { feature: "AI agents use each app's own features", marks: ["yes", "Manage apps", "Files and hosting", "Manage apps", "no", "no"] },
+  { feature: "Build and install apps from inside the system", marks: ["yes", "Through Studio", "Web apps", "no", "no", "no"] },
+  { feature: "The owner grants each app's permissions", marks: ["yes", "Declared in the manifest", "yes", "Folder access", "yes", "Declared in the manifest"] },
+  { feature: "Apps run isolated", marks: ["Optional sandbox", "Per container", "Own folder and storage", "Per container", "Per document", "Per namespace"] },
   { feature: "Installs without administrator access", marks: ["yes", "no", "yes", "Full OS", "With -u", "Full OS"] },
-  { feature: "The system shares GPUs between programs", marks: ["no", "yes", "no", "no", "no", "no"] },
+  { feature: "The system shares GPUs between apps", marks: ["no", "yes", "no", "Passed through to apps", "no", "For app streaming"] },
   { feature: "Several machines as one system", marks: ["no", "yes", "no", "no", "no", "no"] },
-  { feature: "Several user accounts", marks: ["One owner", "yes", "yes", "Since umbrelOS 2.0", "yes", "One account"] },
+  { feature: "Several user accounts", marks: ["One owner", "yes", "yes", "Since umbrelOS 2.0", "yes", "yes"] },
   { feature: "An app store", marks: ["soon", "yes", "yes", "yes", "yes", "yes"] },
-  { feature: "Source license", marks: ["MIT", "AGPL-3.0", "AGPL-3.0", "PolyForm Noncommercial", "Apache-2.0", "MIT"] }
+  { feature: "Source license", marks: ["MIT", "AGPL-3.0", "AGPL-3.0", "PolyForm Noncommercial", "Apache-2.0", "MIT or Apache-2.0"] }
 ]
 
 function MarkCell({ mark }: Readonly<{ mark: Mark }>) {
@@ -211,7 +211,7 @@ function Comparison() {
   return <section className="section">
     <Reveal>
       <h2 className="section-title">How it compares.</h2>
-      <p className="section-lede">PhreshOS is about the system underneath: how programs run, reach each other, and shape the desktop. An honest map, not a scoreboard; some of these projects do things PhreshOS does not set out to do.</p>
+      <p className="section-lede">PhreshOS is about the system underneath: how apps run, reach each other, and shape the desktop. An honest map, not a scoreboard; some of these projects do things PhreshOS does not set out to do.</p>
     </Reveal>
     <Reveal delay={0.1}>
       <Surface className="comparison" radius="xlarge" material="full">
