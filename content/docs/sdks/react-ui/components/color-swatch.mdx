@@ -1,0 +1,27 @@
+---
+title: Color Swatch
+description: Show one color as a square.
+---
+
+<ColorSwatchShowcase />
+
+`ColorSwatch` shows a color. Its `color` is a role, a level, or any CSS color,
+like every other `color` prop:
+
+```tsx
+<ColorSwatch color="primary" />
+<ColorSwatch color="#1b9aa6" />
+```
+
+A translucent color shows a checkerboard beneath it. The swatch is as tall as a
+control of the same `size`, so it lines up with fields and buttons.
+
+Inside a [`ColorPicker`](/docs/sdks/react-ui/components/color-picker), a swatch
+without `color` shows the picker's color.
+
+## Props
+
+| Prop | Default | Sets |
+| --- | --- | --- |
+| `color` | The owner's color | The color shown |
+| `size`, `radius` | `"medium"` | Its size and corners |

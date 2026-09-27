@@ -1,0 +1,15 @@
+{
+  "title": "SDKs",
+  "description": "Use PhreshOS from each execution environment",
+  "icon": "Braces",
+  "pages": [
+    "index",
+    "cli",
+    "core",
+    "client",
+    "server",
+    "node",
+    "react",
+    "react-ui"
+  ]
+}

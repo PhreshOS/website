@@ -1,0 +1,31 @@
+---
+title: Drop Zone
+description: An area that takes files dragged onto it.
+---
+
+<DropZoneShowcase />
+
+`DropZone` takes files dragged onto it. Put a
+[`FileTrigger`](/docs/sdks/react-ui/components/file-trigger) inside, so the files can
+also be chosen without dragging:
+
+```tsx
+<DropZone aria-label="Wallpaper" accept={["image/*"]} onDrop={files => upload(files[0])}>
+  Drop an image, or
+  <FileTrigger accept={["image/*"]} onSelect={files => upload(files[0])}>
+    <Button size="small">Choose one</Button>
+  </FileTrigger>
+</DropZone>
+```
+
+It recesses like every value holder, and takes the `subtle` level of `primary`
+with a focus ring while files hover it. Files outside `accept` are left out of
+`onDrop`.
+
+## Props
+
+| Prop | Sets |
+| --- | --- |
+| `accept` | MIME types it takes, such as `image/png`, or a family such as `image/*` |
+| `onDrop` | Receives the dropped files |
+| `radius`, `material`, `disabled` | Its corners, material, and state |

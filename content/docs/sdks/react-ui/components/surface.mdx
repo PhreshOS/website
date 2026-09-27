@@ -1,0 +1,103 @@
+---
+title: Surface
+description: The one visual building block every React UI component is made of.
+---
+
+<SurfaceShowcase />
+
+A `Surface` is a painted area: a color, a material, an edge, corners, and a
+shadow. Every React UI component that draws something is built from it. Use it
+directly for your own regions, such as a card or a sidebar.
+
+```tsx
+<Surface style={{ padding: 20 }}>
+  <h2>Storage</h2>
+  <p>4.2 GB available</p>
+</Surface>
+```
+
+A Surface paints; it does not decide padding, layout, or overflow. Set those
+with `style` or `className`, or use a component that has a structure, such as
+[`Panel`](/docs/sdks/react-ui/components/panel) or
+[`Window`](/docs/sdks/react-ui/components/window).
+
+## Depth
+
+`depth` says where a Surface sits relative to what is around it:
+
+| `depth` | Means | Looks | Used by |
+| --- | --- | --- | --- |
+| `raised` (default) | Something you act on | A lit edge and a soft shadow | Buttons, windows, menus, the selected tab |
+| `flat` | Level with its surroundings | A softer edge | Regions and groups |
+| `recessed` | Something that holds a value you enter | Slightly sunk, a dim edge | Text fields, tracks, switches when off |
+
+```tsx
+<Surface>Raised</Surface>
+<Surface depth="flat">Flat</Surface>
+<Surface depth="recessed">Holds content</Surface>
+```
+
+Every depth uses the same edge: light along the top and bottom, faint along
+the sides, and a fine dark line around it. How deep a recess sinks and how
+bright the edge is follow the background's actual lightness, so the effect
+matches on any background.
+
+## Material
+
+`material` sets how much of the Appearance material is drawn:
+
+| `material` | Draws |
+| --- | --- |
+| `none` | The color only |
+| `basic` (default) | The color, grain, and the edge; fully opaque |
+| `extended` | Also the material's opacity |
+| `full` | Also the backdrop blur, saturation, and distortion behind it |
+
+```tsx
+<Surface material="full">Frosted</Surface>
+<Surface material={{ opacity: 0.7, backdrop: 18 }}>Custom frosted</Surface>
+```
+
+An object selects `full` with your overrides. Backdrop effects are skipped
+whenever the result is opaque, since nothing behind would show through.
+
+## Color, radius, and shadow
+
+```tsx
+<Surface color="primary:subtle">Highlighted</Surface>
+<Surface radius="full">Pill</Surface>
+<Surface shadow={false}>No shadow</Surface>
+<Surface shadow={{ blur: 24, opacity: 0.2 }}>Custom shadow</Surface>
+```
+
+The default color is `background`. Text inside a colored Surface takes the
+most readable color automatically. See [Color](/docs/sdks/react-ui/color) and
+[Size and radius](/docs/sdks/react-ui/size-and-radius).
+
+Only a `raised` Surface casts a shadow.
+
+## Choose the element
+
+`as` renders another element or component, without an extra wrapper:
+
+```tsx
+<Surface as="section" aria-labelledby="summary">
+  <h2 id="summary">Summary</h2>
+</Surface>
+```
+
+A custom component must put `className`, `style`, and `children` on one element
+and forward its ref.
+
+Your `className` and `style` always win over the Surface's own styles.
+
+## Props
+
+| Prop | Default | Sets |
+| --- | --- | --- |
+| `depth` | `"raised"` | `raised`, `flat`, or `recessed` |
+| `color` | `"background"` | Its color |
+| `material` | `"basic"` | `none`, `basic`, `extended`, `full`, or material overrides |
+| `radius` | The Appearance radius | Its corners |
+| `shadow` | The Appearance shadow | `false`, `true`, or overrides; raised only |
+| `as` | `"div"` | The element to render |

@@ -1,0 +1,52 @@
+---
+title: Tabs
+description: Switch between sections of one interface.
+---
+
+<TabsShowcase />
+
+`Tabs` shows one section at a time. Each tab and its panel share an `id`.
+
+```tsx
+<Tabs value={view} onChange={setView}>
+  <Tabs.List aria-label="Program">
+    <Tabs.Tab id="overview">Overview</Tabs.Tab>
+    <Tabs.Tab id="activity">Activity</Tabs.Tab>
+  </Tabs.List>
+  <Tabs.Panel id="overview">…</Tabs.Panel>
+  <Tabs.Panel id="activity">…</Tabs.Panel>
+</Tabs>
+```
+
+## Look
+
+The tab list is a recessed track. The selected tab rises out of it and slides
+between tabs with the Appearance timing. Horizontal tabs share the width
+equally.
+
+`orientation="vertical"` stacks the tabs, for a sidebar.
+
+## Tabs from data
+
+Wrap panels in `Tabs.Panels` when they come from a list:
+
+```tsx
+<Tabs defaultValue={views[0].id}>
+  <Tabs.List aria-label="Views" items={views}>
+    {view => <Tabs.Tab id={view.id}>{view.label}</Tabs.Tab>}
+  </Tabs.List>
+  <Tabs.Panels items={views}>
+    {view => <Tabs.Panel id={view.id}>{view.content}</Tabs.Panel>}
+  </Tabs.Panels>
+</Tabs>
+```
+
+## Parts
+
+| Part | Props |
+| --- | --- |
+| `Tabs` | `value`, `defaultValue`, `onChange`, `orientation` (`"horizontal"`), `disabled`, `color` (`"default"`), `size`, `radius`, `material` |
+| `Tabs.List` | `aria-label`, `items` |
+| `Tabs.Tab` | `id`, `disabled` |
+| `Tabs.Panels` | `items` |
+| `Tabs.Panel` | `id`, `forceMount` |

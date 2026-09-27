@@ -1,0 +1,60 @@
+---
+title: What is PhreshOS?
+description: Understand the System, the web Desktop, and the runtime model connecting them.
+icon: CircleQuestionMark
+---
+
+PhreshOS is an open-source operating system for software built with web technologies.
+
+It provides a shared runtime in which Programs can run continuously on a host, present interfaces through a web Desktop, communicate with one another, persist data, and expose the same System capabilities to people, agents, and other software through common APIs.
+
+## Why PhreshOS?
+
+Web technologies are an excellent foundation for building software. They provide a powerful interface model, a mature ecosystem, and a runtime available on almost every device.
+
+What they do not provide is the environment around the application.
+
+A local web application can bundle its own browser, server, storage, and host integration. A remotely accessible application can build its own authentication, persistence, communication, synchronization, and process management. But each application then has to create and maintain its own version of the same surrounding infrastructure.
+
+PhreshOS moves that infrastructure into the operating system.
+
+Programs share one environment for execution, communication, persistence, permissions, lifecycle management, and remote access. They can remain alive independently of any browser session and cooperate through System-defined contracts rather than application-specific infrastructure.
+
+People interact with this environment through the Desktop. Agents and other software interact with the same underlying System through its APIs.
+
+## How it works
+
+PhreshOS runs on a host controlled by its owner.
+
+The **System** is the authority behind the environment. It knows which Programs exist, manages their execution, and provides the capabilities through which they interact with the host and with one another.
+
+The **Desktop** is the graphical environment of that System. It runs in the browser and presents Client interfaces without becoming the runtime that keeps the Programs alive.
+
+<img
+  src="/mental-models/phreshos.png"
+  alt="The System owns Programs, Processes, and symmetrical Server and Client Endpoints; Server and Client Services address their Endpoints; the Desktop provides the graphical environment"
+  className="mental-model"
+/>
+
+A **Program** is the persistent identity of a piece of software.
+
+Each live execution of a Program is a **Process**. A Process contains its live **Endpoints**:
+
+* a **Server Endpoint** can continue running on the host independently of the browser;
+* a **Client Endpoint** can present an interactive interface through the Desktop.
+
+A **Service** gives an Endpoint a stable way to be reached by other Programs, allowing software to communicate without owning or managing each other's Processes.
+
+This separation means that execution, presentation, and communication belong to one coherent runtime model rather than being assembled independently by every application.
+
+A Program can run in the background, open an interface when needed, communicate with other Programs, use System capabilities, and remain accessible remotely — all within the same environment.
+
+## One System, multiple ways to interact
+
+The Desktop is not the System itself. It is one interface to it.
+
+A person can interact with a Program through its graphical Client, while an agent or another Program can interact with the same underlying environment through APIs and Services.
+
+Both operate on the same Programs, Processes, capabilities, and runtime state.
+
+That is the core idea behind PhreshOS: web software does not merely run inside a page. It becomes part of a shared operating environment.

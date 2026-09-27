@@ -1,0 +1,27 @@
+---
+title: Color Area
+description: Adjust two channels of a color at once on a square.
+---
+
+<ColorAreaShowcase />
+
+`ColorArea` changes two channels together, one per axis. The usual pair is
+saturation across and brightness up:
+
+```tsx
+<ColorArea aria-label="Color" colorSpace="hsb" xChannel="saturation" yChannel="brightness" value={color} onChange={setColor} />
+```
+
+Pair it with a hue [`ColorSlider`](/docs/sdks/react-ui/components/color-slider) to
+reach every color. Arrow keys move the thumb on both axes.
+
+The area is a region, so it keeps the Appearance radius. Its default width is
+six control heights; `style` sets another.
+
+## Props
+
+| Prop | Default | Sets |
+| --- | --- | --- |
+| `xChannel`, `yChannel`, `colorSpace` | The color's own | The channels on each axis |
+| `value`, `defaultValue`, `onChange`, `onChangeEnd` | — | Its value |
+| `size`, `radius`, `disabled` | — | Its thumb, corners, and state |

@@ -1,0 +1,12 @@
+{
+  "title": "CLI",
+  "description": "Use PhreshOS through human and machine-readable commands",
+  "icon": "Terminal",
+  "pages": [
+    "index",
+    "project-commands",
+    "runtime-commands",
+    "system-commands",
+    "contract-discovery"
+  ]
+}

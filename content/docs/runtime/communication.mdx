@@ -1,0 +1,235 @@
+---
+title: Communication
+description: Send messages, ask questions, and observe what Endpoints exchange.
+icon: MessagesSquare
+---
+
+Endpoints communicate in two ways:
+
+- **Publish** a message when you announce something and expect no reply.
+- **Ask** a question when you need exactly one answer.
+
+The same few operations work everywhere: between the Server and Client of one
+Process, across Processes, and through Services to other Programs. You never
+deal with iframes, workers, or network connections.
+
+```ts
+// Client: announce something
+context.publish("document.opened", { path: "welcome.txt" })
+
+// Client: ask the Server
+const notes = await context.server.ask("notes.list")
+
+// Server: answer
+context.answer("notes.list", () => loadNotes())
+```
+
+## Choose where a message goes
+
+The handle you call decides who receives the message:
+
+| Handle | Reaches |
+| --- | --- |
+| `context` | Nobody in particular: a message from this Endpoint, seen by anyone observing it |
+| `process.server`, `process.client` | That exact Endpoint of that Process |
+| a Service | Whichever Endpoint currently provides that [Service](/docs/runtime/services) |
+
+All three offer the same operations where they make sense.
+
+## Publish a message
+
+`publish(event, payload?)` sends a message and returns immediately. It does
+not report whether anyone received it; if the destination is not running, the
+message is dropped.
+
+```ts
+process.client.publish("theme.changed", { dark: true })
+service.publish("index.refresh")
+context.publish("client.ready")
+```
+
+Use it for facts and signals, such as "something changed" or "I am ready".
+When the sender needs to know the outcome, ask instead.
+
+## Receive messages
+
+An Endpoint receives the messages sent to it through its `context`. Each one
+carries its sender:
+
+```ts
+context.subscribe("theme.changed", ({ from, payload }) => {
+  applyTheme(payload)
+})
+```
+
+`from` is the sending Endpoint, or `null` when you are not allowed to see it.
+
+From the outside, you listen to an Endpoint or a Service to hear what it
+announces with `context.publish()`. The payload arrives directly:
+
+```ts
+// Server
+context.publish("progress", 40)
+
+// Anywhere holding the handle
+process.server.subscribe("progress", percent => render(percent))
+```
+
+So `context.publish()` is how an Endpoint broadcasts, and `endpoint.publish()`
+is how you send something to one Endpoint.
+
+## Three ways to listen
+
+Every source of events offers the same three operations:
+
+```ts
+// Keep listening until you stop
+const stop = target.subscribe("changed", value => {})
+stop()
+
+// Wait for the next one (10 seconds by default)
+const value = await target.wait("changed")
+const later = await target.wait("changed", 60_000)
+
+// Loop over them
+for await (const value of target.events("changed")) {}
+```
+
+`events()` accepts `{ signal }` to stop the loop, and `{ capacity }` to limit
+how many unread messages it keeps (64 by default).
+
+Leave out the event name to receive every event, each as
+`{ event, message }`:
+
+```ts
+target.subscribe(({ event, message }) => {})
+```
+
+The same three operations appear on every other event source in PhreshOS,
+such as Programs, Processes, and Windows.
+
+Listening only sees messages sent from now on. An event is something that
+happened, not the current state, so to know the current state, read it first
+and then follow its changes.
+
+A subscription survives while its target is temporarily stopped or
+unavailable. It ends when you stop it, or when no message can ever arrive
+again, such as when its Process has exited.
+
+## Ask a Server
+
+A question gets exactly one answer, or fails. Only Servers answer, so you can
+ask a Server Endpoint or a Server Service:
+
+```ts
+const status = await process.server.ask("status.read")
+const doc = await service.ask("document.open", { path: "welcome.txt" })
+```
+
+The default deadline is ten seconds. `timeout()` returns a handle with
+another deadline:
+
+```ts
+const report = await process.server.timeout(60_000).ask("report.create", {
+  format: "pdf",
+})
+```
+
+The deadline includes waiting for the Server to be ready. A question fails
+when:
+
+- the Server is not available, or stops before answering;
+- the answer handler throws;
+- no answer arrives before the deadline.
+
+Why only Servers: a Client can be open on several Desktops at once, so a
+question to it would have no single answerer.
+
+## Answer questions
+
+A Server answers through its `context`. The handler receives the payload and
+the asker, and its return value becomes the answer:
+
+```ts
+context.answer("document.open", async ({ payload, from }) => {
+  return { opened: await openDocument(payload.path) }
+})
+```
+
+Throwing makes the question fail with the error's message. Each question
+name has one handler at a time. See
+[Answer questions](/docs/runtime/context#answer-questions-server).
+
+## Type your messages
+
+Operations accept type parameters, so payloads and answers are typed where
+you use them:
+
+```ts
+const notes = await process.server.ask<Note[]>("notes.list")
+
+context.answer<{ path: string }, { opened: boolean }>(
+  "document.open",
+  async ({ payload }) => ({ opened: await openDocument(payload.path) }),
+)
+```
+
+A Service handle can carry its complete event contract:
+
+```ts
+type EditorEvents = { "document.changed": { path: string } }
+
+const editor = system.service.prepare<EditorEvents>({
+  program: "text-studio",
+  process: "editor",
+  endpoint: "server",
+})
+
+editor.subscribe("document.changed", ({ path }) => {})
+```
+
+## Send more than JSON
+
+Payloads and answers can hold more than JSON:
+
+- `undefined`, `bigint`, `Date`, `Map`, `Set`, `RegExp`, `URL`, and `Error`
+  arrive as themselves;
+- binary data arrives as a `Uint8Array`, including any `ArrayBuffer` or typed
+  array you send;
+- functions and symbols arrive as `null`.
+
+This is the same between Client, Server, and Node.
+
+## Observe traffic
+
+`traffic` on an Endpoint shows what it sends, without affecting delivery.
+Use it to debug, log, or build tools that watch other Programs.
+
+```ts
+// Messages it publishes
+process.client.traffic.subscribe("theme.changed", ({ to, payload }) => {})
+
+// Questions it asks
+process.client.traffic.subscribeAsks(({ event, questionId, message }) => {})
+
+// Answers a Server sends
+process.server.traffic.subscribeAnswers(({ event, questionId, message }) => {
+  message.outcome   // { success: true, result } or { success: false, error }
+})
+```
+
+`questionId` links a question to its answer. `asks()` and `answers()` offer the
+same as loops. A destination you are not allowed to see appears as `null`.
+
+## Reference
+
+| Operation | On | Result |
+| --- | --- | --- |
+| `publish(event, payload?)` | `context`, Endpoints, Services | Sends a message; no reply |
+| `subscribe(event?, handler)` | Every event source | Keeps listening; returns a stop function |
+| `wait(event, timeout?)` | Every event source | The next message |
+| `events(event?, { signal, capacity }?)` | Every event source | A loop over messages |
+| `ask(event, payload?)` | Server Endpoints, Server Services | The answer |
+| `timeout(ms)` | Server Endpoints, Server Services | A handle with another deadline |
+| `answer(event, handler)` | Server `context` | Registers an answer; returns a cleanup |
+| `traffic` | Endpoints | What the Endpoint sends |

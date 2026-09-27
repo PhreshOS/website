@@ -1,0 +1,72 @@
+---
+title: Dialog
+description: A window over the interface that must be finished or closed before continuing.
+---
+
+<DialogShowcase />
+
+`Dialog` opens over the interface and blocks everything behind it until it
+closes.
+
+```tsx
+<Dialog>
+  <Dialog.Trigger>Rename</Dialog.Trigger>
+  <Dialog.Backdrop dismissable>
+    <Dialog.Content>
+      <Dialog.Header>
+        <Dialog.Title>Rename note</Dialog.Title>
+        <Dialog.Description>Choose a new name.</Dialog.Description>
+      </Dialog.Header>
+      <Dialog.Body>
+        <Input label="Name" value={name} onChange={setName} />
+      </Dialog.Body>
+      <Dialog.Footer>
+        <Dialog.Close>Cancel</Dialog.Close>
+        <Button color="primary" onPress={rename}>Rename</Button>
+      </Dialog.Footer>
+    </Dialog.Content>
+  </Dialog.Backdrop>
+</Dialog>
+```
+
+Focus moves into the dialog, stays there, and returns to the trigger when it
+closes. Escape closes it.
+
+## Closing by clicking outside
+
+`dismissable` on the backdrop lets a click outside close the dialog. Leave it
+out when closing must be deliberate. Use
+[`AlertDialog`](/docs/sdks/react-ui/components/alert-dialog) when the person must
+choose an explicit answer.
+
+## Control it
+
+```tsx
+<Dialog open={open} onOpenChange={setOpen}>…</Dialog>
+```
+
+## Look
+
+The dialog is a raised Surface with the Appearance radius and a deeper shadow.
+
+The backdrop holds back the interface behind it in one of two ways:
+
+```tsx
+<Dialog.Backdrop>…</Dialog.Backdrop>               // dim: darkens it
+<Dialog.Backdrop variant="blur">…</Dialog.Backdrop> // blur: blurs it, dims lightly
+```
+
+`dim` darkens toward whichever Appearance color is darker, so it works on any
+palette. `blur` uses the blur of the Appearance material and dims less, so the
+Dialog still stands apart on a light background.
+
+## Parts
+
+| Part | Props |
+| --- | --- |
+| `Dialog` | `open`, `defaultOpen`, `onOpenChange` |
+| `Dialog.Trigger` | Button props |
+| `Dialog.Backdrop` | `variant` (`"dim"`), `dismissable` (`false`), `keyboardDismissable` (`true`) |
+| `Dialog.Content` | `aria-label`, Surface props |
+| `Dialog.Header`, `Title`, `Description`, `Body`, `Footer` | Layout and names |
+| `Dialog.Close` | Button props; closes the dialog |

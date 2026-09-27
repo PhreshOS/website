@@ -1,0 +1,56 @@
+---
+title: Overview
+description: Which PhreshOS package to use, depending on where your code runs.
+icon: Braces
+---
+
+Every SDK reaches the same System, with the same Programs, Processes, and
+capabilities. Pick one by where your code runs:
+
+| Your code runs | Use | You get |
+| --- | --- | --- |
+| In a Program's interface, in the Desktop | [Client](/docs/sdks/client) | `context`, `desktop`, `system` |
+| In a Program's Server, on the machine | [Server](/docs/sdks/server) | `context`, `system` |
+| In a script or tool outside any Program | [Node](/docs/sdks/node) | `System.connect()`, `Project` |
+| In a terminal | [CLI](/docs/sdks/cli) | The `phresh` command |
+| In React components | [React](/docs/sdks/react) | Providers and hooks |
+| — | [React UI](/docs/sdks/react-ui) | The PhreshOS components and visual language |
+
+[Core](/docs/sdks/core) holds what they all share: the types and classes, the
+Program configuration, and Execute. Install it next to the SDK you use.
+
+```ts
+// A Program's Server
+import { context, system } from "@phreshos/server"
+
+// A script
+import { System } from "@phreshos/node"
+const system = await System.connect()
+
+// Either way, the same API
+const programs = await system.program.list()
+```
+
+## What differs between them
+
+Only what depends on where the code runs:
+
+- **`context`** exists only inside a Program's Client or Server.
+- **`desktop`** exists only in a Client, because only a Client is shown in a
+  Desktop.
+- **Permissions** apply to Clients and Servers. Node and the CLI connect as the
+  owner and are not limited.
+
+Everything else, Programs, Processes, Services, storage, network, and the rest
+of `system`, behaves the same everywhere. It is documented once, under
+[Runtime](/docs/runtime) and [System](/docs/system).
+
+<Cards>
+  <Card title="Client" description="A Program's interface in the Desktop." href="/sdks/client" />
+  <Card title="Server" description="A Program's code on the machine." href="/sdks/server" />
+  <Card title="Node" description="Scripts, tools, and Program projects." href="/sdks/node" />
+  <Card title="CLI" description="The phresh command." href="/sdks/cli" />
+  <Card title="Core" description="Shared types, configuration, and Execute." href="/sdks/core" />
+  <Card title="React" description="Providers and hooks." href="/sdks/react" />
+  <Card title="React UI" description="Components and visual language." href="/sdks/react-ui" />
+</Cards>

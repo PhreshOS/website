@@ -1,0 +1,41 @@
+---
+title: Textarea
+description: A multi-line text field with a label, help text, and validation.
+---
+
+<TextareaShowcase />
+
+`Textarea` is the multi-line version of [`Input`](/docs/sdks/react-ui/components/input),
+with the same props.
+
+```tsx
+<Textarea
+  label="Notes"
+  description="Only this Program can see them."
+  rows={5}
+  value={notes}
+  onChange={setNotes}
+/>
+```
+
+It shows four rows by default, and can be resized vertically.
+
+## Validate
+
+```tsx
+<Textarea
+  label="Description"
+  value={description}
+  onChange={setDescription}
+  invalid={description.length > 500}
+  errorMessage="Keep it under 500 characters."
+/>
+```
+
+## Props
+
+The same as [Input](/docs/sdks/react-ui/components/input#props), plus:
+
+| Prop | Default | Sets |
+| --- | --- | --- |
+| `rows` | `4` | Visible lines |

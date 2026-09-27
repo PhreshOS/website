@@ -1,0 +1,83 @@
+---
+title: Size and radius
+description: Five sizes derived from the Appearance, and the rules that decide every corner.
+---
+
+## Size
+
+Every control takes a `size`:
+
+```tsx
+<Button size="small">Cancel</Button>
+<Input size="large" label="Search" />
+```
+
+| `size` | Relative to `medium` |
+| --- | --- |
+| `xsmall` | Smallest |
+| `small` | Smaller |
+| `medium` | The default |
+| `large` | Larger |
+| `xlarge` | Largest |
+
+A size sets the height, padding, gaps, indicator size, and text size together,
+all derived from the Appearance `spacing`. Change `spacing` and every size
+follows.
+
+Text is compact by default, because React UI is an interface, not a document.
+Components set their text size once, at their root, and do not stack relative
+sizes.
+
+## Spacing
+
+Layout props such as `gap` and `padding` accept a size level, a number of
+pixels, or any CSS length:
+
+```tsx
+<Flex gap="small">…</Flex>
+<Grid gap={12} columns={2}>…</Grid>
+```
+
+A level is a share of the Appearance `spacing`: `xsmall` is a quarter,
+`small` half, `medium` all of it, `large` one and a half, `xlarge` double.
+
+## Radius
+
+`radius` accepts a size level, `"full"`, a number of pixels, or any CSS
+radius. You rarely need it: two rules decide every default from the
+Appearance `radius`.
+
+**1. Every Surface uses the Appearance radius.** Shells and containers, such as
+Window, Panel and its content, Dialog, and Popover, use it as it is. A control
+scales it with its height, so every size keeps the same shape: a `medium`
+control has exactly the Appearance radius. This holds wherever a Surface sits:
+the items of a list and the selected Tab are controls, so they take the control
+radius, whatever holds them.
+
+**2. Shapes defined by their form stay round.** Radio buttons, Switches,
+Sliders, progress bars, and scrollbar thumbs are always fully rounded.
+
+```tsx
+<Button radius="full">Rounded</Button>
+<Surface radius={4}>Sharp</Surface>
+```
+
+## Use the scale in your own components
+
+```tsx
+import { useAppearance, useScale, resolveSpacing } from "@phreshos/react-ui"
+
+const appearance = useAppearance()
+const spacing = useScale(appearance.spacing)   // { xsmall, small, medium, large, xlarge }
+const gap = resolveSpacing("small", appearance.spacing)
+```
+
+## Reference
+
+| Export | Result |
+| --- | --- |
+| `ScaleLevel` | `"xsmall"`, `"small"`, `"medium"`, `"large"`, `"xlarge"` |
+| `Spacing` | A level, pixels, or CSS |
+| `Radius` | A level, `"full"`, pixels, or CSS |
+| `useScale(value)` | Every level of a number |
+| `resolveSpacing(value, spacing)`, `resolveRadius(value, radius)` | A concrete value from a base spacing or radius |

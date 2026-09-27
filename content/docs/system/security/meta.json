@@ -1,0 +1,11 @@
+{
+  "title": "Security",
+  "description": "Authentication, Program authority, and Endpoint execution containment",
+  "icon": "ShieldCheck",
+  "pages": [
+    "index",
+    "authentication",
+    "permissions",
+    "execution"
+  ]
+}

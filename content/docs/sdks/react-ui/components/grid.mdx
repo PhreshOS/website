@@ -1,0 +1,40 @@
+---
+title: Grid
+description: Arrange children in rows and columns, with gaps from the Appearance.
+---
+
+<GridShowcase />
+
+`Grid` lays out its children in rows and columns. Like
+[`Flex`](/docs/sdks/react-ui/components/flex), it only arranges and paints nothing.
+
+```tsx
+<Grid columns={3} gap="medium">
+  {programs.map(program => <ProgramCard key={program.identity} program={program} />)}
+</Grid>
+```
+
+## Columns and rows
+
+A number makes that many equal columns. A string is any CSS track list:
+
+```tsx
+<Grid columns="minmax(12rem, 1fr) 2fr" gap="large">
+  <Navigation />
+  <Main />
+</Grid>
+```
+
+`rows` works the same way, and `flow` sets how items fill the grid.
+
+## Props
+
+| Prop | Default | Sets |
+| --- | --- | --- |
+| `columns`, `rows` | — | A count of equal tracks, or a CSS track list |
+| `flow` | — | CSS `grid-auto-flow` |
+| `gap` | — | A size level, pixels, or CSS |
+| `align`, `justify` | — | Alignment, as in Flex |
+| `inline` | `false` | Lay out inline with text |
+
+`Grid` also accepts every `div` prop.

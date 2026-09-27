@@ -1,0 +1,53 @@
+---
+title: Toolbar
+description: A labeled row of related controls, navigated with the arrow keys.
+---
+
+<ToolbarShowcase />
+
+`Toolbar` groups related controls into one keyboard stop. Tab moves into and
+out of the toolbar; the arrow keys move between its controls. The controls
+keep their own look and actions.
+
+```tsx
+<Toolbar aria-label="Document">
+  <Toolbar.Group aria-label="History">
+    <Button>Undo</Button>
+    <Button>Redo</Button>
+  </Toolbar.Group>
+  <Toolbar.Separator />
+  <Button color="primary">Save</Button>
+</Toolbar>
+```
+
+Name every toolbar with `aria-label`. `Toolbar.Group` groups a smaller set,
+and can have its own name.
+
+## Vertical toolbars
+
+```tsx
+<Toolbar aria-label="Alignment" orientation="vertical">
+  <Button>Start</Button>
+  <Button>Center</Button>
+  <Button>End</Button>
+</Toolbar>
+```
+
+A vertical toolbar uses the up and down arrows. Disabled controls are skipped.
+
+## Spacing and separators
+
+`gap` sets the space between items, and `Toolbar.Group` has its own `gap`.
+`Toolbar.Separator` turns to match the toolbar: vertical in a horizontal
+toolbar, and the other way round.
+
+Toolbar paints nothing. Put it in a Window, Panel, or Surface to give it a
+background.
+
+## Parts
+
+| Part | Props |
+| --- | --- |
+| `Toolbar` | `aria-label`, `orientation` (`"horizontal"`), `gap` (`"medium"`), `color` for separators (`"foreground"`) |
+| `Toolbar.Group` | `aria-label`, `gap`, `disabled` |
+| `Toolbar.Separator` | — |

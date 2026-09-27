@@ -1,0 +1,31 @@
+---
+title: Alert
+description: A message that stays in place, such as a failed save.
+---
+
+<AlertShowcase />
+
+`Alert` shows a message where it applies. Its `color` is its meaning:
+
+```tsx
+<Alert color="danger" title="Could not save">
+  The System refused the change. Try again in a moment.
+</Alert>
+```
+
+It is painted in the `subtle` level of its color, the same level as a
+selection, and leads with the icon of its meaning: a circle for `danger`, a
+triangle for `warning`, a check for `success`, and an `i` for anything else.
+`icon` replaces it, and `icon={false}` leaves the Alert without one.
+
+`warning` and `danger` Alerts are announced as they appear; others are read as
+status. The Alert keeps the Appearance radius, like any region.
+
+## Props
+
+| Prop | Default | Sets |
+| --- | --- | --- |
+| `color` | `"info"` | Its meaning and paint |
+| `title` | — | A short summary above the message |
+| `icon` | The icon of its meaning | Its icon, or `false` for none |
+| Surface props | — | Radius, material, and native attributes |

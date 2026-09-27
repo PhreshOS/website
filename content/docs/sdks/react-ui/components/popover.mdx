@@ -1,0 +1,50 @@
+---
+title: Popover
+description: Floating content attached to a trigger, without blocking the rest.
+---
+
+<PopoverShowcase />
+
+`Popover` opens a small floating panel next to its trigger, for details or a
+few controls. The rest of the interface stays usable.
+
+```tsx
+<Popover>
+  <Popover.Trigger>Connection</Popover.Trigger>
+  <Popover.Content placement="bottom start">
+    <Popover.Dialog aria-label="Connection">
+      <Popover.Title>Connected</Popover.Title>
+      <p>Local System on port 4300.</p>
+      <Popover.Close>Done</Popover.Close>
+    </Popover.Dialog>
+  </Popover.Content>
+</Popover>
+```
+
+`Popover.Content` is the floating raised Surface and decides where it opens.
+`Popover.Dialog` holds its content for screen readers and focus.
+When content must inherit a particular layout coordinate space, pass that DOM
+element as `portalContainer` to `Popover.Content`.
+
+## Placement
+
+`placement` is `bottom` by default, and accepts values such as `top`,
+`bottom start`, and `end`. `start` and `end` follow the text direction.
+
+Clicking outside or pressing Escape closes it, and focus returns to the
+trigger.
+
+Use [`Tooltip`](/docs/sdks/react-ui/components/tooltip) for a short description
+only, and [`Dialog`](/docs/sdks/react-ui/components/dialog) when the rest of the
+interface must wait.
+
+## Parts
+
+| Part | Props |
+| --- | --- |
+| `Popover` | `open`, `defaultOpen`, `onOpenChange` |
+| `Popover.Trigger` | Button props |
+| `Popover.Content` | `placement` (`"bottom"`), `offset`, `portalContainer`, Surface props |
+| `Popover.Dialog` | `aria-label` |
+| `Popover.Title` | Its text |
+| `Popover.Close` | Button props |

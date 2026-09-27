@@ -1,0 +1,83 @@
+---
+title: Overview
+description: The components and visual language of PhreshOS, for any React application.
+---
+
+`@phreshos/react-ui` is the component library PhreshOS itself is built with.
+Programs use it to look and behave like the rest of the System, and it works
+just as well in any React application outside PhreshOS.
+
+<Tabs items={["npm", "pnpm", "Bun", "Yarn Classic"]} groupId="package-manager" persist>
+  <Tab value="npm">
+    ```sh
+    npm install @phreshos/react-ui react react-dom
+    ```
+  </Tab>
+  <Tab value="pnpm">
+    ```sh
+    pnpm add @phreshos/react-ui react react-dom
+    ```
+  </Tab>
+  <Tab value="Bun">
+    ```sh
+    bun add @phreshos/react-ui react react-dom
+    ```
+  </Tab>
+  <Tab value="Yarn Classic">
+    ```sh
+    yarn add @phreshos/react-ui react react-dom
+    ```
+  </Tab>
+</Tabs>
+
+```tsx
+import { Button, Input, Select } from "@phreshos/react-ui"
+
+<Input label="Name" value={name} onChange={setName} />
+
+<Select label="Program" value={program} onChange={setProgram}>
+  <Select.Item id="notes">Notes</Select.Item>
+  <Select.Item id="tilo">Tilo</Select.Item>
+</Select>
+
+<Button color="primary" onPress={save}>Save</Button>
+```
+
+Components work without any setup. They use the default Appearance and follow
+the browser's light or dark setting.
+
+## Six ideas behind every component
+
+1. **Appearance** is one set of values, colors, spacing, radius, shadow,
+   material, and timing, that every component derives from. Change it once and
+   everything follows. See [Appearance](/docs/sdks/react-ui/appearance).
+2. **Surface** is the one visual building block. Every component that paints
+   something is a Surface: raised when it stands on its own or you act on it,
+   recessed when it holds a value you enter. See [Surface](/docs/sdks/react-ui/components/surface).
+3. **Color** is a role and a level, such as `primary` or `danger:soft`. Text
+   color and hover, press, and focus states are derived for you. See
+   [Color](/docs/sdks/react-ui/color).
+4. **Size and radius** come from five levels, and corners follow rules instead
+   of fixed values. See [Size and radius](/docs/sdks/react-ui/size-and-radius).
+5. **Three rules** give every component the same props: anything painted,
+   anything that holds a value, and any collection. Learn `Button`, `Input`,
+   and `Select`, and you know the rest. See
+   [Shared props](/docs/sdks/react-ui/shared-props).
+6. **Families** keep related parts together: `Dialog.Title`, `Select.Item`,
+   `Window.Header`.
+
+## Built for any interface
+
+- **Accessible:** keyboard, focus, and screen-reader behavior come from React
+  Aria.
+- **Left-to-right and right-to-left:** every component follows the text
+  direction.
+- **Light and dark:** every value derives from the actual colors, not from a
+  theme name.
+- **Reduced motion:** animations stop when the user asks for less motion.
+
+<Cards>
+  <Card title="Appearance" description="Provide values, preferences, and direction." href="/sdks/react-ui/appearance" />
+  <Card title="Shared props" description="The three rules every component follows." href="/sdks/react-ui/shared-props" />
+  <Card title="Components" description="Every component, with live examples." href="/sdks/react-ui/components/surface" />
+</Cards>

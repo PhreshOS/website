@@ -1,0 +1,90 @@
+---
+title: Project commands
+description: Create, run, install, and package a Program project.
+---
+
+Run these commands in a Program project folder. They do the same as the Node
+[`Project`](/docs/sdks/node/project) API.
+
+| Command | Does |
+| --- | --- |
+| `phresh create [folder]` | Creates a new project from the starter |
+| `phresh init` | Adds `phresh.config.ts` to an existing package |
+| `phresh dev` | Runs the development setup, attached to the terminal |
+| `phresh start` | Builds and runs the production setup, attached to the terminal |
+| `phresh install [name]` | Installs this project, or an official Program by name |
+| `phresh uninstall [name]` | Uninstalls it |
+| `phresh pack` | Builds a release archive |
+
+## Create a project
+
+```sh
+phresh create my-program
+phresh create my-program --name "My Program" --package-manager bun
+phresh create my-program --no-install    # skip installing dependencies
+```
+
+The folder name becomes the Program's identity, so it must be lowercase words
+joined by hyphens. Without a folder, `create` asks for one. See
+[Your first Program](/docs/first-program).
+
+To turn an existing package into a Program:
+
+```sh
+phresh init --server --client
+phresh init --client --client-location dist/client
+```
+
+`init` fills in what it can from `package.json`. `--force` replaces an
+existing `phresh.config.ts`.
+
+## Run it
+
+```sh
+phresh dev      # each Endpoint's devCommand
+phresh start    # buildCommand, then the production build
+```
+
+Both run one Process for as long as the command runs: its output appears in
+the terminal, and `Ctrl+C` ends it. The command exits with the Process's exit
+status.
+
+Pass launch options to both Endpoints:
+
+```sh
+phresh dev --run-option-document=welcome.txt
+```
+
+Both Endpoints read them with `context.options()`.
+
+## Install it
+
+```sh
+phresh install              # this project
+phresh install --run        # and start it right away
+phresh install --purge      # delete its previous data first
+phresh install terminal     # an official Program, by name
+```
+
+Installing a project builds it first. An official Program is downloaded and
+verified.
+
+After installing, `--run` starts one Process with the Endpoint defaults.
+Without it, the Program's `installLaunch` decides; see
+[Program configuration](/docs/sdks/core/program-configuration#start-after-installing).
+
+```sh
+phresh uninstall            # remove the installed files, keep the data
+phresh uninstall --purge    # also end its Processes and delete its data
+```
+
+See [Install and uninstall](/docs/runtime/programs#install-and-uninstall).
+
+## Package it
+
+```sh
+phresh pack
+```
+
+Builds the project and writes a release zip, its `program.json`, and a
+SHA-256 checksum.

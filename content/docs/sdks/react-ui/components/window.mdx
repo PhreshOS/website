@@ -1,0 +1,118 @@
+---
+title: Window
+description: A window frame with a title bar, window controls, and a content area.
+---
+
+<WindowShowcase />
+
+`Window` draws a window: a title bar with an icon, a title, and controls,
+above a content area that fills the rest. It only draws; you connect its
+controls to whatever manages your window.
+
+```tsx
+<Window style={{ width: 640, height: 420 }}>
+  <Window.Header maximized={maximized} onMaximize={toggleMaximize}>
+    <Window.Header.Identity icon="/icon.svg" title="Notes" />
+    <Window.Header.Center />
+    <Window.Header.Actions>
+      <Window.Header.Minimize onPress={minimize} />
+      <Window.Header.Maximize />
+      <Window.Header.Close onPress={close} />
+    </Window.Header.Actions>
+  </Window.Header>
+  <Window.Content>
+    <Editor />
+  </Window.Content>
+</Window>
+```
+
+In a PhreshOS Program, the Desktop already draws your Window. Use this
+component to draw windows yourself, such as in a custom shell or a preview.
+
+## The title bar
+
+| Part | Holds |
+| --- | --- |
+| `Window.Header.Identity` | The icon and a title that truncates |
+| `Window.Header.Center` | Optional flexible space, for tabs or a search field |
+| `Window.Header.Actions` | Controls, aligned to the end |
+
+The controls are Buttons:
+
+| Control | Default |
+| --- | --- |
+| `Window.Header.Minimize` | — |
+| `Window.Header.Maximize` | Uses the header's `maximized` and `onMaximize` |
+| `Window.Header.Close` | Colored `danger` |
+| `Window.Header.Action` | Your own compact action |
+
+```tsx
+<Window.Header.Actions>
+  <Window.Header.Action aria-label="Pin" onPress={pin}>
+    <PinIcon />
+  </Window.Header.Action>
+  <Window.Header.Close onPress={close} />
+</Window.Header.Actions>
+```
+
+With `maximized` and `onMaximize` on the header, double-clicking the title bar
+maximizes too.
+
+`active={false}` dims the title of an inactive window; its controls keep
+working.
+
+## Drag the window
+
+To let people drag the window by its title bar, pass the function that starts
+a move in your window manager. In a PhreshOS Client, that is
+`context.presentation.beginMoveGesture`:
+
+```tsx
+import { context } from "@phreshos/client"
+
+<Window.Header beginMoveGesture={context.presentation.beginMoveGesture} onMoveError={report}>
+  …
+</Window.Header>
+```
+
+The header waits for an intentional drag, hands the pointer over, and cancels
+the drag if the component goes away. See
+[Draw your own title bar](/docs/system/desktop#draw-your-own-title-bar).
+
+For a drag area that is not a `Window.Header`, use `useWindowMoveHandle()`. A
+window manager that receives the drag in another part of the page renders
+`Window.MoveCapture` there, so the drag cursor stays visible.
+
+## Use the title bar alone
+
+`Window.Header` works inside any Surface:
+
+```tsx
+<Surface>
+  <Window.Header>
+    <Window.Header.Identity title="Inspector" />
+    <Window.Header.Actions>
+      <Window.Header.Close onPress={close} />
+    </Window.Header.Actions>
+  </Window.Header>
+</Surface>
+```
+
+Header parts only work inside `Window.Header`.
+
+## Content
+
+`Window.Content` fills the remaining space but does not scroll or clip on its
+own. Set `overflow`, or put a [`ScrollArea`](/docs/sdks/react-ui/components/scroll-area)
+inside.
+
+## Parts
+
+| Part | Props |
+| --- | --- |
+| `Window` | Surface props |
+| `Window.Header` | `active`, `maximized`, `onMaximize`, `beginMoveGesture`, `onMoveError`, `color` for its text and icons |
+| `Window.Header.Identity` | `icon`, `title` |
+| `Window.Header.Minimize`, `Maximize`, `Close`, `Action` | Button props; `Maximize` also takes `maximized` |
+| `Window.Content` | `div` props |
+| `Window.MoveCapture` | `div` props |

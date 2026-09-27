@@ -1,0 +1,50 @@
+---
+title: Range Calendar
+description: Choose a start and end date from a month view.
+---
+
+<RangeCalendarShowcase />
+
+`RangeCalendar` chooses a range of dates: the first click sets one end, the
+second the other. Its value is `{ start, end }`, two `CalendarDate`s, or
+`null`.
+
+```tsx
+const [trip, setTrip] = useState<DateRange | null>(null)
+
+<RangeCalendar aria-label="Trip dates" value={trip} onChange={setTrip} />
+```
+
+`onChange` fires once the range is complete, not after the first click.
+
+It works like [`Calendar`](/docs/sdks/react-ui/components/calendar), with the same
+limits and look.
+
+## Unavailable dates
+
+`isDateUnavailable` also receives the first chosen date, so a rule can depend
+on it:
+
+```tsx
+<RangeCalendar
+  aria-label="Booking"
+  isDateUnavailable={(date, start) =>
+    date.day === 7 || (start !== null && date.compare(start.add({ days: 14 })) > 0)
+  }
+/>
+```
+
+A range cannot cross an unavailable date, unless `nonContiguous`
+is set.
+
+## Props
+
+| Prop | Default | Sets |
+| --- | --- | --- |
+| `value`, `defaultValue`, `onChange` | — | A `DateRange` or `null` |
+| `minValue`, `maxValue` | — | Allowed dates |
+| `isDateUnavailable(date, start)` | — | Dates to refuse |
+| `nonContiguous` | `false` | Allow ranges across unavailable dates |
+| `readOnly`, `disabled` | `false` | Its state |
+| `color` | `"primary"` | The selected range |
+| `size`, `radius` | — | Its look |

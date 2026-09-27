@@ -1,0 +1,38 @@
+---
+title: Context Menu
+description: A menu that opens with a right-click on an element.
+---
+
+<ContextMenuShowcase />
+
+`ContextMenu` opens a [`Menu`](/docs/sdks/react-ui/components/menu) where someone
+right-clicks, or long-presses on touch:
+
+```tsx
+<ContextMenu>
+  <ContextMenu.Trigger>
+    <NoteRow note={note} />
+  </ContextMenu.Trigger>
+  <ContextMenu.Content>
+    <Menu aria-label="Note" onAction={run}>
+      <Menu.Item id="open">Open</Menu.Item>
+      <Menu.Item id="delete" color="danger">Delete</Menu.Item>
+    </Menu>
+  </ContextMenu.Content>
+</ContextMenu>
+```
+
+The trigger keeps its content as it is. Right-clicking again moves the menu
+to the new spot.
+
+Use [`DropdownMenu`](/docs/sdks/react-ui/components/dropdown-menu) when a visible
+button should open the menu.
+
+## Parts
+
+| Part | Props |
+| --- | --- |
+| `ContextMenu` | `open`, `defaultOpen`, `onOpenChange` |
+| `ContextMenu.Trigger` | The element to right-click; `disabled` |
+| `ContextMenu.Content` | `portalContainer`, Surface props |
+| `ContextMenu.Menu` | The same as `Menu` |

@@ -1,0 +1,130 @@
+---
+title: Overview
+description: The shared types, classes, and helpers every PhreshOS SDK is built on.
+---
+
+`@phreshos/core` defines what a Program, a Process, an Endpoint, a Service,
+and every System capability **are**. The other SDKs, Client, Server, Node, and
+React, all use these same definitions, so a `Program` means the same thing
+everywhere.
+
+Core does not connect to anything. You install it alongside the SDK for your
+environment, and use it directly for three things:
+
+- the [configuration](/docs/sdks/core/program-configuration) of a Program project;
+- [Execute](/docs/sdks/core/execute), the JSON form of System operations;
+- types, classes, and helpers for checking values.
+
+<Tabs items={["npm", "pnpm", "Bun", "Yarn Classic"]} groupId="package-manager" persist>
+  <Tab value="npm">
+    ```sh
+    npm install @phreshos/core
+    ```
+  </Tab>
+  <Tab value="pnpm">
+    ```sh
+    pnpm add @phreshos/core
+    ```
+  </Tab>
+  <Tab value="Bun">
+    ```sh
+    bun add @phreshos/core
+    ```
+  </Tab>
+  <Tab value="Yarn Classic">
+    ```sh
+    yarn add @phreshos/core
+    ```
+  </Tab>
+</Tabs>
+
+## One set of classes
+
+The environment SDKs list Core as a peer dependency, so your application
+loads it once. Every handle an SDK returns is an instance of a Core class:
+
+```ts
+import { Process, Program } from "@phreshos/core"
+import { System } from "@phreshos/node"
+
+const system = await System.connect()
+const program = await system.program.find("notes")
+
+program instanceof Program   // true
+```
+
+Reaching the same Program, Process, or Endpoint again returns the same handle
+object, so you can compare them with `===`.
+
+## Types
+
+Import types from Core to describe your own code:
+
+```ts
+import type { Launch, Process, ServerEndpoint, Service, Appearance } from "@phreshos/core"
+
+function openEditor(process: Process, launch: Launch) {}
+```
+
+The meaning of each type is documented where it is used: [Runtime](/docs/runtime)
+for Programs, Processes, Endpoints, Services, Context, and communication;
+[System](/docs/system) for everything else.
+
+Communication types are generic over your events, so typed handles give you
+typed payloads:
+
+```ts
+type EditorEvents = { "document.changed": { path: string } }
+
+const editor = system.service.prepare<EditorEvents>(address)
+editor.subscribe("document.changed", ({ path }) => {})
+```
+
+## Check values you did not create
+
+When a value comes from outside TypeScript, such as a file, a user, a message,
+or a plain JavaScript caller, Core can check it. A parser returns the clean
+value or throws; a guard returns `true` or `false`.
+
+```ts
+import { isServiceAddress, parseLaunch, parseProgramDefinition } from "@phreshos/core"
+
+const launch = parseLaunch(JSON.parse(input))
+if (isServiceAddress(value)) system.service.prepare(value)
+```
+
+Extra properties are ignored rather than rejected, so an otherwise valid value
+is never refused for carrying more than needed.
+
+| Kind | Helpers |
+| --- | --- |
+| Launch and Programs | `parseLaunch`, `parseProgramDefinition`, `parseProgramInstallOptions`, `parseProgramUninstallOptions` |
+| Permissions | `isPermissionName`, `parsePermissionName`, `parsePermission`, `parsePermissions`, `parseProgramPermissionDeclarations` |
+| Network and storage scopes | `parseNetworkScope`, `networkScopeCovers`, `parseStorageScope`, `describeStorageScope` |
+| Appearance and Desktop | `parseAppearance`, `parseDesktopPreferencesUpdate`, `isLayer`, `isRelativeValue`, `parseRelativeValue` |
+| Other values | `isServiceAddress`, `isUploadFile`, `parseShellEvent`, `parseExecuteRequest` |
+
+Check whether one permission scope covers another:
+
+```ts
+import { networkScopeCovers } from "@phreshos/core"
+
+networkScopeCovers("https://*.example.com/v1/**", "https://api.example.com/v1/items") // true
+```
+
+## Constants
+
+| Export | Contains |
+| --- | --- |
+| `programPermissionCatalog` | Every permission and the kind of value it takes |
+| `layers` | The Desktop layers, back to front |
+| `defaultAppearance`, `appearanceLimits` | The default Appearance and its allowed ranges |
+| `desktopPreferencesLimits`, `defaultDesktopScale` | Desktop scale bounds and default |
+
+These are read-only and describe the contracts. Changing a copy does not
+change a running System.
+
+<Cards>
+  <Card title="Program configuration" description="Every field of phresh.config.ts." href="/sdks/core/program-configuration" />
+  <Card title="Execute" description="System operations as JSON." href="/sdks/core/execute" />
+</Cards>

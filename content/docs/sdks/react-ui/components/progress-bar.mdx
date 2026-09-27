@@ -1,0 +1,47 @@
+---
+title: Progress Bar
+description: Show how far an operation has come, or that it is still running.
+---
+
+<ProgressBarShowcase />
+
+`ProgressBar` shows progress. It only reports; people cannot change it.
+
+```tsx
+<ProgressBar label="Uploading archive" value={64} />
+```
+
+## Measured progress
+
+`value` sits between `minValue` and `maxValue`, `0` and `100` by default. The
+bar fills with `primary` in a recessed track.
+
+```tsx
+<ProgressBar label="Files copied" value={3} maxValue={8} valueLabel="3 of 8" />
+```
+
+The shown value is a percentage by default. `valueLabel` replaces it with your
+own text, and `formatOptions` changes its number format.
+
+## Unknown progress
+
+When work is running but you cannot measure it, use `indeterminate`:
+
+```tsx
+<ProgressBar aria-label="Connecting to the System" indeterminate />
+```
+
+It moves continuously, and stays still when animations are off.
+
+Use [`Spinner`](/docs/sdks/react-ui/components/spinner) where there is little room.
+
+## Props
+
+| Prop | Default | Sets |
+| --- | --- | --- |
+| `value`, `minValue`, `maxValue` | `0`, `0`, `100` | Progress |
+| `indeterminate` | `false` | Running, but unmeasured |
+| `label` | — | The visible label; or use `aria-label` |
+| `valueLabel`, `formatOptions` | A percentage | The shown value |
+| `color` | `"primary"` | The fill |
+| `size`, `material` | `"medium"`, `"basic"` | Its size and track material |

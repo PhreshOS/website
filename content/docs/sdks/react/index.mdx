@@ -1,0 +1,74 @@
+---
+title: Overview
+description: Follow PhreshOS state and events in React components.
+---
+
+`@phreshos/react` connects PhreshOS to React. It turns reads and events into
+component state, and cleans up subscriptions when components unmount.
+
+It does not connect to anything by itself: you give it the `system`,
+`context`, or handles you already have, from the Client SDK, Node, or tests.
+It does not use the DOM either, so it also works with React renderers other
+than React DOM.
+
+<Tabs items={["npm", "pnpm", "Bun", "Yarn Classic"]} groupId="package-manager" persist>
+  <Tab value="npm">
+    ```sh
+    npm install @phreshos/react @phreshos/core react
+    ```
+  </Tab>
+  <Tab value="pnpm">
+    ```sh
+    pnpm add @phreshos/react @phreshos/core react
+    ```
+  </Tab>
+  <Tab value="Bun">
+    ```sh
+    bun add @phreshos/react @phreshos/core react
+    ```
+  </Tab>
+  <Tab value="Yarn Classic">
+    ```sh
+    yarn add @phreshos/react @phreshos/core react
+    ```
+  </Tab>
+</Tabs>
+
+```tsx
+import { context } from "@phreshos/client"
+import { useSubscribe, useWindowState } from "@phreshos/react"
+
+function Counter() {
+  const count = useSubscribe(context.server, "changed")
+  const windowState = useWindowState(context.window)
+
+  return <p>{count ?? "…"} in a {windowState?.size.width ?? "…"}px Window</p>
+}
+```
+
+## What it provides
+
+| Kind | Use it for | Needs a provider |
+| --- | --- | --- |
+| [Providers](/docs/sdks/react/providers) | Make `system`, `context`, and `desktop` available to a component tree, and wait for their first values | — |
+| [State hooks](/docs/sdks/react/hooks#state-hooks) | The current state of a Program, Process, Endpoint, Window, and more | No |
+| [Event hooks](/docs/sdks/react/hooks#event-hooks) | The latest event, question, or answer from a source | No |
+| [Provider hooks](/docs/sdks/react/providers#hooks) | `useSystem()`, `useContext()`, `useProgram()`, `useDesktopViewport()`, and others | Yes |
+
+## Undefined means "not yet"
+
+State and event hooks return `undefined` until their first value arrives. That
+is not an empty result: an unresolved list of Processes is different from an
+empty one. Render a loading state for it:
+
+```tsx
+const state = useProgramState(program)
+if (!state) return <Loading />
+```
+
+A failed first read is thrown to the nearest React error boundary.
+
+<Cards>
+  <Card title="Providers" description="System, Context, and Desktop for a component tree." href="/sdks/react/providers" />
+  <Card title="Hooks" description="State and event hooks." href="/sdks/react/hooks" />
+</Cards>

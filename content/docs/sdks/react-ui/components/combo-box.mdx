@@ -1,0 +1,52 @@
+---
+title: Combo Box
+description: A text field that filters a list as you type, to choose one option.
+---
+
+<ComboBoxShowcase />
+
+`ComboBox` is a [`Select`](/docs/sdks/react-ui/components/select) you can type
+into. Typing filters the items, which makes long lists fast to use.
+
+```tsx
+<ComboBox label="Region" placeholder="Search regions" value={region} onChange={setRegion}>
+  <ComboBox.Item id="eu">Europe</ComboBox.Item>
+  <ComboBox.Item id="us">United States</ComboBox.Item>
+  <ComboBox.Item id="apac">Asia Pacific</ComboBox.Item>
+</ComboBox>
+```
+
+Its value is the chosen item's `id`, or `null`, never the typed text.
+
+## The typed text
+
+The selection and the typed text are separate. Control the text only when you
+need it, for example to load results from a server:
+
+```tsx
+<ComboBox
+  label="Program"
+  value={program}
+  onChange={setProgram}
+  inputValue={query}
+  onInputChange={setQuery}
+>
+  {results.map(result => <ComboBox.Item key={result.id} id={result.id}>{result.name}</ComboBox.Item>)}
+</ComboBox>
+```
+
+Choosing an item puts its text in the field. `defaultInputValue` sets the
+starting text.
+
+## Behavior
+
+Disabled items stay visible but cannot be chosen. `readOnly` keeps the field
+focusable without changing. Keyboard navigation, filtering, and focus are
+handled for you. Items, sections, and headers work as in Select.
+
+## Parts
+
+| Part | Props |
+| --- | --- |
+| `ComboBox` | `value`, `defaultValue`, `onChange`, `inputValue`, `defaultInputValue`, `onInputChange`, `onOpenChange`, `openWhenEmpty`, `focusWrap`, `placeholder`, field props, `color` (`"background"`), `size`, `radius`, `material` |
+| `ComboBox.Item`, `Section`, `Header` | As in Select |

@@ -1,0 +1,210 @@
+---
+title: Storage
+description: Files, uploads, key-value state, and SQLite for Programs and the System.
+icon: HardDrive
+---
+
+PhreshOS gives each kind of data its own place:
+
+| Use | For |
+| --- | --- |
+| `program.data`, `program.cache` | Your Program's own files |
+| `system.storage` | Files anywhere on the machine, with permission |
+| `program.store` | Small values by key, optionally expiring |
+| `context.memory`, `process.client.memory` | Small JSON values shared during one Client run |
+| `program.database` | Structured data in SQLite |
+| `system.uploads` | Files shared by key, such as wallpapers |
+
+Captured output of your Endpoints is in `program.logs`; see
+[Logs](/docs/system/logs).
+
+```ts
+await program.data.file("settings.json").write({ theme: "dark" })
+await program.store.set("draft", { title: "Untitled" })
+const rows = await program.database.query("SELECT * FROM notes")
+```
+
+## Your Program's files
+
+Every Program has two folders of its own, shared by all of its Processes:
+
+- `program.data` for files to keep;
+- `program.cache` for files that can be recreated and may be deleted.
+
+```ts
+const settings = program.data.file("settings.json")
+
+await settings.write({ theme: "dark" })
+const value = await settings.json()
+```
+
+Inside an Endpoint, reach them through your Program:
+
+```ts
+const program = await context.program()
+const index = program.cache.file("search", "index.bin")
+```
+
+Your own `data` and `cache` need no permission.
+
+## Work with folders and files
+
+A folder is a `Storage` and a file is a `StorageFile`. Selecting one only
+builds a handle; nothing touches the disk until you call an operation.
+
+```ts
+const reports = program.data.navigate("reports", "2026")
+const today = reports.file("today.json")
+```
+
+### Files
+
+```ts
+await today.write({ done: true })          // replace the file, atomically
+await today.append("\nmore")               // add to the end
+await today.json()                         // parse as JSON
+await today.text()                         // read as text
+await today.bytes({ offset: 0, length: 64 }) // read some bytes
+await today.stream()                       // read as a stream
+await today.stat()                         // { size, modifiedAt }, or null
+await today.delete()
+```
+
+`write()` and `append()` accept JSON data, a `Blob`, an `ArrayBuffer`, a typed
+array, or a `ReadableStream<Uint8Array>`.
+
+### Folders
+
+```ts
+await reports.create()                        // with missing parents
+await reports.list()                          // direct children
+await reports.list({ recursive: true, depth: 2 })
+await reports.clear()                         // empty it, keep the folder
+await reports.delete()                        // remove it
+await reports.space()                         // { capacity, available, used }
+```
+
+### Copy and move
+
+```ts
+await today.copy(reports.file("backup.json"))
+await reports.move(program.data.navigate("archive"))
+await today.copy(target, { overwrite: true })
+```
+
+Copying and moving never replace an existing destination unless you pass
+`overwrite: true`. Deleting something that does not exist succeeds.
+
+### Watch for changes
+
+```ts
+for await (const change of reports.watch({ recursive: true })) {
+  console.log(change.event, change.path)   // "change" or "rename"
+}
+```
+
+Pass a `signal` to stop watching.
+
+## Files on the machine
+
+`system.storage` starts at the home folder of the user running PhreshOS, and
+can reach any path:
+
+```ts
+const documents = system.storage.navigate("Documents")
+const absolute = system.storage.navigate("/var/data")
+```
+
+It works exactly like your Program's folders, but every operation requires
+the `storage` permission for that path. A permission value is a path,
+optionally limited to some operations:
+
+| Value | Allows |
+| --- | --- |
+| `Documents/**` | Read, write, and delete anything under `Documents` in the home folder |
+| `read:Documents/**` | Only read under `Documents` |
+| `read,write:/var/data/report.txt` | Read and write one file |
+
+A relative path starts at the home folder; `~` is not expanded. `/**` covers
+everything below a folder and must come last. See
+[Permissions](/docs/system/security/permissions).
+
+A Node script connected as the owner accesses these files directly, without
+permissions.
+
+## Key-value store
+
+`program.store` keeps small values by key, shared by all of the Program's
+Processes:
+
+```ts
+await program.store.set("draft", { title: "Untitled" })
+await program.store.set("session", token, 60_000)   // expires after 60 seconds
+await program.store.get("draft")                    // the value, or undefined
+await program.store.has("draft")
+await program.store.delete(["draft", "session"])
+await program.store.clear()
+```
+
+## SQLite database
+
+`program.database` is a SQLite database owned by the Program. Each `query`
+runs one statement:
+
+```ts
+await program.database.query("CREATE TABLE IF NOT EXISTS notes (id TEXT, title TEXT)")
+await program.database.query("INSERT INTO notes VALUES (?, ?)", ["1", "Hello"])
+
+const notes = await program.database.query<{ id: string, title: string }>(
+  "SELECT * FROM notes WHERE title = ?",
+  ["Hello"],
+)
+```
+
+Pass values as parameters instead of building them into the statement. A
+template literal does this for you:
+
+```ts
+const title = "Hello"
+await program.database.query`SELECT * FROM notes WHERE title = ${title}`
+```
+
+## Uploads
+
+`system.uploads` stores files under generated keys, for things other parts of
+the System refer to, such as [wallpapers](/docs/system/appearance#set-a-wallpaper).
+An upload never changes after it is written.
+
+```ts
+const upload = await system.uploads.write(imageBlob)
+// { file: "3f2a…c1.png", size, modifiedAt }
+
+await system.uploads.bytes(upload.file)
+await system.uploads.stat(upload.file)   // or null
+```
+
+Uploads have no folders, listing, or deletion. Writing an upload requires the
+`uploads` permission; reading one by its key does not.
+
+## What happens to the data
+
+| Data | Kept until |
+| --- | --- |
+| `data`, `cache`, `store`, `database`, `logs` | The Program is uninstalled with `purge` |
+| Uploads | The System is uninstalled or reinstalled with `purge` |
+
+See [Install and uninstall](/docs/runtime/programs#install-and-uninstall).
+
+## Reference
+
+| Member | Result |
+| --- | --- |
+| `storage.navigate(...path)`, `file(...path)` | Folder and file handles |
+| `storage.create()`, `list()`, `clear()`, `delete()` | Folder operations |
+| `storage.copy()`, `move()`, `space()`, `watch()`, `stat()` | More folder operations |
+| `file.write()`, `append()`, `delete()`, `copy()`, `move()` | Change a file |
+| `file.bytes()`, `text()`, `json()`, `stream()`, `stat()` | Read a file |
+| `name()`, `path()` | The last path part, or the absolute path |
+| `program.store.get()`, `set()`, `has()`, `delete()`, `clear()` | Key-value state |
+| `program.database.query(statement, values?)` | Run one SQL statement |
+| `system.uploads.write()`, `bytes()`, `text()`, `json()`, `stream()`, `stat()` | Uploads |

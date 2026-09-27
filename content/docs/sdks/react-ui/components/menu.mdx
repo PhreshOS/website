@@ -1,0 +1,49 @@
+---
+title: Menu
+description: A list of commands, or of options that can be checked.
+---
+
+<MenuShowcase />
+
+`Menu` lists commands. Pressing an item reports its `id` through `onAction`:
+
+```tsx
+<Menu aria-label="Note" onAction={id => run(id)}>
+  <Menu.Item id="rename">Rename</Menu.Item>
+  <Menu.Item id="duplicate">Duplicate</Menu.Item>
+  <Menu.Separator />
+  <Menu.Item id="delete" color="danger">Delete</Menu.Item>
+</Menu>
+```
+
+A menu usually opens from a button or a right-click. Put it inside a
+[`DropdownMenu`](/docs/sdks/react-ui/components/dropdown-menu) or a
+[`ContextMenu`](/docs/sdks/react-ui/components/context-menu).
+
+## Options that stay checked
+
+With `selectionMode`, items become options that show a check mark, with the
+same `value` and `onChange` as other collections:
+
+```tsx
+<Menu aria-label="Density" selectionMode="single" value={density} onChange={setDensity}>
+  <Menu.Item id="comfortable">Comfortable</Menu.Item>
+  <Menu.Item id="compact">Compact</Menu.Item>
+</Menu>
+```
+
+## Groups
+
+`Menu.Section` with a `Menu.Header` groups items, and `Menu.Separator` draws a
+line between them.
+
+The arrow keys, typing to jump, and focus are handled for you. Keyboard focus
+highlights items the same way the pointer does.
+
+## Parts
+
+| Part | Props |
+| --- | --- |
+| `Menu` | `onAction`, `selectionMode` (`"none"`), `value`, `defaultValue`, `onChange`, `closeOnSelect` (`true`), `focusWrap`, `aria-label`, `color` (`"primary"`), `size`, `radius` |
+| `Menu.Item` | `id`, `disabled`, `color`, `closeOnSelect` |
+| `Menu.Section`, `Menu.Header`, `Menu.Separator` | Grouping |

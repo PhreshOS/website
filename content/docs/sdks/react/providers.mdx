@@ -1,0 +1,74 @@
+---
+title: Providers
+description: Make system, context, and desktop available to a React tree.
+---
+
+Providers make one of the three PhreshOS roots available to the components
+below them, and wait for its first values before rendering them.
+
+```tsx
+import { context, desktop, system } from "@phreshos/client"
+import { ContextProvider, DesktopProvider, SystemProvider } from "@phreshos/react"
+
+<SystemProvider system={system}>
+  <DesktopProvider desktop={desktop}>
+    <ContextProvider context={context} fallback={<Loading />}>
+      <App />
+    </ContextProvider>
+  </DesktopProvider>
+</SystemProvider>
+```
+
+Use only the providers your components need; they are independent.
+
+## Loading
+
+Each provider shows its `fallback` (nothing by default) until its first values
+are ready, then shows its children. After that, later changes update the
+children in place, without showing the fallback again.
+
+A failed first read is thrown to the nearest React error boundary.
+
+## The providers
+
+| Provider | Takes | Waits for |
+| --- | --- | --- |
+| `SystemProvider` | `system`, from the Client SDK or Node | The Appearance |
+| `ContextProvider` | `context`, from the Client SDK | The Program, Process, and parent |
+| `DesktopProvider` | `desktop`, from the Client SDK | The viewport and preferences |
+
+A provider only passes its value down. It does not connect, change the value,
+or stop anything when it unmounts. Replacing the value it receives starts
+over with the new one.
+
+## Hooks
+
+These hooks read from the nearest provider, and throw a clear error when used
+outside it.
+
+| Hook | Provider | Returns |
+| --- | --- | --- |
+| `useSystem()` | `SystemProvider` | The `system` |
+| `useSystemAppearance()` | `SystemProvider` | The current Appearance, updated on each change |
+| `useContext()` | `ContextProvider` | The `context` |
+| `useProgram()` | `ContextProvider` | The Program |
+| `useProcess()` | `ContextProvider` | The Process |
+| `useParent()` | `ContextProvider` | The parent Process, or `null` |
+| `useDesktop()` | `DesktopProvider` | The `desktop` |
+| `useDesktopViewport()` | `DesktopProvider` | The current viewport |
+| `useDesktopPreferences()` | `DesktopProvider` | The current preferences |
+| `useDesktopConnection()` | `DesktopProvider` | The browser Connection, or `undefined` while loading |
+
+Because providers wait, these hooks return their value right away, without
+`undefined`. The exception is `useDesktopConnection()`: the Connection is
+only read when a component asks for it, since it needs a
+[permission](/docs/system/security/permissions).
+
+```tsx
+function Title() {
+  const program = useProgram()
+  const appearance = useSystemAppearance()
+
+  return <h1 style={{ color: appearance.colors.light.primary }}>{program.name}</h1>
+}
+```

@@ -1,28 +1,38 @@
 # PhreshOS Website
 
-The public presentation website for PhreshOS.
+The PhreshOS website: the home page and the documentation, in one Next.js
+static export.
 
 [Website](https://phreshos.com) ·
-[Documentation](https://docs.phreshos.com) ·
-[Source](https://github.com/PhreshOS/website)
+[Documentation](https://phreshos.com/docs) ·
+[Source](https://github.com/PhreshOS)
 
-## Role
+## Structure
 
-The website introduces PhreshOS and directs people to its documentation,
-installation, and source repositories. It consumes published packages and does
-not define product contracts, technical documentation, or runtime behavior.
+The site grows by path, not by subdomain. Each part has its own root layout,
+so one part's styles never reach another:
+
+- `app/(home)/` is the home page, and later the blog at `/blog`. It is built
+  with `@phreshos/react-ui`, so the site looks like the desktop it describes.
+  The shell (navigation, footer, provider) lives in `components/site/`, the
+  page sections in `components/landing/`.
+- `app/(docs)/` is the documentation at `/docs`, built with Fumadocs. Pages are
+  MDX in `content/docs/`; component showcases live in `components/showcase/`.
+- `app/llms.txt`, `app/llms-full.txt`, and `app/llms.mdx/` serve the
+  documentation to agents; `app/og/` renders page images; `app/sitemap.ts`
+  lists the home page and every documentation page.
 
 ## Development
 
 ```sh
 bun install --frozen-lockfile
-bun run lint
-bun run check
-bun run build
 bun run dev
+bun run verify
 ```
 
-The static site is emitted to `out/`.
+`check` performs static checks, `build` emits the static site to `out/`, and
+`test` runs Vitest assertions from `tests/`, some of which read the built
+output. `verify` runs `check`, `build`, and `test` in order.
 
 ## Deployment
 
@@ -30,24 +40,7 @@ The static site is emitted to `out/`.
 bun run deploy
 ```
 
-Cloudflare Workers serves the static export produced by Next.js.
-
-`check` performs static checks, `build` creates distributable output, and `test`
-runs Vitest assertions from `tests/`. Run `build` before testing built artifacts.
-`verify` runs `check`, `build`, and `test` in order. Operational tooling belongs
-in `scripts/`; tests and their fixtures belong in `tests/`. Verification uses
-the committed dependency graph without local package substitutions.
-
-## Related repositories
-
-- [PhreshOS Documentation](https://github.com/PhreshOS/docs) owns all technical
-  documentation linked by the website.
-- [PhreshOS Install](https://github.com/PhreshOS/install) owns the clean-machine
-  installation endpoint presented by the website.
-- [PhreshOS System](https://github.com/PhreshOS/system) owns the product runtime
-  represented by the website.
-- [`@phreshos/react-ui`](https://github.com/PhreshOS/react-ui) provides the
-  published visual primitives used by the site.
+Cloudflare Workers serves the static export.
 
 ## License
 

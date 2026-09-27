@@ -1,0 +1,28 @@
+---
+title: Fieldset
+description: A titled group of related fields.
+---
+
+<FieldsetShowcase />
+
+`Fieldset` groups related fields under a title, such as one section of
+settings:
+
+```tsx
+<Fieldset title="Layout" description="Shared spacing and corners.">
+  <NumberField label="Spacing" defaultValue={12} />
+  <NumberField label="Radius" defaultValue={10} />
+</Fieldset>
+```
+
+Each field keeps its own label. The Fieldset adds only its title and
+description, which also name the group for assistive technology, and the
+`large` spacing between its fields.
+
+## Props
+
+| Prop | Sets |
+| --- | --- |
+| `title` | Its name |
+| `description` | A line under the title |
+| `fieldset` attributes | Such as `disabled` or `form` |

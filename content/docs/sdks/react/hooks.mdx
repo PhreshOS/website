@@ -1,0 +1,121 @@
+---
+title: Hooks
+description: Follow the state of a handle, or the latest event from it.
+---
+
+Two kinds of hooks take a handle you already have and keep a component up to
+date with it. Neither needs a provider.
+
+| Kind | Returns | Use it when you need |
+| --- | --- | --- |
+| State hooks | The current state, kept up to date | What something is now |
+| Event hooks | The latest event since mounting | What just happened |
+
+Both return `undefined` until their first value, and both stop listening when
+the component unmounts or the handle changes.
+
+## State hooks
+
+Inside `ContextProvider`, `useClientMemory(key, initial)` stores one JSON
+value in the current Client run and follows changes from other browser views:
+
+```tsx
+const [tab, setTab] = useClientMemory("tab", "colors")
+await setTab("layout")
+await setTab(current => current === "layout" ? "colors" : "layout")
+```
+
+To follow a particular Client, pass its memory handle explicitly:
+
+```tsx
+const [tab, setTab] = useClientMemory(process.client.memory, "tab", "colors")
+```
+
+The explicit form works without `ContextProvider`; the two-argument form uses
+the current Client from that provider.
+
+The first value is `undefined` while the initial read is pending. If the key
+does not exist, `initial` is inserted atomically. The updater uses the hook's
+live memory subscription and may run again after a concurrent write.
+
+A state hook reads the current state, then follows changes:
+
+```tsx
+const programState = useProgramState(program)
+const serverState = useEndpointState(process.server)
+const windowState = useWindowState(process.client.window)
+
+if (!programState) return <Loading />
+return <p>{programState.processes.length} running · {serverState?.running ? "online" : "offline"}</p>
+```
+
+| Hook | Returns |
+| --- | --- |
+| `useProgramState(program)` | `{ installed, pinned, processes }` |
+| `useProcessState(process)` | `{ exited }` |
+| `useEndpointState(endpoint)` | `{ running }` |
+| `useServiceState(service)` | `{ available }` |
+| `useWindowState(window)` | `{ title, header, position, size, minimized, maximized, front, layer }` |
+| `useClientMemory(key, initial)` or `useClientMemory(memory, key, initial)` | `[value, setValue]` for one Client run |
+| `useConnectionState(connection)` | `{ connected, session }` |
+| `useSessionState(session)` | `{ valid, connections }` |
+
+A change that happens while the first read is still loading is not lost: the
+hook listens before it reads, and applies the change afterwards.
+
+## Event hooks
+
+`useSubscribe` returns the latest event from a source, starting from when the
+component mounted:
+
+```tsx
+const count = useSubscribe(context.server, "changed")
+const exit = useSubscribe(process, "exit")
+
+return <p>{exit ? `Exited with ${exit.code}` : "Running"}</p>
+```
+
+It does not read the current state, so it stays `undefined` until an event
+arrives. When you need a value immediately, use a state hook, or read once and
+then follow events.
+
+Transform the event before it is stored with a third argument. It may be
+async:
+
+```tsx
+const title = useSubscribe(editor, "document.changed", ({ path }) => basename(path))
+```
+
+Leave out the event name to receive every event as `{ event, message }`.
+
+The event name and payload type come from the handle, so they are checked by
+TypeScript.
+
+### Watch questions and answers
+
+`useSubscribeAsks` and `useSubscribeAnswers` follow what an Endpoint sends,
+through its [`traffic`](/docs/runtime/communication#observe-traffic). They only
+watch; they never send or answer anything.
+
+```tsx
+const question = useSubscribeAsks(process.client.traffic, ({ event, message }) => ({
+  event,
+  payload: message.payload,
+}))
+
+const answer = useSubscribeAnswers(process.server.traffic, ({ questionId, message }) => ({
+  questionId,
+  outcome: message.outcome,   // { success: true, result } or { success: false, error }
+}))
+```
+
+## Reference
+
+| Hook | Result |
+| --- | --- |
+| `useProgramState`, `useProcessState`, `useEndpointState`, `useServiceState` | Runtime state |
+| `useWindowState` | Window state |
+| `useConnectionState`, `useSessionState` | Authentication state |
+| `useSubscribe(target, event?, project?)` | The latest event |
+| `useSubscribeAsks(traffic, project)` | The latest question sent |
+| `useSubscribeAnswers(traffic, project)` | The latest answer sent |

@@ -1,0 +1,47 @@
+---
+title: Time Field
+description: Type a time of day, in the format of the person's locale.
+---
+
+<TimeFieldShowcase />
+
+`TimeField` enters a time of day without a date or time zone. Its value is a
+`Time` from `@internationalized/date`, or `null`. Whether it shows 12 or 24
+hours follows the locale.
+
+```tsx
+import { parseTime } from "@internationalized/date"
+
+<TimeField label="Start time" defaultValue={parseTime("09:30")} />
+```
+
+## Precision and format
+
+```tsx
+<TimeField label="Run at" granularity="second" hourCycle={24} defaultValue={parseTime("21:30:15")} />
+```
+
+| Prop | Default | Sets |
+| --- | --- | --- |
+| `granularity` | `"minute"` | The smallest part: `hour`, `minute`, or `second` |
+| `hourCycle` | The locale's | `12` or `24` |
+| `leadingZeros` | `false` | Always show two-digit hours |
+
+The value is the same whatever the format.
+
+## Limit the times
+
+```tsx
+<TimeField label="Start" minValue={parseTime("08:00")} maxValue={parseTime("18:00")} value={start} onChange={setStart} />
+```
+
+## Props
+
+| Prop | Default | Sets |
+| --- | --- | --- |
+| `value`, `defaultValue`, `onChange` | — | A `Time` or `null` |
+| `minValue`, `maxValue` | — | The allowed range |
+| `granularity`, `hourCycle`, `leadingZeros` | — | Format |
+| Field props | — | As in every field |
+| `color` | `"background"` | Its color |
+| `size`, `radius`, `material` | — | Its Surface |

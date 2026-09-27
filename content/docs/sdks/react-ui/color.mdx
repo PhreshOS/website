@@ -1,0 +1,86 @@
+---
+title: Color
+description: Choose colors by role and level; text and interaction colors follow on their own.
+---
+
+Components take a `color` by **role**, not by value, so they follow the
+Appearance and look right in light and dark:
+
+```tsx
+<Button color="primary">Install</Button>
+<Button color="danger">Delete</Button>
+<Surface color="info:soft">Syncing in the background</Surface>
+```
+
+## Roles
+
+| Role | Means | Default use |
+| --- | --- | --- |
+| `default` | Neutral, close to the background | Buttons and controls without a meaning of their own |
+| `primary` | The identity color: PhreshOS apricot | The main action, selection, progress, focus |
+| `secondary` | A second accent | Secondary emphasis |
+| `success`, `warning`, `danger`, `info` | Status | Results, alerts, destructive actions |
+| `background`, `foreground` | The canvas and its text | Fields paint from `background` |
+
+Each component already picks the role that matches its meaning: a Button is
+`default`, a text field paints from `background`, and selection, switches, and
+progress use `primary`. Pass `color` only to change that.
+
+## Levels
+
+Add a level after a colon to move a color toward the background or toward the
+text:
+
+| Level | Moves toward | Use it for |
+| --- | --- | --- |
+| `subtle` | The background, most | Selection, gentle highlights |
+| `soft` | The background | Tinted panels, soft buttons |
+| `base` | Unchanged. The same as no level | Solid fills |
+| `strong` | The text | Emphasis |
+| `intense` | The text, most | Strongest emphasis |
+
+```tsx
+<Button color="danger:soft">Remove</Button>
+<Surface color="primary:subtle">Selected</Surface>
+```
+
+Because levels move toward the actual background and text colors, `soft`
+stays soft in both light and dark.
+
+Any CSS color works too:
+
+```tsx
+<Button color="#6d5dfc">Custom</Button>
+```
+
+## What you do not choose
+
+- **Text color.** Text on a colored Surface uses whichever of the Appearance's
+  `background` or `foreground` reads more clearly on it, judged by perceived
+  contrast. It is chosen once for the resting color, so it does not flip when
+  the Surface is hovered or pressed.
+- **State colors.** Hover and press move the same color slightly toward the
+  text. Focus shows a ring in the component's color, or in `primary` when the
+  component is neutral. An invalid field outlines itself in `danger`. There is
+  no separate hover, pressed, or focus color to set.
+
+## Use colors in your own components
+
+```tsx
+import { resolveColor, useColor, useContrastingColor, useThemedValue, useAppearance } from "@phreshos/react-ui"
+
+const scale = useColor("primary")          // { subtle, soft, base, strong, intense }
+const text = useContrastingColor("primary") // the readable text color on it
+
+const colors = useThemedValue(useAppearance().colors)
+const primary = resolveColor("primary:soft", colors)  // a CSS color
+```
+
+## Reference
+
+| Export | Result |
+| --- | --- |
+| `Color` | A role, a `role:level`, or any CSS color |
+| `resolveColor(color, colors)` | A concrete CSS color from a set of colors |
+| `useColor(color)` | Every level of a color |
+| `useContrastingColor(color)` | The readable text color on it |

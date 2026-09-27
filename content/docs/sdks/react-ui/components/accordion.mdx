@@ -1,0 +1,58 @@
+---
+title: Accordion
+description: Several collapsible sections, one or many open at a time.
+---
+
+<AccordionShowcase />
+
+`Accordion` stacks sections that open and close. By default, opening one
+closes the others.
+
+```tsx
+<Accordion defaultValue="general">
+  <Accordion.Item id="general">
+    <Accordion.Trigger>General</Accordion.Trigger>
+    <Accordion.Content>Name, icon, and startup.</Accordion.Content>
+  </Accordion.Item>
+  <Accordion.Item id="privacy">
+    <Accordion.Trigger>Privacy</Accordion.Trigger>
+    <Accordion.Content>Permissions and data access.</Accordion.Content>
+  </Accordion.Item>
+</Accordion>
+```
+
+The value is the `id` of the open section, or `null` when all are closed.
+
+## Several open at once
+
+With `multiple`, each section opens on its own, and the value is a list:
+
+```tsx
+const [open, setOpen] = useState<readonly string[]>(["general"])
+
+<Accordion multiple value={open} onChange={setOpen}>…</Accordion>
+```
+
+TypeScript knows which form you use, so `value` and `onChange` have the right
+type in each.
+
+## Disable
+
+`disabled` on the Accordion disables every section; on an `Accordion.Item`,
+only that one.
+
+## Look
+
+`color`, `size`, and `radius` on the Accordion apply to every section, and an
+item can override them. `gap` sets the space between sections. The triggers
+and contents look and behave like
+[`Disclosure`](/docs/sdks/react-ui/components/disclosure)'s.
+
+## Parts
+
+| Part | Props |
+| --- | --- |
+| `Accordion` | `value`, `defaultValue`, `onChange`, `multiple`, `disabled`, `color`, `size`, `radius`, `gap` (`"xsmall"`) |
+| `Accordion.Item` | `id`, `disabled`, `color`, `size`, `radius` |
+| `Accordion.Trigger` | Its label |
+| `Accordion.Content` | `padding` |

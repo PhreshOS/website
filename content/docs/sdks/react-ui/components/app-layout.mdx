@@ -1,0 +1,46 @@
+---
+title: App Layout
+description: "The frame of a program's interface: a sidebar, a header, the content, and a footer."
+---
+
+<AppLayoutShowcase />
+
+`AppLayout` frames a program: a sidebar beside a header, the content, and an
+optional footer. It owns only the regions, their scrolling, and the hairlines
+between them. The program places its own components inside:
+
+```tsx
+<AppLayout>
+  <AppLayout.Sidebar aria-label="Settings">
+    <nav aria-label="Settings"><Tree aria-label="Sections" selectionMode="single">…</Tree></nav>
+  </AppLayout.Sidebar>
+  <AppLayout.Header><Palette />Appearance</AppLayout.Header>
+  <AppLayout.Content>…</AppLayout.Content>
+  <AppLayout.Footer><Button>Discard</Button><Button color="primary">Save</Button></AppLayout.Footer>
+</AppLayout>
+```
+
+Put it inside [`Window.Content`](/docs/sdks/react-ui/components/window), or fill a
+Program's Client page with it.
+
+## Regions
+
+- The sidebar and the content each scroll on their own.
+- The header is the same row as a Window or Panel header: it follows the
+  Appearance `spacing`.
+- The content is padded by the `spacing`, the same as Panel content.
+- The sidebar is eighteen times the `spacing` wide unless `sidebarWidth` says
+  otherwise.
+
+A [`Tree`](/docs/sdks/react-ui/components/tree) in the sidebar makes a navigation
+that branches: sections that open into pages.
+
+## Parts
+
+| Part | Is |
+| --- | --- |
+| `AppLayout` | The frame. `sidebarWidth` sets the sidebar's width |
+| `AppLayout.Sidebar` | The sidebar, an `aside` |
+| `AppLayout.Header` | The row above the content, a `header` |
+| `AppLayout.Content` | The content, the page's `main` |
+| `AppLayout.Footer` | An optional row below the content, a `footer` |

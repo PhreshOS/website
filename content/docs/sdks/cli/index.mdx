@@ -1,0 +1,79 @@
+---
+title: Overview
+description: The phresh command, for Program projects, the running System, and its installation.
+---
+
+`phresh` is the PhreshOS command line. It does three kinds of work:
+
+| Commands | For | See |
+| --- | --- | --- |
+| `create`, `dev`, `start`, `install`, `pack`, … | Your Program project | [Project commands](/docs/sdks/cli/project-commands) |
+| `program`, `process`, `endpoint`, `service`, `window`, `execute` | The running System | [Runtime commands](/docs/sdks/cli/runtime-commands) |
+| `system install`, `system start`, … | Installing and running PhreshOS itself | [System commands](/docs/sdks/cli/system-commands) |
+
+<Tabs items={["npm", "pnpm", "Bun", "Yarn Classic"]} groupId="package-manager" persist>
+  <Tab value="npm">
+    ```sh
+    npm install --global @phreshos/cli
+    ```
+  </Tab>
+  <Tab value="pnpm">
+    ```sh
+    pnpm add --global @phreshos/cli
+    ```
+  </Tab>
+  <Tab value="Bun">
+    ```sh
+    bun add --global @phreshos/cli
+    ```
+  </Tab>
+  <Tab value="Yarn Classic">
+    ```sh
+    yarn global add @phreshos/cli
+    ```
+  </Tab>
+</Tabs>
+
+The CLI needs Node.js `20.10` or newer; the System it installs needs
+`24.15.0` or newer. See [Installation](/docs/installation).
+
+```sh
+phresh create my-program
+phresh dev
+phresh program list
+phresh system status
+```
+
+## For people and for scripts
+
+Commands print readable output by default. Add `--json` to get the complete
+result as one line of JSON:
+
+```sh
+phresh process list --program notes --json
+```
+
+`phresh execute` takes and returns JSON directly; see
+[Execute](/docs/sdks/core/execute).
+
+## Help
+
+```sh
+phresh --help
+phresh process create --help
+phresh describe process create --json   # the same, as data
+```
+
+See [Contract discovery](/docs/sdks/cli/contract-discovery).
+
+## Who the CLI acts as
+
+The CLI connects to the System on this machine as its owner, through the same
+connection as [Node](/docs/sdks/node). It is not limited by Program permissions.
+
+<Cards>
+  <Card title="Project commands" description="Create, run, install, and package a Program." href="/sdks/cli/project-commands" />
+  <Card title="Runtime commands" description="Programs, Processes, Endpoints, Services, and Windows." href="/sdks/cli/runtime-commands" />
+  <Card title="System commands" description="Install, run, and remove PhreshOS." href="/sdks/cli/system-commands" />
+  <Card title="Contract discovery" description="Read every command's definition as data." href="/sdks/cli/contract-discovery" />
+</Cards>

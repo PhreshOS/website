@@ -1,0 +1,85 @@
+---
+title: Button
+description: A raised control that performs an action when pressed, or goes somewhere when it has an href.
+---
+
+<ButtonShowcase />
+
+Use `Button` when pressing something does something: save, open, confirm.
+
+```tsx
+<Button color="primary" onPress={save}>Save</Button>
+```
+
+`onPress` fires for a click, a tap, and Enter or Space alike, so you need no
+separate keyboard handling.
+
+## Links
+
+When pressing a Button takes the person somewhere, give it an `href`. It then
+renders a real `<a>`, so browsers can open it in a new tab and search engines
+can follow it. It looks and behaves like any other Button:
+
+```tsx
+<Button href="/blog">Read the blog</Button>
+<Button href="https://github.com/PhreshOS" target="_blank" rel="noopener">Source</Button>
+```
+
+A link accepts `target`, `rel`, `download`, and the other link attributes, but
+not `pending` or `type`. A disabled link has no destination.
+
+Links inside your app, such as `/blog`, go through the `navigate` you give
+[`UIProvider`](/docs/sdks/react-ui/appearance#links-inside-your-app), so your
+router can follow them without a page load.
+
+## Color
+
+A Button is neutral (`default`) unless you give it a meaning:
+
+```tsx
+<Button>Cancel</Button>
+<Button color="primary">Install</Button>
+<Button color="danger">Delete</Button>
+<Button color="danger:soft">Remove</Button>
+```
+
+Use `primary` for the one main action on a screen. The text color, hover,
+press, and focus ring follow from the color. See
+[Color](/docs/sdks/react-ui/color).
+
+## While something runs
+
+`pending` ignores presses but keeps the Button focusable, so focus does not
+jump away mid-action. `disabled` removes it from focus entirely.
+
+```tsx
+<Button color="primary" pending={saving} onPress={save}>
+  {saving ? "Saving…" : "Save"}
+</Button>
+
+<Button disabled>Unavailable</Button>
+```
+
+## Icons and forms
+
+An icon-only Button needs a name for screen readers:
+
+```tsx
+<Button aria-label="Close" onPress={close}><CloseIcon /></Button>
+```
+
+A Button is `type="button"` by default. Set `type="submit"` to submit a form.
+
+## Props
+
+| Prop | Default | Sets |
+| --- | --- | --- |
+| `onPress` | — | What happens when pressed |
+| `color` | `"default"` | Its color |
+| `size` | `"medium"` | Its size |
+| `radius` | Scaled to its size | Its corners |
+| `material`, `shadow` | `"basic"`, the Appearance shadow | Its Surface |
+| `href` | — | Where it goes; renders an `<a>` |
+| `pending` | `false` | Ignore presses, keep focus |
+| `disabled` | `false` | Off |
+| `type` | `"button"` | The native button type; not with `href` |

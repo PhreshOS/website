@@ -1,0 +1,26 @@
+---
+title: File Trigger
+description: Open the system file chooser from a Button.
+---
+
+<FileTriggerShowcase />
+
+`FileTrigger` opens the system file chooser from the control it wraps, and
+draws nothing of its own:
+
+```tsx
+<FileTrigger accept={["image/*"]} onSelect={files => upload(files[0])}>
+  <Button><ImageUp />Choose an image</Button>
+</FileTrigger>
+```
+
+`onSelect` receives the chosen files as an array.
+
+## Props
+
+| Prop | Sets |
+| --- | --- |
+| `accept` | MIME types or extensions offered, such as `image/*` or `.html` |
+| `multiple` | Whether more than one file can be chosen |
+| `directory` | Choose a directory instead |
+| `onSelect` | Receives the chosen files |

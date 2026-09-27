@@ -1,0 +1,51 @@
+---
+title: Disclosure
+description: Show and hide one section of content with a trigger.
+---
+
+<DisclosureShowcase />
+
+`Disclosure` hides content behind a trigger, for details that should be
+available without taking space all the time.
+
+```tsx
+<Disclosure>
+  <Disclosure.Trigger>Connection details</Disclosure.Trigger>
+  <Disclosure.Content>Connected to the System on this machine.</Disclosure.Content>
+</Disclosure>
+```
+
+The trigger works with the mouse and the keyboard, and tells screen readers
+whether the content is shown. Hidden content cannot receive focus.
+
+## Open state
+
+```tsx
+<Disclosure defaultExpanded>…</Disclosure>
+
+const [expanded, setExpanded] = useState(false)
+<Disclosure expanded={expanded} onExpandedChange={setExpanded}>…</Disclosure>
+```
+
+`disabled` stops the trigger from changing it, keeping its current state.
+
+## Look
+
+The trigger is transparent by default and shows a veil on hover. `color`,
+`size`, and `radius` style it. `Disclosure.Content` takes a `padding`.
+
+Opening animates the content's real height with the Appearance timing, and is
+immediate when animations are off.
+
+The content has no background. Put a Surface inside it if it needs one.
+
+For several sections where one opens at a time, use
+[`Accordion`](/docs/sdks/react-ui/components/accordion).
+
+## Parts
+
+| Part | Props |
+| --- | --- |
+| `Disclosure` | `expanded`, `defaultExpanded`, `onExpandedChange`, `disabled`, `color` (`"transparent"`), `size`, `radius` |
+| `Disclosure.Trigger` | Its label |
+| `Disclosure.Content` | `padding` |

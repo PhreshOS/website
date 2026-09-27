@@ -1,0 +1,39 @@
+---
+title: Spinner
+description: A small indicator that something is loading.
+---
+
+<SpinnerShowcase />
+
+`Spinner` shows that something is in progress, where a
+[`ProgressBar`](/docs/sdks/react-ui/components/progress-bar) would not fit.
+
+```tsx
+<Spinner label="Loading workspace" />
+```
+
+`label` names it for screen readers; it shows no text.
+
+## Next to visible text
+
+When text beside it already says what is happening, mark it `decorative`, so it
+is not announced twice:
+
+```tsx
+<span role="status">
+  <Spinner decorative /> Connecting to the System
+</span>
+```
+
+A Spinner needs either a `label` or `decorative`.
+
+It spins in `primary`, and shows a still arc when animations are off.
+
+## Props
+
+| Prop | Default | Sets |
+| --- | --- | --- |
+| `label` | — | Its name for screen readers |
+| `decorative` | `false` | Hide it from screen readers |
+| `color` | `"primary"` | The moving arc |
+| `size` | `"medium"` | Its diameter |

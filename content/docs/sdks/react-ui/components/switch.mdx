@@ -1,0 +1,31 @@
+---
+title: Switch
+description: A toggle for a setting that takes effect immediately.
+---
+
+<SwitchShowcase />
+
+`Switch` turns a setting on or off right away. Its value is a boolean.
+
+```tsx
+<Switch label="Start with the System" checked={startup} onChange={setStartup} />
+```
+
+Off, the track is recessed. On, the thumb moves across and the track fills
+with `primary`.
+
+`readOnly` shows the state but cannot change it; `disabled` turns the Switch
+off.
+
+Use [`Checkbox`](/docs/sdks/react-ui/components/checkbox) for a choice that is
+applied later rather than immediately.
+
+## Props
+
+| Prop | Default | Sets |
+| --- | --- | --- |
+| `checked`, `defaultChecked`, `onChange` | — | Its value |
+| `label`, `description`, `errorMessage` | — | Its text |
+| `invalid`, `required`, `readOnly`, `disabled` | `false` | Its state |
+| `color` | `"primary"` | Its on color |
+| `size`, `material` | — | Its look |

@@ -1,0 +1,38 @@
+---
+title: System commands
+description: Install, update, run, and remove PhreshOS itself.
+---
+
+`phresh system` manages PhreshOS on this machine: installing it, running its
+service, and removing it.
+
+| Command | Does |
+| --- | --- |
+| `phresh system install` | Installs or updates PhreshOS and starts it |
+| `phresh system status` | Shows the version, whether it runs, and the Desktop address |
+| `phresh system version` | Shows the installed version |
+| `phresh system start`, `stop` | Starts or stops the service now |
+| `phresh system enable`, `disable` | Turns starting at login on or off |
+| `phresh system uninstall` | Removes PhreshOS and its service |
+| `phresh system logs` | Queries the System log |
+
+```sh
+phresh system install
+phresh system status
+```
+
+`install --purge` and `uninstall --purge` also delete all of PhreshOS's data.
+See [Installation](/docs/installation) for what each command does on each
+operating system.
+
+## Query the System log
+
+```sh
+phresh system logs --statement 'select * from logs where level = ? order by createdAt desc limit 50' --values '["error"]'
+```
+
+The statement is read-only SQL over the System's `logs` table. See
+[Logs](/docs/system/logs).
+
+Programs, Processes, and Windows are managed with the
+[runtime commands](/docs/sdks/cli/runtime-commands), not under `system`.

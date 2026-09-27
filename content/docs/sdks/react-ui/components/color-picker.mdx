@@ -1,0 +1,32 @@
+---
+title: Color Picker
+description: Edit one color in a popover built from the other color components.
+---
+
+<ColorPickerShowcase />
+
+`ColorPicker` owns one color. Its Trigger shows the color, and its Content
+holds whichever color components you choose; each edits the picker's color
+without its own `value`:
+
+```tsx
+<ColorPicker value={color} onChange={setColor}>
+  <ColorPicker.Trigger>Accent</ColorPicker.Trigger>
+  <ColorPicker.Content>
+    <ColorArea aria-label="Color" colorSpace="hsb" xChannel="saturation" yChannel="brightness" />
+    <ColorSlider label="Hue" channel="hue" colorSpace="hsb" />
+    <ColorField aria-label="Hex" />
+  </ColorPicker.Content>
+</ColorPicker>
+```
+
+The picker draws nothing of its own. Choose the editors a use needs: presets
+only, a hex field only, or the full set.
+
+## Parts
+
+| Part | Props |
+| --- | --- |
+| `ColorPicker` | `value`, `defaultValue`, `onChange`, `open`, `defaultOpen`, `onOpenChange` |
+| `ColorPicker.Trigger` | Button props; its label follows the swatch |
+| `ColorPicker.Content` | Popover content props, such as `placement` |

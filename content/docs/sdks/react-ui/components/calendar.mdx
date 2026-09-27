@@ -1,0 +1,52 @@
+---
+title: Calendar
+description: Choose a date from a month view.
+---
+
+<CalendarShowcase />
+
+`Calendar` shows a month to choose a date from. Its value is a
+`CalendarDate`, or `null`.
+
+```tsx
+import { parseDate } from "@internationalized/date"
+
+<Calendar aria-label="Release date" value={date} onChange={setDate} />
+```
+
+It handles moving between months, the keyboard, and weekday names in the
+person's locale. The selected day is filled with `primary`.
+
+The Calendar has no background of its own. Put it in a Surface or a Panel if
+it needs one.
+
+## Limit the dates
+
+```tsx
+<Calendar
+  aria-label="Delivery date"
+  minValue={parseDate("2026-09-01")}
+  maxValue={parseDate("2026-10-31")}
+  isDateUnavailable={date => date.day === 7}
+/>
+```
+
+Unavailable dates stay visible but cannot be chosen.
+
+## Choose the visible month
+
+`defaultFocusedValue` shows a month without selecting anything.
+`focusedValue` with `onFocusChange` controls which day has keyboard focus.
+`firstDayOfWeek` overrides the locale's first weekday.
+
+## Props
+
+| Prop | Default | Sets |
+| --- | --- | --- |
+| `value`, `defaultValue`, `onChange` | — | A `CalendarDate` or `null` |
+| `minValue`, `maxValue`, `isDateUnavailable` | — | Allowed dates |
+| `focusedValue`, `defaultFocusedValue`, `onFocusChange` | Today | The focused day and visible month |
+| `firstDayOfWeek` | The locale's | The first column |
+| `readOnly`, `disabled` | `false` | Its state |
+| `color` | `"primary"` | The selected day |
+| `size`, `radius` | — | Its look |

@@ -1,0 +1,9 @@
+{
+  "title": "Server",
+  "description": "Use PhreshOS inside a Server Endpoint",
+  "icon": "Server",
+  "pages": [
+    "index",
+    "execution"
+  ]
+}

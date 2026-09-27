@@ -1,0 +1,46 @@
+---
+title: Icons
+description: One icon set that follows the text it sits in.
+---
+
+<IconsShowcase />
+
+React UI includes the [Lucide](https://lucide.dev/icons) icon set. Import icons
+from `@phreshos/react-ui/icons`, never from the icon set directly, so the
+source can change without changing your code:
+
+```tsx
+import { Palette, Trash2 } from "@phreshos/react-ui/icons"
+
+<Button><Palette />Appearance</Button>
+<Button color="danger"><Trash2 />Delete</Button>
+```
+
+Every Lucide icon is available under its Lucide name.
+
+## They follow their text
+
+Inside a `UIProvider` an icon takes the size and color of the text around it,
+with a constant 1.5px stroke at any size. A small Button gets a small icon, and
+a danger Button a readable icon on its color, with nothing to set.
+
+Components that hold content, such as Button, Menu items, and Tabs, place an
+icon before the text with their own gap.
+
+## Set one icon apart
+
+The icon's own props win over the defaults:
+
+```tsx
+<Palette size={24} />
+<Palette color="var(--accent)" strokeWidth={2} />
+```
+
+## Name what an icon means
+
+An icon is hidden from assistive technology by default, because the text next
+to it names the action. An icon-only control needs its own name:
+
+```tsx
+<Button aria-label="Settings"><Settings /></Button>
+```

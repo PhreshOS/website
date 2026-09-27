@@ -1,0 +1,40 @@
+---
+title: Contract discovery
+description: Read every phresh command's definition as structured data.
+---
+
+`phresh describe` returns the definition of a command as data: its name,
+aliases, arguments, options, examples, and output. Tools and agents use it to
+learn the CLI without parsing `--help` text.
+
+```sh
+phresh describe                        # the top-level commands
+phresh describe process create         # one command
+phresh describe --all --json           # every command, as JSON
+```
+
+It works without a running System.
+
+## What a description contains
+
+- the command path and its aliases, such as `set-geometry` for `setGeometry`;
+- its arguments and options, with whether each is required, repeatable, its
+  allowed choices, and its default;
+- guidance and examples;
+- whether it needs a running System;
+- the shape of its output, and its subcommands.
+
+`--help` is generated from the same definitions, so both always agree.
+
+## CLI commands and System operations
+
+`phresh describe` covers the commands of the CLI. The operations of the System
+itself are described by [Execute](/docs/sdks/core/execute):
+
+```sh
+phresh operation list
+phresh operation describe --domain endpoint --operation ask
+```
+
+The runtime commands are built from those operations, so their descriptions
+match.

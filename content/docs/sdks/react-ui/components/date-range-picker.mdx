@@ -1,0 +1,54 @@
+---
+title: Date Range Picker
+description: Type a start and end date, or pick them from a calendar.
+---
+
+<DateRangePickerShowcase />
+
+`DateRangePicker` has two date fields and a button that opens a
+[`RangeCalendar`](/docs/sdks/react-ui/components/range-calendar). Its value is
+`{ start, end }`, or `null`.
+
+```tsx
+import { parseDate } from "@internationalized/date"
+
+<DateRangePicker
+  label="Trip dates"
+  defaultValue={{ start: parseDate("2026-09-21"), end: parseDate("2026-09-24") }}
+/>
+```
+
+The calendar closes once the range is complete. Set
+`closeOnSelect={false}` to keep it open.
+
+## Control it
+
+```tsx
+<DateRangePicker label="Report period" value={period} onChange={setPeriod} open={open} onOpenChange={setOpen} />
+```
+
+## Forms
+
+`startName` and `endName` submit the two dates as separate form values:
+
+```tsx
+<DateRangePicker label="Reservation" startName="arrival" endName="departure" />
+```
+
+The limits work as in RangeCalendar, including the first chosen date passed to
+`isDateUnavailable`.
+
+## Props
+
+| Prop | Default | Sets |
+| --- | --- | --- |
+| `value`, `defaultValue`, `onChange` | — | A `DateRange` or `null` |
+| `open`, `defaultOpen`, `onOpenChange` | — | Whether the calendar is open |
+| `closeOnSelect` | `true` | Close after completing the range |
+| `startName`, `endName` | — | Form field names |
+| `nonContiguous` | `false` | Allow ranges across unavailable dates |
+| `leadingZeros` | `false` | Always show two-digit parts |
+| `minValue`, `maxValue`, `isDateUnavailable` | — | Allowed dates |
+| Field props | — | As in every field |
+| `color` | `"background"` | The fields |
+| `size`, `radius`, `material` | — | Their look |

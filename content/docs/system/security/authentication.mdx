@@ -1,0 +1,123 @@
+---
+title: Authentication
+description: The owner account, the browsers connected to the System, and their sign-in Sessions.
+---
+
+A PhreshOS System has one owner. The owner signs in to a Desktop with a
+username and password, set on the first visit.
+
+Two objects describe who is connected:
+
+- a **Connection** is one browser currently connected to the System, signed
+  in or not;
+- a **Session** is a sign-in. It can be shared by several Connections and
+  outlives each of them.
+
+```ts
+import { desktop } from "@phreshos/client"
+
+const connection = await desktop.connection()
+const session = await connection.session()   // null when not signed in
+```
+
+Node scripts and the CLI connect directly as the owner. They are not
+Connections and need no Session.
+
+## Connections
+
+```ts
+await connection.connected()   // whether the browser is still connected
+await connection.session()     // its Session, or null
+
+connection.subscribe("sessionChange", session => {})
+connection.subscribe("disconnect", () => {})
+```
+
+`signIn()` authorizes a connected browser that is not signed in yet, and
+creates a new Session for it:
+
+```ts
+const session = await connection.signIn()
+```
+
+It needs no password because credentials prove who is connecting, and the
+caller here is a Program already trusted with authentication, not the
+browser. For example, a Program could watch new Connections and approve
+remote ones without anyone typing a password on them.
+
+It rejects when the Connection is already signed in or no longer connected.
+It requires `authentication`, or `desktopConnection` for the Program's own
+Desktop.
+
+## Sessions
+
+```ts
+await session.valid()          // whether it can still sign Connections in
+await session.connections()    // Connections using it
+await session.signOut()        // end it
+
+session.subscribe("connectionAttach", connection => {})
+session.subscribe("connectionDetach", connection => {})
+session.subscribe("end", ({ reason }) => {})   // "signedOut" or "expired"
+```
+
+A Session stays valid while any Connection uses it. After the last one
+disconnects, it stays valid for 24 hours, so reopening the browser does not
+require signing in again. Signing out ends it immediately.
+
+Signing out does not close the browser connections; they stay connected but
+are no longer signed in.
+
+The browser keeps the Session's secret token. The System stores only a hash of
+it.
+
+## All Connections and Sessions
+
+`system.authentication` lists and follows everything connected to the System:
+
+```ts
+await system.authentication.connections()
+await system.authentication.connection(identity)   // or null
+await system.authentication.sessions()
+await system.authentication.session(identity)      // or null
+
+system.authentication.subscribe("connectionCreate", connection => {})
+system.authentication.subscribe("connectionDisconnect", connection => {})
+system.authentication.subscribe("sessionCreate", session => {})
+system.authentication.subscribe("sessionEnd", ({ session, reason }) => {})
+
+await system.authentication.signOutAllSessions()
+```
+
+## Owner credentials
+
+```ts
+await system.authentication.state()          // { username }; username is null before setup
+await system.authentication.requirements()   // allowed username and password lengths
+
+await system.authentication.setCredentials({ username: "owner", password: "…" })
+```
+
+Changing credentials affects future sign-ins only. To also sign everyone out,
+call `signOutAllSessions()`.
+
+## Permissions
+
+| Permission | Allows |
+| --- | --- |
+| `desktopConnection` | A Client reading its own Desktop's Connection and Session |
+| `authentication` | Everything on this page, including every Connection and Session and the owner credentials |
+
+See [Permissions](/docs/system/security/permissions).
+
+## Reference
+
+| Member | Result |
+| --- | --- |
+| `desktop.connection()` | This Desktop's Connection |
+| `connection.connected()`, `session()`, `signIn()` | One browser connection |
+| `session.valid()`, `connections()`, `signOut()` | One sign-in |
+| `system.authentication.connections()`, `connection(id)` | Connected browsers |
+| `system.authentication.sessions()`, `session(id)` | Valid Sessions |
+| `system.authentication.state()`, `requirements()`, `setCredentials()` | Owner credentials |
+| `system.authentication.signOutAllSessions()` | End every Session |

@@ -1,0 +1,85 @@
+---
+title: Overview
+description: The four pieces every running Program is made of, and how they fit together.
+icon: Cpu
+---
+
+Everything that runs on PhreshOS is described by four pieces:
+
+| Piece | What it is | Example |
+| --- | --- | --- |
+| [Program](/docs/runtime/programs) | A piece of software the System knows | A notes app |
+| [Process](/docs/runtime/processes) | One running instance of that Program | The notes app, open on one notebook |
+| [Endpoint](/docs/runtime/endpoints) | One of the two roles inside a Process: the Server or the Client | Its background sync, and its Window |
+| [Service](/docs/runtime/services) | A named Endpoint that other Programs can find and reach | The sync engine, offered to other apps |
+
+```text
+Program
+└── Process
+    ├── Server Endpoint   host-side code, runs without a browser
+    └── Client Endpoint   the interface, shown in a Desktop Window
+```
+
+## Why four pieces
+
+Each piece lives for a different length of time, so each owns different
+things:
+
+- A **Program** stays installed whether or not anything runs. It owns what
+  must last: files, storage, logs, and permissions.
+- A **Process** exists while one run is alive. It owns what that run shares:
+  its name, options, and lifetime.
+- An **Endpoint** can stop and start again inside its Process. Its handle stays
+  the same, so you can keep it across restarts.
+- A **Service** address stays known even while nobody provides it, so other
+  Programs can wait for it and reach it again.
+
+## How they fit together
+
+A Program creates Processes. Each Process has a Server and a Client, and runs
+whichever of them it needs. Code inside an Endpoint sees itself through
+[Context](/docs/runtime/context), and Endpoints talk to each other through
+[Communication](/docs/runtime/communication).
+
+```ts
+// Anywhere with access to the System
+const program = await system.program.find("notes")
+const process = await program.createProcess({ name: "main", client: true })
+
+// Inside the Client
+import { context } from "@phreshos/client"
+const notes = await context.server.ask("notes.list")
+
+// Inside the Server
+import { context } from "@phreshos/server"
+context.answer("notes.list", () => loadNotes())
+```
+
+## The same model everywhere
+
+You reach these pieces through `system`, whether your code runs in a Client,
+in a Server, in a Node script, or from the CLI. The environment only changes
+how the call reaches the System and which permissions apply:
+
+- a Program's Client and Server share that Program's permissions;
+- Node scripts and the CLI connect as the owner of the machine.
+
+```ts
+const program = await system.program.find("notes")
+```
+
+```sh
+phresh program inspect --program notes
+```
+
+Within one environment, reaching the same Program, Process, or Endpoint again
+returns the same handle object.
+
+<Cards>
+  <Card title="Programs" description="Identity, resources, installation." href="/runtime/programs" />
+  <Card title="Processes" description="Create, name, and end running instances." href="/runtime/processes" />
+  <Card title="Endpoints" description="Start, stop, and wait for the Server and Client." href="/runtime/endpoints" />
+  <Card title="Services" description="Offer and reach capabilities across Programs." href="/runtime/services" />
+  <Card title="Context" description="The running Endpoint's view of itself." href="/runtime/context" />
+  <Card title="Communication" description="Publish messages and ask questions." href="/runtime/communication" />
+</Cards>

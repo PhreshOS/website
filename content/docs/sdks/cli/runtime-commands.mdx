@@ -1,0 +1,109 @@
+---
+title: Runtime commands
+description: Inspect and control Programs, Processes, Endpoints, Services, and Windows from the terminal.
+---
+
+Runtime commands work on the running System, the same way the SDK does. Each
+one is an [Execute](/docs/sdks/core/execute) operation with terminal options.
+
+```sh
+phresh program list
+phresh process create --program notes --name main --client
+phresh endpoint ask --program notes --process main --endpoint server --event notes.list
+phresh window inspect --program notes --process main
+```
+
+Add `--json` to any of them for the full result as JSON.
+
+## Commands
+
+| Command | Subcommands |
+| --- | --- |
+| `program` | `list`, `inspect`, `agent`, `definition`, `get-startup`, `enable-startup`, `disable-startup`, `pinned`, `pin`, `unpin`, `get-permission`, `list-permissions`, `allows-permission`, `allow-permission`, `deny-permission`, `logs`, `wait` |
+| `process` | `list`, `inspect`, `create`, `find-or-create`, `exit`, `wait` |
+| `endpoint` | `inspect`, `start`, `stop`, `wait-ready`, `ask`, `publish`, `wait`, `wait-lifecycle`, `memory get/set/delete/entries` |
+| `service` | `list`, `search`, `inspect`, `wait-ready`, `ask`, `publish`, `wait`, `wait-lifecycle`, `wait-discovery` |
+| `window` | `inspect`, `move`, `resize`, `set-geometry`, `minimize`, `maximize`, `set-title`, `set-header`, `raise`, `wait` |
+| `operation` | `list`, `describe` |
+| `system logs` | Query the System log |
+| `execute` | Run any operation as raw JSON |
+
+The camelCase names, such as `setGeometry`, work as well.
+
+## Programs
+
+```sh
+phresh program list --installed-only --search notes --limit 10
+phresh program inspect --program notes
+phresh program logs --program notes --statement 'select * from logs order by createdAt desc limit 20'
+```
+
+See [Programs](/docs/runtime/programs).
+
+## Processes
+
+A Process name is unique only within its Program, so commands that use a name
+also need `--program`.
+
+```sh
+phresh process create \
+  --program notes \
+  --name main \
+  --server \
+  --client --client-width 900 --client-height 640 \
+  --option document=welcome.txt
+
+phresh process find-or-create --program notes --name main
+phresh process exit --program notes --process main
+phresh process wait --event exit --program notes --process main
+```
+
+`--server` and `--client` start an Endpoint; `--no-server` and `--no-client`
+keep it stopped. `--server-service` and `--client-service` make it a Service.
+`--replace` replaces a Process with the same name. See
+[Processes](/docs/runtime/processes).
+
+## Endpoints and Services
+
+```sh
+phresh endpoint start --program notes --process main --endpoint client
+phresh endpoint ask --program notes --process main --endpoint server --event notes.list
+phresh endpoint publish --program notes --process main --endpoint client --event theme.changed
+phresh endpoint wait-lifecycle --program notes --process main --endpoint server
+
+phresh service search --name editor
+```
+
+Read or change the memory of a running Client:
+
+```sh
+phresh endpoint memory get --program notes --process main --key tab
+phresh endpoint memory set --program notes --process main --key tab --value '"colors"'
+phresh endpoint memory entries --program notes --process main --json
+```
+
+`wait` waits for an event the Endpoint announces; `wait-lifecycle` waits for
+it to start or stop.
+
+Payloads on the command line are JSON, so values such as `Date`, `Map`, or
+binary data that the SDK can send are not available here. See
+[Communication](/docs/runtime/communication).
+
+## Windows
+
+```sh
+phresh window set-geometry --program notes --process main \
+  --x 0 --y 0 --width 100% --height 100%
+
+phresh window set-title --program notes --process main --title "Notes"
+```
+
+A number is always pixels, even in quotes: `--height 1` means one pixel. Use
+`100%` or `1/1` for the full height. See [Desktop](/docs/system/desktop).
+
+## Raw JSON
+
+```sh
+phresh execute '{"$domain":"program","$operation":"list"}'
+phresh operation describe --domain endpoint --operation ask
+```

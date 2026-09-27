@@ -1,0 +1,54 @@
+---
+title: Scroll Area
+description: Scroll content with slim scrollbars that take no space.
+---
+
+<ScrollAreaShowcase />
+
+`ScrollArea` scrolls its content like the browser does, with slim scrollbars
+drawn over the content. They appear while you scroll or point at them, and
+take no space from the layout.
+
+Give it a fixed height or width so its content can overflow:
+
+```tsx
+<ScrollArea style={{ height: 240 }}>
+  <ProcessList />
+</ScrollArea>
+```
+
+## Choose the direction
+
+Vertical is the default:
+
+```tsx
+<ScrollArea axis="horizontal" style={{ width: 480 }}>
+  <Timeline />
+</ScrollArea>
+
+<ScrollArea axis="both" style={{ width: 480, height: 320 }}>
+  <Canvas />
+</ScrollArea>
+```
+
+## Reach the scrolling element
+
+The ref points at the outer element. To read or set the scroll position, use
+`viewportRef`, the element that actually scrolls:
+
+```tsx
+const viewport = useRef<HTMLDivElement>(null)
+
+<ScrollArea viewportRef={viewport} onScroll={event => setTop(event.currentTarget.scrollTop)}>
+  <Logs />
+</ScrollArea>
+```
+
+## Props
+
+| Prop | Default | Sets |
+| --- | --- | --- |
+| `axis` | `"vertical"` | `vertical`, `horizontal`, or `both` |
+| `color` | `"foreground"` | The scrollbar color |
+| `viewportRef` | — | A ref to the scrolling element |
+| `onScroll` | — | Scroll events from that element |

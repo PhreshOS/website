@@ -1,0 +1,93 @@
+---
+title: Table
+description: Rows and columns of data, with optional selection, actions, and sorting.
+---
+
+<TableShowcase />
+
+`Table` shows records in columns. Each column and row has an `id`, and each
+cell can hold any content.
+
+```tsx
+<Table aria-label="Processes">
+  <Table.Header>
+    <Table.Column id="name" rowHeader>Name</Table.Column>
+    <Table.Column id="state">State</Table.Column>
+  </Table.Header>
+  <Table.Body>
+    <Table.Row id="notes">
+      <Table.Cell>Notes</Table.Cell>
+      <Table.Cell>Running</Table.Cell>
+    </Table.Row>
+  </Table.Body>
+</Table>
+```
+
+Mark the column that names each row with `rowHeader`, so screen readers can
+announce rows by it.
+
+## Rows from data
+
+```tsx
+<Table.Body items={processes}>
+  {process => (
+    <Table.Row id={process.id}>
+      <Table.Cell>{process.name}</Table.Cell>
+      <Table.Cell>{process.state}</Table.Cell>
+    </Table.Row>
+  )}
+</Table.Body>
+```
+
+When the render function uses other state, pass it in `dependencies` so rows
+update. `renderEmptyState` shows content when there are no rows.
+
+## Selection and actions
+
+Rows are not selectable by default. Selection works as in every collection:
+
+```tsx
+<Table aria-label="Processes" selectionMode="multiple" value={selected} onChange={setSelected}>
+  …
+</Table>
+```
+
+`onAction(id)` opens a row, separately from selecting it. A row is disabled
+with `disabled` on it.
+
+## Sorting
+
+Mark columns `sortable`. The Table reports what the person asked for; you sort
+the data and pass the result back:
+
+```tsx
+const [sort, setSort] = useState({ column: "name", direction: "ascending" })
+
+<Table aria-label="Processes" sort={sort} onSortChange={setSort}>
+  <Table.Header>
+    <Table.Column id="name" rowHeader sortable>Name</Table.Column>
+    <Table.Column id="state" sortable>State</Table.Column>
+  </Table.Header>
+  <Table.Body items={sortBy(processes, sort)}>…</Table.Body>
+</Table>
+```
+
+An arrow appears on the column the table is sorted by.
+
+## Look
+
+Selected rows show the `subtle` level of the Table's `color`, `primary` by default,
+under the same veil as hover.
+The Table has no background or scrolling of its own; put it in a Surface, a
+Panel, or a horizontal ScrollArea.
+
+## Parts
+
+| Part | Props |
+| --- | --- |
+| `Table` | `aria-label`, `selectionMode` (`"none"`), `value`, `defaultValue`, `onChange`, `onAction`, `sort`, `onSortChange`, `color` (`"primary"`), `size`, `radius` |
+| `Table.Header` | `columns` |
+| `Table.Column` | `id`, `rowHeader`, `sortable` |
+| `Table.Body` | `items`, `dependencies`, `renderEmptyState` |
+| `Table.Row` | `id`, `disabled` |
+| `Table.Cell` | Its content |

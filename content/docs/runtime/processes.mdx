@@ -1,0 +1,276 @@
+---
+title: Processes
+description: Running instances of a Program, with a Server and a Client that live and end together.
+icon: Workflow
+---
+
+A Process is one running instance of a Program. It holds the Program's two
+Endpoints, the Server and the Client, and gives them a shared name, shared
+options, and one lifetime: when the Process exits, both of them stop.
+
+A Program can run several Processes at once, such as one per open document or
+one per background job.
+
+```ts
+const process = await program.createProcess({ client: true })
+```
+
+## Create a Process
+
+`program.createProcess()` starts a new Process and resolves once it exists.
+With no argument, each Endpoint the Program declares starts according to its
+declaration.
+
+```ts
+const process = await program.createProcess()
+```
+
+Pass a Launch to choose which Endpoints start and how. `true` starts an
+Endpoint with its declared defaults, `false` leaves it stopped, and an object
+starts it with overrides:
+
+```ts
+const process = await program.createProcess({
+  server: true,
+  client: {
+    title: "Notes",
+    size: { width: 900, height: 640 },
+  },
+})
+```
+
+A Process must start at least one Endpoint, and it can only start Endpoints
+the Program declares.
+
+| Launch field | Meaning |
+| --- | --- |
+| `server` | `true`, `false`, or `{ service }` |
+| `client` | `true`, `false`, or Window settings: `title`, `header`, `size`, `position`, `layer`, `minimize`, `maximize`, and `service` |
+| `name` | A name unique among this Program's live Processes |
+| `replace` | Replace a live Process with the same `name` |
+| `options` | String values both Endpoints can read |
+
+`service: true` lets the Endpoint be discovered as a
+[Service](/docs/runtime/services). A `layer` other than `window` requires the
+`layers` [permission](/docs/system/security/permissions).
+
+A Program can have at most 20 live Processes.
+
+## Pass options
+
+`options` are string values fixed when the Process is created. Both Endpoints
+read the same values, from the Process or from their own
+[Context](/docs/runtime/context):
+
+```ts
+await program.createProcess({
+  client: true,
+  options: { document: "notes/today.md" },
+})
+
+// Inside either Endpoint
+const document = await context.options("document")
+```
+
+```ts
+await process.options()            // { document: "notes/today.md" }
+await process.options("document")  // "notes/today.md"
+```
+
+Options never change. To give a running Process new information, send it a
+message through [Communication](/docs/runtime/communication).
+
+## Name a Process
+
+A name gives a Process a stable address inside its Program, so you can find it
+again without keeping its identity.
+
+```ts
+await program.createProcess({ name: "main", client: true })
+
+const main = await program.findProcess("main")
+```
+
+Only one live Process per Program can hold a name. Creating another with the
+same name rejects, unless you ask to replace it:
+
+```ts
+await program.createProcess({ name: "main", client: true, replace: true })
+```
+
+`replace` exits the existing Process and creates the new one as a single step,
+so no other launch can take the name in between.
+
+To reuse a named Process when it already runs, use
+`findOrCreateProcess()`:
+
+```ts
+const main = await program.findOrCreateProcess({ name: "main", client: true })
+```
+
+It returns the existing Process when its launch matches, creates it when the
+name is free, and rejects when the name is held by a Process launched
+differently.
+
+## Reach its Endpoints
+
+Every Process has a `server` and a `client` handle, even when that Endpoint is
+stopped or the Program never declared it. The handles never change, so you can
+keep them and ask each one whether it is running:
+
+```ts
+if (await process.server.running()) {
+  await process.server.ask("status")
+}
+```
+
+Why always present: code can address a role directly and let the operation
+report whether it is running, instead of first checking for `null`.
+
+Starting, stopping, and talking to Endpoints is covered in
+[Endpoints](/docs/runtime/endpoints).
+
+## Find Processes
+
+From a Program:
+
+```ts
+await program.processes()               // every live Process
+await program.findProcess("main")       // by name or identity
+await program.oldestProcess()           // earliest started, or null
+await program.newestProcess()           // latest started, or null
+```
+
+Across the System:
+
+```ts
+await system.process.list()
+await system.process.find(identity)     // by identity only
+```
+
+`system.process.find()` accepts only an identity, because names are unique
+only within their Program. Both return only the Processes you are allowed to
+see.
+
+## Exit a Process
+
+`exit()` ends the Process and stops both of its Endpoints.
+
+```ts
+await process.exit()
+await process.exited()   // true
+```
+
+`program.exitProcesses()` ends every live Process of a Program and returns
+their identities.
+
+A Process also ends on its own:
+
+- when its Server stops unexpectedly, such as a crash. The Client is stopped
+  too, because the run it belonged to is no longer valid;
+- when its last running Endpoint stops.
+
+You cannot stop the last running Endpoint on its own. A Process with nothing
+running is not a Process anymore, so exit the Process instead.
+
+After a Process exits, `identity`, `name`, `startedAt`, and `exited()` stay
+available. Operations that act on the Process, such as `exit()` or
+`parent()`, reject because it no longer exists.
+
+## Observe the lifecycle
+
+A Process emits `exit` once, with how it ended:
+
+```ts
+const exit = await process.wait("exit")
+// { status: "exited" | "signaled", code, signal }
+```
+
+To follow every Process of a Program, or of the whole System:
+
+```ts
+program.subscribe("processCreate", process => {})
+program.subscribe("processExit", ({ process, status, code }) => {})
+
+system.process.subscribe("create", process => {})
+system.process.subscribe("exit", ({ process, status }) => {})
+```
+
+## Run a Process for as long as you need it
+
+`program.runProcess()` creates a Process whose lifetime belongs to the loop
+that reads it. It reports the start, the Server's output, and the exit, in
+order:
+
+```ts
+for await (const event of program.runProcess({ server: true })) {
+  if (event.event === "started") console.log(event.process.identity)
+  if (event.event === "output") console.log(event.stream, event.text)
+  if (event.event === "exited") console.log(event.exit)
+}
+```
+
+Leaving the loop early, aborting its `signal`, or losing the connection that
+started it exits the Process. This is how `phresh dev` ties a Program to a
+terminal session: closing the command ends the Process.
+
+## Parent and owner
+
+`program()` returns the Program that owns the Process. `parent()` returns the
+Process whose Endpoint created it, or `null`.
+
+```ts
+const owner = process.program()
+const parent = await process.parent()
+```
+
+A parent records where a Process came from, not who owns it: a child created
+by another Program's Process still belongs to its own Program, and it keeps
+running when its parent exits. `parent()` keeps returning the parent after
+that parent has exited.
+
+## Start a Process with the System
+
+`program.startup` stores a launch that the System runs every time it starts:
+
+```ts
+await program.startup.enable({ name: "main", server: true })
+await program.startup.get()      // the stored launch, or null
+await program.startup.disable()
+```
+
+## From the CLI
+
+```sh
+phresh process list --program notes
+phresh process create --program notes --name main --client
+phresh process find-or-create --program notes --name main
+phresh process inspect --process main --program notes
+phresh process exit --process main --program notes
+phresh process wait --event exit --process main --program notes
+```
+
+## Permissions
+
+An Endpoint can always create, find, and exit the Processes of its own
+Program. Reaching another Program's Processes requires the `programs`
+permission for that Program. See [Permissions](/docs/system/security/permissions).
+
+## Reference
+
+| Operation | Result |
+| --- | --- |
+| `program.createProcess(launch?)` | A new Process |
+| `program.findOrCreateProcess(launch)` | The named Process, created if absent |
+| `program.runProcess(launch?, { signal }?)` | Events of a Process owned by the loop |
+| `program.processes()` | Every live Process of the Program |
+| `program.findProcess(nameOrIdentity)` | A Process, or `null` |
+| `program.oldestProcess()` / `newestProcess()` | Earliest or latest started, or `null` |
+| `program.exitProcesses()` | Identities of the Processes it ended |
+| `program.startup` | The launch run when the System starts |
+| `system.process.list()` / `find(identity)` | Visible Processes across the System |
+| `process.identity`, `name`, `startedAt` | Fixed facts about the Process |
+| `process.server`, `process.client` | Permanent Endpoint handles |
+| `process.options(name?)` | All options, or one option |
+| `process.program()` / `parent()` | Owner, and creator or `null` |
+| `process.exit()` / `exited()` | End the Process, or check whether it ended |

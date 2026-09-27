@@ -1,0 +1,32 @@
+---
+title: Tooltip
+description: A short description that appears on hover or focus.
+---
+
+<TooltipShowcase />
+
+`Tooltip` shows a short text when someone points at or focuses its trigger,
+typically to explain an icon.
+
+```tsx
+<Tooltip>
+  <Tooltip.Trigger aria-label="Information">
+    <InfoIcon />
+  </Tooltip.Trigger>
+  <Tooltip.Content>Visible only to this Program</Tooltip.Content>
+</Tooltip>
+```
+
+The trigger still needs its own name, such as `aria-label`: a tooltip does not
+replace it.
+
+Keep tooltips to a few words, and never put anything required or clickable in
+them. Use [`Popover`](/docs/sdks/react-ui/components/popover) for that.
+
+## Parts
+
+| Part | Props |
+| --- | --- |
+| `Tooltip` | `open`, `defaultOpen`, `onOpenChange`, `delay`, `closeDelay`, `closeOnPress`, `disabled` |
+| `Tooltip.Trigger` | Button props |
+| `Tooltip.Content` | `placement` (`"top"`), Surface props |

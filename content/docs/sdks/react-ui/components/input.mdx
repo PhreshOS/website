@@ -1,0 +1,68 @@
+---
+title: Input
+description: A single-line text field with a label, help text, and validation.
+---
+
+<InputShowcase />
+
+`Input` is a text field with its label, help text, and error message built in.
+Its value is a string.
+
+```tsx
+const [name, setName] = useState("")
+
+<Input label="Name" value={name} onChange={setName} />
+```
+
+It follows the [field props](/docs/sdks/react-ui/shared-props#2-everything-that-holds-a-value-is-a-field)
+shared by every field.
+
+## Validate
+
+Set `invalid` with an `errorMessage` when your validation fails. `required`
+marks the field as required; the rules are yours.
+
+```tsx
+<Input
+  label="Username"
+  value={username}
+  onChange={setUsername}
+  required
+  invalid={username.length > 0 && username.length < 3}
+  errorMessage="Use at least three characters."
+/>
+```
+
+## Without a visible label
+
+A placeholder is not a name. Use `aria-label`:
+
+```tsx
+<Input aria-label="Search Programs" placeholder="Search…" type="search" />
+```
+
+## Types
+
+`type` accepts `text` (the default), `email`, `password`, `search`, `tel`, and
+`url`, with their browser behavior.
+
+## Look
+
+A field is a recessed Surface painted from `background`, slightly deeper than
+what surrounds it. Focus and errors color its outline. `color`, `size`,
+`radius`, and `material` change it.
+
+`readOnly` keeps the value readable and focusable; `disabled` turns the field
+off.
+
+## Props
+
+| Prop | Default | Sets |
+| --- | --- | --- |
+| `value`, `defaultValue`, `onChange` | — | Its text |
+| `label`, `description`, `errorMessage` | — | Its text around it |
+| `invalid`, `required`, `readOnly`, `disabled` | `false` | Its state |
+| `type` | `"text"` | The input type |
+| `placeholder`, `name` | — | Native attributes |
+| `color` | `"background"` | Its color |
+| `size`, `radius`, `material` | — | Its Surface |

@@ -1,0 +1,11 @@
+{
+  "title": "Start",
+  "description": "Install PhreshOS and build a Program",
+  "icon": "Rocket",
+  "pages": [
+    "index",
+    "what-is-phreshos",
+    "installation",
+    "first-program"
+  ]
+}

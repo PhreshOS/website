@@ -1,0 +1,53 @@
+---
+title: Date Field
+description: Type a date as day, month, and year, in the order of the person's locale.
+---
+
+<DateFieldShowcase />
+
+`DateField` enters a date without a time or time zone. Its parts follow the
+person's locale, and its value is a `CalendarDate` from
+`@internationalized/date`, or `null` when empty.
+
+```tsx
+import { parseDate } from "@internationalized/date"
+
+<DateField label="Due date" defaultValue={parseDate("2026-09-21")} />
+```
+
+```tsx
+const [due, setDue] = useState<CalendarDate | null>(null)
+
+<DateField label="Due date" value={due} onChange={setDue} />
+```
+
+Each part accepts typing and the arrow keys. You always receive one complete
+date, never the separate parts.
+
+## Limit the dates
+
+```tsx
+<DateField
+  label="Maintenance date"
+  minValue={parseDate("2026-09-01")}
+  maxValue={parseDate("2026-09-30")}
+  isDateUnavailable={date => date.day === 7}
+/>
+```
+
+Dates outside the range or marked unavailable make the field invalid.
+
+To pick from a calendar as well, use
+[`DatePicker`](/docs/sdks/react-ui/components/date-picker).
+
+## Props
+
+| Prop | Default | Sets |
+| --- | --- | --- |
+| `value`, `defaultValue`, `onChange` | — | A `CalendarDate` or `null` |
+| `minValue`, `maxValue` | — | The allowed range, inclusive |
+| `isDateUnavailable` | — | Dates to refuse |
+| `leadingZeros` | `false` | Always show two-digit days and months |
+| Field props | — | `label`, `description`, `errorMessage`, `invalid`, `required`, `readOnly`, `disabled` |
+| `color` | `"background"` | Its color |
+| `size`, `radius`, `material` | — | Its Surface |

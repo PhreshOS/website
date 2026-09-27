@@ -1,0 +1,71 @@
+---
+title: Overview
+description: What the System provides to Programs, and how to reach it.
+icon: MonitorCog
+---
+
+The System is PhreshOS itself: the service running on your machine. It keeps
+Programs running, carries their messages, stores their data, controls what they
+may access, and serves the Desktop.
+
+Everything it offers is reached through one object, `system`. It is the same
+in a Client, a Server, and a Node script; only the permissions that apply
+differ.
+
+```ts
+import { system } from "@phreshos/server"   // or @phreshos/client, or System.connect() in Node
+
+const programs = await system.program.list()
+const appearance = await system.appearance.snapshot()
+```
+
+## What it provides
+
+| Capability | For |
+| --- | --- |
+| `system.program`, `system.process`, `system.service` | Programs, their running Processes, and Services; see [Runtime](/docs/runtime) |
+| [`system.appearance`](/docs/system/appearance) | The shared visual settings |
+| [`system.storage`, `system.uploads`](/docs/system/storage) | Files on the machine, and uploaded files |
+| [`system.logs`](/docs/system/logs) | The System log |
+| [`system.network`](/docs/system/network) | HTTP requests and WebSockets |
+| [`system.shell()`](/docs/system/shell) | Operating-system commands |
+| [`system.authentication`](/docs/system/security/authentication) | The owner, Connections, and Sessions |
+| [`system.permissions`](/docs/system/security/permissions#decide-requests) | Pending permission requests |
+| [`system.execute()`](/docs/sdks/core/execute) | The same operations as JSON, for tools and agents |
+
+## What you see depends on who you are
+
+A Program sees only what its [permissions](/docs/system/security/permissions)
+allow. Lists leave out what it cannot see, and lookups return `null`, so
+having `system` does not by itself reveal anything.
+
+Node scripts and the CLI connect as the owner and see everything.
+
+## Current state and changes
+
+Each capability lets you read the current state, and subscribe to what
+changes next:
+
+```ts
+const processes = await system.process.list()
+system.process.subscribe("create", process => {})
+```
+
+Subscriptions only report changes from now on, so read first, then subscribe.
+
+## The Desktop
+
+The [Desktop](/docs/system/desktop) is the System's interface in the browser. It
+shows what the System holds, but the state lives in the System: the browser
+does not own the lifecycle of Programs or Processes, and several Desktops can
+show the same System at once.
+
+<Cards>
+  <Card title="Desktop" description="Windows, layers, and Desktop preferences." href="/system/desktop" />
+  <Card title="Appearance" description="Colors, spacing, material, Taskbar, wallpapers." href="/system/appearance" />
+  <Card title="Storage" description="Files, uploads, key-value store, SQLite." href="/system/storage" />
+  <Card title="Network" description="Fetch and WebSocket under permissions." href="/system/network" />
+  <Card title="Shell" description="Run operating-system commands." href="/system/shell" />
+  <Card title="Logs" description="System and Program records." href="/system/logs" />
+  <Card title="Security" description="Authentication, permissions, execution modes." href="/system/security" />
+</Cards>

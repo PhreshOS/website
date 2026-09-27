@@ -1,0 +1,32 @@
+---
+title: Segmented Control
+description: Choose one of a few options that stay visible.
+---
+
+<SegmentedControlShowcase />
+
+`SegmentedControl` chooses one value from a few options, all visible at once.
+Its value is the chosen Item's `id`:
+
+```tsx
+<SegmentedControl label="Theme" value={theme} onChange={setTheme}>
+  <SegmentedControl.Item id="system"><Monitor />System</SegmentedControl.Item>
+  <SegmentedControl.Item id="light"><Sun />Light</SegmentedControl.Item>
+  <SegmentedControl.Item id="dark"><Moon />Dark</SegmentedControl.Item>
+</SegmentedControl>
+```
+
+A choice cannot be emptied: pressing the chosen option keeps it.
+
+It shares the [`Tabs`](/docs/sdks/react-ui/components/tabs) track, and the selection
+slides the same way. The difference is only its purpose: Tabs switch what is
+shown, a SegmentedControl sets a value. Use
+[`Select`](/docs/sdks/react-ui/components/select) when the options are too many to
+show at once.
+
+## Parts
+
+| Part | Props |
+| --- | --- |
+| `SegmentedControl` | `value`, `defaultValue`, `onChange`, `orientation`, `label`, `description`, `color` (`"default"`), `size`, `radius`, `material`, `disabled` |
+| `SegmentedControl.Item` | `id`, `disabled`; its label may lead with an icon |

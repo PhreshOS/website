@@ -1,0 +1,53 @@
+---
+title: Date Picker
+description: Type a date, or pick it from a calendar.
+---
+
+<DatePickerShowcase />
+
+`DatePicker` is a [`DateField`](/docs/sdks/react-ui/components/date-field) with a
+button that opens a [`Calendar`](/docs/sdks/react-ui/components/calendar). Typing
+and picking change the same value, a `CalendarDate` or `null`.
+
+```tsx
+import { parseDate } from "@internationalized/date"
+
+<DatePicker label="Appointment" value={date} onChange={setDate} />
+```
+
+Choosing a day closes the calendar. Set `closeOnSelect={false}` to keep
+it open.
+
+## Control the calendar
+
+```tsx
+<DatePicker label="Release date" value={date} onChange={setDate} open={open} onOpenChange={setOpen} />
+```
+
+`defaultOpen` opens it at first.
+
+## Limit the dates
+
+The same props as DateField:
+
+```tsx
+<DatePicker
+  label="Delivery date"
+  minValue={parseDate("2026-09-01")}
+  isDateUnavailable={date => date.day === 7}
+  description="The 7th of each month is unavailable."
+/>
+```
+
+## Props
+
+| Prop | Default | Sets |
+| --- | --- | --- |
+| `value`, `defaultValue`, `onChange` | — | A `CalendarDate` or `null` |
+| `open`, `defaultOpen`, `onOpenChange` | — | Whether the calendar is open |
+| `closeOnSelect` | `true` | Close after choosing a day |
+| `minValue`, `maxValue`, `isDateUnavailable` | — | Allowed dates |
+| `leadingZeros` | `false` | Always show two-digit parts |
+| Field props | — | As in every field |
+| `color` | `"background"` | The field |
+| `size`, `radius`, `material` | — | Its look |

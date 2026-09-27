@@ -1,0 +1,15 @@
+{
+  "title": "System",
+  "description": "Operate the runtime and desktop",
+  "icon": "MonitorCog",
+  "pages": [
+    "index",
+    "desktop",
+    "appearance",
+    "storage",
+    "logs",
+    "network",
+    "shell",
+    "security"
+  ]
+}

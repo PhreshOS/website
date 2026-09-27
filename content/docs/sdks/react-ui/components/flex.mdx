@@ -1,0 +1,52 @@
+---
+title: Flex
+description: Arrange children in a row or a column, with gaps from the Appearance.
+---
+
+<FlexShowcase />
+
+`Flex` lays out its children in a row or a column. It only arranges: it paints
+nothing and adds no padding.
+
+```tsx
+<Flex align="center" justify="between" gap="medium">
+  <span>Connection</span>
+  <Button size="small">Reconnect</Button>
+</Flex>
+```
+
+## Direction and wrapping
+
+```tsx
+<Flex direction="column" gap="small">
+  <Input label="Name" />
+  <Input label="Email" />
+</Flex>
+
+<Flex wrap gap="small">{tags}</Flex>
+```
+
+## Alignment
+
+`align` places children across the direction, `justify` along it. Both use
+`start` and `end` rather than left and right, so a layout flips correctly in
+right-to-left interfaces.
+
+| Prop | Values |
+| --- | --- |
+| `align` | `start`, `center`, `end`, `stretch`, `baseline` |
+| `justify` | `start`, `center`, `end`, `between`, `around`, `evenly` |
+
+Use [`Grid`](/docs/sdks/react-ui/components/grid) when both rows and columns matter.
+
+## Props
+
+| Prop | Default | Sets |
+| --- | --- | --- |
+| `direction` | `"row"` | `row`, `column`, `row-reverse`, `column-reverse` |
+| `gap` | — | A size level, pixels, or CSS; see [Spacing](/docs/sdks/react-ui/size-and-radius#spacing) |
+| `align`, `justify` | — | Alignment |
+| `wrap` | `false` | `true` or `"reverse"` |
+| `inline` | `false` | Lay out inline with text |
+
+`Flex` also accepts every `div` prop.

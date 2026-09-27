@@ -1,0 +1,31 @@
+---
+title: Color Slider
+description: Adjust one channel of a color, such as hue or opacity.
+---
+
+<ColorSliderShowcase />
+
+`ColorSlider` changes one `channel` of a color on a track painted with that
+channel's range. Its value is the whole color, as a hex string:
+
+```tsx
+<ColorSlider label="Hue" channel="hue" colorSpace="hsl" value={color} onChange={setColor} />
+<ColorSlider label="Opacity" channel="alpha" value={color} onChange={setColor} />
+```
+
+`colorSpace` chooses where the channel comes from: `"hsl"` or `"hsb"` for hue
+and saturation, `"rgb"` for red, green, and blue. `alpha` works in any space.
+
+Inside a [`ColorPicker`](/docs/sdks/react-ui/components/color-picker) it edits the
+picker's color without its own `value`.
+
+## Props
+
+| Prop | Default | Sets |
+| --- | --- | --- |
+| `channel` | — | The channel it changes |
+| `colorSpace` | The color's own | Where the channel comes from |
+| `value`, `defaultValue`, `onChange`, `onChangeEnd` | — | Its value |
+| `orientation` | `"horizontal"` | Its direction |
+| `label`, `description` | — | Its text |
+| `size`, `disabled` | — | Its size and state |

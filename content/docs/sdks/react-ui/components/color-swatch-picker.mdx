@@ -1,0 +1,30 @@
+---
+title: Color Swatch Picker
+description: Choose one color from a set of swatches.
+---
+
+<ColorSwatchPickerShowcase />
+
+`ColorSwatchPicker` chooses one color from ready-made swatches. Its value is the
+chosen Item's `value`, a hex color:
+
+```tsx
+<ColorSwatchPicker aria-label="Accent" value={color} onChange={setColor}>
+  <ColorSwatchPicker.Item value="#f5b37d" />
+  <ColorSwatchPicker.Item value="#1b9aa6" />
+  <ColorSwatchPicker.Item value="#3f7de0" disabled />
+</ColorSwatchPicker>
+```
+
+Arrow keys move between swatches. The selected swatch has a ring in the text
+color, and the focused one a ring in `primary`.
+
+Inside a [`ColorPicker`](/docs/sdks/react-ui/components/color-picker) it sets the
+picker's color, so presets sit next to the other editors.
+
+## Parts
+
+| Part | Props |
+| --- | --- |
+| `ColorSwatchPicker` | `value`, `defaultValue`, `onChange`, `size`, `radius` |
+| `ColorSwatchPicker.Item` | `value`, `disabled` |

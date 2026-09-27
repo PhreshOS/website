@@ -1,0 +1,71 @@
+---
+title: Panel
+description: A frosted frame with an optional header and a solid content area.
+---
+
+<PanelShowcase />
+
+`Panel` groups related content: a frosted frame, an optional header, and a
+more solid area that holds the content.
+
+```tsx
+<Panel>
+  <Panel.Header>Connection</Panel.Header>
+  <Panel.Content>
+    Connected to the local System.
+  </Panel.Content>
+</Panel>
+```
+
+`Panel.Content` sits half the Appearance `spacing` inside the frame and pads
+its content by the `spacing`. The padding is a default: a class or
+`style` replaces it, for example `padding: 0` for content that scrolls edge to
+edge.
+
+## Without a header
+
+Leave out `Panel.Header` and the content sits evenly inside the frame:
+
+```tsx
+<Panel>
+  <Panel.Content>
+    <SettingsForm />
+  </Panel.Content>
+</Panel>
+```
+
+## Style the frame and the content separately
+
+The frame and the content are two Surfaces, each with its own props:
+
+```tsx
+<Panel material="basic">
+  <Panel.Header>Processes</Panel.Header>
+  <Panel.Content color="background:soft" material="basic">
+    <ProcessList />
+  </Panel.Content>
+</Panel>
+```
+
+By default the frame uses the `full` material and the content takes the
+frame's `color`, raised, with the `extended` material. The content is set apart
+by its material rather than a different color, and fields inside it, which are
+recessed, stand out from it.
+
+The header is the same row as a [Window](/docs/sdks/react-ui/components/window)
+header: 16px plus the Appearance `spacing` above and below, padded by the
+`spacing` at the sides.
+
+The frame and the content both use the Appearance radius, following
+[the radius rules](/docs/sdks/react-ui/size-and-radius#radius).
+
+For a single painted area without this structure, use
+[`Surface`](/docs/sdks/react-ui/components/surface).
+
+## Parts
+
+| Part | Is |
+| --- | --- |
+| `Panel` | The frame, `full` material by default. Accepts Surface props |
+| `Panel.Header` | A row for a title and actions. Accepts `div` props |
+| `Panel.Content` | The content area, in the frame's color with `extended` material. Accepts Surface props |

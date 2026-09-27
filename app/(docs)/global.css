@@ -1,0 +1,207 @@
+@import 'tailwindcss';
+@import 'fumadocs-ui/css/neutral.css';
+@import 'fumadocs-ui/css/preset.css';
+
+@theme inline {
+  --default-font-family: var(--font-sans);
+  --default-mono-font-family: var(--font-mono);
+}
+
+:root {
+  --color-fd-primary: hsl(164, 82%, 34%);
+}
+
+.dark {
+  --color-fd-primary: hsl(154, 72%, 63%);
+}
+
+html {
+  scrollbar-gutter: stable;
+}
+
+html > body[data-scroll-locked] {
+  margin-right: 0px !important;
+  --removed-body-scroll-bar-size: 0px !important;
+}
+
+body {
+  background-color: var(--color-fd-background);
+}
+
+.component-preview {
+  margin-block: 1rem;
+  overflow: hidden;
+  border: 1px solid var(--color-fd-border);
+  border-radius: 0.75rem;
+}
+
+.component-preview-tabs {
+  display: flex;
+  gap: 0.25rem;
+  padding: 0.25rem;
+  border-bottom: 1px solid var(--color-fd-border);
+  background: var(--color-fd-secondary);
+}
+
+.component-preview-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.625rem;
+  border: 0;
+  border-radius: 0.375rem;
+  background: transparent;
+  color: var(--color-fd-muted-foreground);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.25rem;
+  cursor: pointer;
+  transition: color 100ms, background-color 100ms;
+}
+
+.component-preview-tab:hover {
+  color: var(--color-fd-foreground);
+}
+
+.component-preview-tab[aria-selected="true"] {
+  background: var(--color-fd-background);
+  color: var(--color-fd-foreground);
+}
+
+.component-preview-tab:focus-visible {
+  outline: 2px solid var(--color-fd-ring);
+  outline-offset: -2px;
+}
+
+.component-preview-tab svg {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+.component-preview-result {
+  min-height: 0;
+  padding: 0;
+  overflow: visible;
+}
+
+.component-preview-loading {
+  display: grid;
+  min-height: 20rem;
+  place-items: center;
+  color: var(--color-fd-muted-foreground);
+  font-size: 0.8125rem;
+}
+
+.component-preview-loading-content {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.component-preview-loading-icon {
+  width: 1rem;
+  height: 1rem;
+  animation: component-preview-loading 800ms linear infinite;
+}
+
+@keyframes component-preview-loading {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .component-preview-loading-icon { animation: none; }
+}
+
+.component-showcase-stage {
+  min-height: 20rem;
+}
+
+.component-showcase-stage-content {
+  display: grid;
+  width: 100%;
+  min-height: 16rem;
+  place-items: center;
+}
+
+.component-showcase {
+  display: grid;
+  width: 100%;
+  align-items: stretch;
+}
+
+.component-showcase-with-controls {
+  grid-template-columns: minmax(0, 1fr) minmax(12rem, 15rem);
+}
+
+.component-showcase-scene {
+  display: grid;
+  min-width: 0;
+  place-items: center;
+}
+
+.component-showcase-controls-title {
+  font-size: 0.75em;
+  font-weight: 500;
+  opacity: 0.72;
+}
+
+.component-showcase-controls-fields {
+  display: grid;
+  align-content: start;
+}
+
+@media (max-width: 48rem) {
+  .component-showcase-with-controls {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.component-preview-code > .docs-code-block {
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+}
+
+.docs-code-block {
+  border-color: var(--color-fd-border);
+  background: var(--color-fd-card);
+  box-shadow: none;
+}
+
+.docs-code-block > div:first-child:not([role="region"]) {
+  background: var(--color-fd-secondary);
+}
+
+.docs-code-block-viewport {
+  padding-block: 1rem;
+  font-size: 0.8125rem;
+  line-height: 1.65;
+}
+
+.component-preview-code .docs-code-block-viewport {
+  max-height: 22rem;
+}
+
+.docs-code-block-viewport::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.docs-code-block-viewport::-webkit-scrollbar-thumb {
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background: var(--color-fd-muted-foreground);
+  background-clip: padding-box;
+}
+
+.mental-model {
+  display: block;
+  width: 100%;
+  max-width: 48rem;
+  height: auto;
+  margin-inline: auto;
+}
+
+.dark .mental-model {
+  filter: invert(100%);
+}

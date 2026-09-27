@@ -1,0 +1,34 @@
+---
+title: Dropdown Menu
+description: A menu that opens from a button.
+---
+
+<DropdownMenuShowcase />
+
+`DropdownMenu` opens a [`Menu`](/docs/sdks/react-ui/components/menu) from a button:
+
+```tsx
+<DropdownMenu>
+  <DropdownMenu.Trigger>Actions</DropdownMenu.Trigger>
+  <DropdownMenu.Content>
+    <Menu aria-label="Note" onAction={run}>
+      <Menu.Item id="rename">Rename</Menu.Item>
+      <Menu.Item id="delete" color="danger">Delete</Menu.Item>
+    </Menu>
+  </DropdownMenu.Content>
+</DropdownMenu>
+```
+
+Choosing an item closes the menu.
+
+Use [`ContextMenu`](/docs/sdks/react-ui/components/context-menu) to open the same
+Menu with a right-click.
+
+## Parts
+
+| Part | Props |
+| --- | --- |
+| `DropdownMenu` | `open`, `defaultOpen`, `onOpenChange` |
+| `DropdownMenu.Trigger` | Button props |
+| `DropdownMenu.Content` | `placement`, `portalContainer`, Surface props |
+| `DropdownMenu.Menu` | The same as `Menu` |

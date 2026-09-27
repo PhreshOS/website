@@ -1,0 +1,76 @@
+---
+title: Tree
+description: A nested list of items that expand to show their children.
+---
+
+<TreeShowcase />
+
+`Tree` shows items inside items, such as folders and files.
+
+```tsx
+<Tree aria-label="Files" defaultExpanded={["source"]}>
+  <Tree.Item id="source" textValue="source">
+    <Tree.Content>source</Tree.Content>
+    <Tree.Item id="main" textValue="main.ts">
+      <Tree.Content>main.ts</Tree.Content>
+    </Tree.Item>
+  </Tree.Item>
+</Tree>
+```
+
+`Tree.Content` is what the row shows; on an item with children, it also
+includes the expand control. `textValue` names the item for screen readers and
+for typing to jump.
+
+## Expand
+
+Items start collapsed, unless listed in `defaultExpanded`. To control it:
+
+```tsx
+const [expanded, setExpanded] = useState<readonly string[]>(["source"])
+
+<Tree aria-label="Files" expanded={expanded} onExpandedChange={setExpanded}>…</Tree>
+```
+
+Expanding an item does not select it.
+
+## Select and open
+
+Items are not selectable by default. Selection works as in every collection,
+and `onAction(id)` opens an item, separately from selecting it:
+
+```tsx
+<Tree aria-label="Files" selectionMode="single" value={file} onChange={setFile} onAction={open}>
+  …
+</Tree>
+```
+
+An item is disabled with `disabled` on it.
+
+## Items from data
+
+Pass the top level as `items`, and render children with `Tree.Collection`:
+
+```tsx
+function renderEntry(entry: Entry) {
+  return (
+    <Tree.Item id={entry.id} textValue={entry.name}>
+      <Tree.Content>{entry.name}</Tree.Content>
+      {entry.children && <Tree.Collection items={entry.children}>{renderEntry}</Tree.Collection>}
+    </Tree.Item>
+  )
+}
+
+<Tree aria-label="Files" items={entries}>{renderEntry}</Tree>
+```
+
+The Tree has no background or scrolling of its own.
+
+## Parts
+
+| Part | Props |
+| --- | --- |
+| `Tree` | `aria-label`, `expanded`, `defaultExpanded`, `onExpandedChange`, `selectionMode` (`"none"`), `value`, `defaultValue`, `onChange`, `onAction`, `items`, `color` (`"primary"`), `size`, `radius` |
+| `Tree.Item` | `id`, `textValue`, `disabled` |
+| `Tree.Content` | Its content |
+| `Tree.Collection` | `items` |

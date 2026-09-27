@@ -1,0 +1,93 @@
+---
+title: Execute
+description: Call System operations as plain JSON, for agents, scripts, and tools.
+---
+
+Execute lets you call System operations with one JSON object and get JSON
+back. It exists for callers that cannot hold SDK handles: AI agents, shell
+scripts, and generic tools.
+
+```ts
+const notes = await system.execute({
+  $domain: "endpoint",
+  $operation: "ask",
+  program: "notes",
+  process: "main",
+  endpoint: "server",
+  event: "notes.list",
+  input: null,
+})
+```
+
+The same request works from the terminal:
+
+```sh
+phresh execute '{"$domain":"process","$operation":"list"}'
+```
+
+## How a request looks
+
+`$domain` and `$operation` choose the operation; the other fields are its
+input. Handles are replaced by plain names, such as `program`, `process`, and
+`endpoint`.
+
+Execute calls the same SDK operations you would call directly, with the same
+permissions and the same errors. A failed operation rejects.
+
+## Find operations
+
+Execute describes itself, so a caller can discover what it can do:
+
+```ts
+await system.execute({ $domain: "operation", $operation: "list" })
+await system.execute({ $domain: "operation", $operation: "list", domain: "endpoint" })
+
+await system.execute({
+  $domain: "operation",
+  $operation: "describe",
+  domain: "endpoint",
+  operation: "ask",
+})
+```
+
+`describe` returns what the operation does and the JSON Schema of its input
+and result. These schemas are the ones used to check each request.
+
+The same catalog is available without a System, from Core:
+
+```ts
+import { describeExecuteOperation, listExecuteOperations } from "@phreshos/core"
+
+listExecuteOperations("endpoint")
+describeExecuteOperation("endpoint", "ask")   // or null
+```
+
+## Check a request
+
+In TypeScript, `ExecuteRequest` types every request from its schema. For a
+value from outside, check it first:
+
+```ts
+import { parseExecuteRequest } from "@phreshos/core"
+
+const request = parseExecuteRequest(JSON.parse(input))
+const result = await system.execute(request)
+```
+
+## Operations
+
+| Domain | Operations |
+| --- | --- |
+| `operation` | `list`, `describe` |
+| `system` | `logs` |
+| `program` | `list`, `find`, `agent`, `definition`, `getStartup`, `enableStartup`, `disableStartup`, `pinned`, `pin`, `unpin`, `getPermission`, `listPermissions`, `allowsPermission`, `allowPermission`, `denyPermission`, `logs`, `wait` |
+| `process` | `list`, `find`, `create`, `findOrCreate`, `exit`, `wait` |
+| `endpoint` | `inspect`, `start`, `stop`, `waitReady`, `ask`, `publish`, `wait`, `waitLifecycle` |
+| `service` | `list`, `search`, `inspect`, `waitReady`, `ask`, `publish`, `wait`, `waitLifecycle`, `waitDiscovery` |
+| `window` | `inspect`, `move`, `resize`, `setGeometry`, `minimize`, `maximize`, `setTitle`, `setHeader`, `raise`, `wait` |
+
+`system.logs` and `program.logs` take a read-only SQL statement over the `logs`
+table; see [Logs](/docs/system/logs).
+
+Each operation behaves like its SDK counterpart, documented in
+[Runtime](/docs/runtime) and [System](/docs/system).

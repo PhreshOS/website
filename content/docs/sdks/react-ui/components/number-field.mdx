@@ -1,0 +1,43 @@
+---
+title: Number Field
+description: Type or step a number within a range.
+---
+
+<NumberFieldShowcase />
+
+`NumberField` holds a number. Type it, step it with the buttons or the arrow
+keys, or scroll over it. Its value is a number, or `null` while the field is
+empty:
+
+```tsx
+<NumberField label="Spacing" value={spacing} onChange={setSpacing} minValue={6} maxValue={18} />
+```
+
+## Units and formats
+
+`formatOptions` takes `Intl.NumberFormat` options, so the unit is part of the
+value shown and typed:
+
+```tsx
+<NumberField label="Duration" formatOptions={{ style: "unit", unit: "millisecond" }} step={10} />
+<NumberField label="Opacity" formatOptions={{ style: "percent" }} minValue={0} maxValue={1} step={0.01} />
+```
+
+The value is checked against its range when the field loses focus, and the
+steppers stop at either end.
+
+It follows the [field props](/docs/sdks/react-ui/shared-props#2-everything-that-holds-a-value-is-a-field),
+and its well and steppers are the same as a
+[`ComboBox`](/docs/sdks/react-ui/components/combo-box) and a
+[`DatePicker`](/docs/sdks/react-ui/components/date-picker).
+
+## Props
+
+| Prop | Default | Sets |
+| --- | --- | --- |
+| `value`, `defaultValue`, `onChange` | — | Its value |
+| `minValue`, `maxValue`, `step` | — | Its range |
+| `formatOptions` | — | How it is shown and read, as `Intl.NumberFormat` options |
+| field props | — | Label, description, error, and states |
+| `color` | `"background"` | Its paint |
+| `size`, `radius`, `material` | — | Its size, corners, and material |

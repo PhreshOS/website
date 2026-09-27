@@ -1,0 +1,30 @@
+---
+title: Color Field
+description: Type a color as a hex value.
+---
+
+<ColorFieldShowcase />
+
+`ColorField` reads a typed color. Its value is a hex string, or `null` while
+the field is empty:
+
+```tsx
+<ColorField label="Accent" value={color} onChange={setColor} />
+```
+
+The value is checked when the field loses focus, and arrow keys step it. Set
+`channel` to type one channel as a number instead, such as `"hue"`.
+
+It follows the [field props](/docs/sdks/react-ui/shared-props#2-everything-that-holds-a-value-is-a-field).
+Inside a [`ColorPicker`](/docs/sdks/react-ui/components/color-picker) it edits the
+picker's color.
+
+## Props
+
+| Prop | Default | Sets |
+| --- | --- | --- |
+| `value`, `defaultValue`, `onChange` | — | Its value |
+| `channel`, `colorSpace` | — | One channel instead of the whole color |
+| field props | — | Label, description, error, and states |
+| `color` | `"background"` | Its paint |
+| `size`, `radius`, `material` | — | Its size, corners, and material |

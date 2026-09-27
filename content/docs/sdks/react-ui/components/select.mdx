@@ -1,0 +1,66 @@
+---
+title: Select
+description: Choose one option from a list that opens on demand.
+---
+
+<SelectShowcase />
+
+`Select` lets people pick one option from a list that stays closed until
+opened. Its value is the `id` of the chosen item, or `null`.
+
+```tsx
+<Select label="Region" value={region} onChange={setRegion}>
+  <Select.Item id="eu">Europe</Select.Item>
+  <Select.Item id="us">United States</Select.Item>
+  <Select.Item id="local" disabled>Local only</Select.Item>
+</Select>
+```
+
+It follows the [field props](/docs/sdks/react-ui/shared-props#2-everything-that-holds-a-value-is-a-field)
+and the [collection rules](/docs/sdks/react-ui/shared-props#3-every-collection-is-made-of-items).
+
+## Items from data
+
+```tsx
+<Select label="Program" value={program} onChange={setProgram}>
+  {programs.map(program => (
+    <Select.Item key={program.identity} id={program.identity}>{program.name}</Select.Item>
+  ))}
+</Select>
+```
+
+## Groups
+
+```tsx
+<Select label="Program">
+  <Select.Section id="installed">
+    <Select.Header>Installed</Select.Header>
+    <Select.Item id="notes">Notes</Select.Item>
+  </Select.Section>
+  <Select.Section id="development">
+    <Select.Header>In development</Select.Header>
+    <Select.Item id="my-program">My Program</Select.Item>
+  </Select.Section>
+</Select>
+```
+
+## Behavior
+
+The list handles the keyboard, typing to jump to an item, scrolling long
+lists, and returning focus. Disabled items stay visible but cannot be chosen.
+
+The closed field looks like other fields: recessed, painted from `background`.
+The list opens as a raised Surface.
+
+Use [`ComboBox`](/docs/sdks/react-ui/components/combo-box) when the list is long
+enough to search, and [`RadioGroup`](/docs/sdks/react-ui/components/radio-group)
+when all options should stay visible.
+
+## Parts
+
+| Part | Props |
+| --- | --- |
+| `Select` | `value`, `defaultValue`, `onChange`, `open`, `defaultOpen`, `onOpenChange`, `openWhenEmpty`, field props, `color` (`"background"`), `size`, `radius`, `material` |
+| `Select.Item` | `id`, `disabled`, `color` |
+| `Select.Section` | `id` |
+| `Select.Header` | Its text |

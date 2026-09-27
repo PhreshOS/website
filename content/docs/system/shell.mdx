@@ -1,0 +1,84 @@
+---
+title: Shell
+description: Run an operating-system command and read its output as it runs.
+icon: Terminal
+---
+
+`system.shell()` runs a command on the machine where PhreshOS is installed and
+streams what happens: when it starts, what it prints, and how it ends.
+
+```ts
+for await (const event of system.shell("git status")) {
+  if (event.event === "output") console.log(event.text)
+}
+```
+
+The command runs in the operating system's shell (`/bin/sh` on macOS and
+Linux, `cmd.exe` on Windows), so pipes and redirections work.
+
+## Read the events
+
+The loop receives three kinds of events, in order:
+
+| Event | Contains |
+| --- | --- |
+| `started` | `pid`, the operating-system process ID |
+| `output` | `stream` (`"stdout"` or `"stderr"`) and `text`, exactly as printed |
+| `exited` | `exit`: `{ status, code, signal }` |
+
+```ts
+for await (const event of system.shell("npm test", { cwd: "/path/to/project" })) {
+  if (event.event === "started") console.log("pid", event.pid)
+  if (event.event === "output") process.stdout.write(event.text)
+  if (event.event === "exited") console.log("exit code", event.exit.code)
+}
+```
+
+A non-zero exit code is a normal `exited` event. The loop throws only when the
+command cannot run at all.
+
+## Options
+
+```ts
+system.shell("make build", {
+  cwd: "/path/to/project",            // default: the user's home folder
+  env: { NODE_ENV: "production" },    // added to the System's environment
+  signal: controller.signal,          // stop the command
+})
+```
+
+## Stop a command
+
+The command lives as long as your loop. Any of these stops it, together with
+every process it started:
+
+- leaving the loop early, with `break` or `return`;
+- aborting its `signal`;
+- losing the connection or Endpoint that started it.
+
+```ts
+const controller = new AbortController()
+setTimeout(() => controller.abort(), 5_000)
+
+for await (const event of system.shell("tail -f app.log", { signal: controller.signal })) {}
+```
+
+## Shell commands and Processes
+
+A shell command is not a PhreshOS [Process](/docs/runtime/processes). It has no
+Endpoints, no Service, and no place in the Desktop. Use a Process when the work
+should belong to a Program and be managed by the System.
+
+## Permissions
+
+A Program needs the `all` permission to use `system.shell()`, because a shell
+command can do anything its user can. A Node script connected as the owner
+runs the command in the Node process, without permissions.
+
+See [Permissions](/docs/system/security/permissions).
+
+## Reference
+
+| Member | Result |
+| --- | --- |
+| `system.shell(command, { cwd, env, signal }?)` | Events: `started`, `output`, `exited` |

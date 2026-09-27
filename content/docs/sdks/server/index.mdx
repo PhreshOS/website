@@ -1,0 +1,143 @@
+---
+title: Overview
+description: Use PhreshOS from a Program's Server, the part that runs on the machine.
+---
+
+`@phreshos/server` is the SDK for a Program's
+[Server Endpoint](/docs/runtime/endpoints#the-server): the code that runs on the
+machine, answers questions, and does the work that does not belong in a page.
+
+<Tabs items={["npm", "pnpm", "Bun", "Yarn Classic"]} groupId="package-manager" persist>
+  <Tab value="npm">
+    ```sh
+    npm install @phreshos/server @phreshos/core
+    ```
+  </Tab>
+  <Tab value="pnpm">
+    ```sh
+    pnpm add @phreshos/server @phreshos/core
+    ```
+  </Tab>
+  <Tab value="Bun">
+    ```sh
+    bun add @phreshos/server @phreshos/core
+    ```
+  </Tab>
+  <Tab value="Yarn Classic">
+    ```sh
+    yarn add @phreshos/server @phreshos/core
+    ```
+  </Tab>
+</Tabs>
+
+`@phreshos/core` is a peer dependency.
+
+## Two entry points
+
+```ts
+import { context, system } from "@phreshos/server"
+```
+
+| Import | Is | Use it for |
+| --- | --- | --- |
+| `context` | This Server, seen from the inside | Its Program, Process, options, messages, answers, and Client |
+| `system` | The whole System | Programs, Processes, storage, network, and more |
+
+There is no `desktop`: a Server is not shown in a Desktop.
+
+## A minimal Server
+
+```ts title="server/main.ts"
+import { context } from "@phreshos/server"
+
+let count = 0
+
+context.answer("read", () => count)
+
+context.subscribe("increment", () => {
+  count += 1
+  context.publish("changed", count)
+})
+```
+
+When this module has loaded and the SDK is connected, the Server becomes
+ready, and questions start arriving. Importing the SDK sends nothing by
+itself.
+
+## Answer questions
+
+```ts
+context.answer("notes.list", async ({ from, payload }) => {
+  return await loadNotes(payload.folder)
+})
+```
+
+The return value is the answer; a thrown error makes the question fail with
+its message. Each question name has one handler. See
+[Answer questions](/docs/runtime/context#answer-questions-server).
+
+## Work with your Client
+
+`context.client` is the Client of the same Process:
+
+```ts
+await context.client.start()
+await context.client.window.setTitle("Syncing…")
+context.client.publish("sync.progress", 40)
+```
+
+The Server can also share small run-scoped state with its Client views through
+[`context.client.memory`](/docs/runtime/endpoints#client-memory).
+
+## Use the System
+
+`system` is the same as in a Client or Node, limited by the Program's
+[permissions](/docs/system/security/permissions):
+
+```ts
+const response = await system.network.fetch("https://api.example.com/items")
+await system.appearance.update({ spacing: 14 })
+```
+
+A Server can check and request permissions too, without any Window open:
+
+```ts
+if (!await context.permissions.allows("network", ["https://api.example.com"])) {
+  await context.permissions.request("network", ["https://api.example.com"])
+}
+```
+
+## What ends a run
+
+- An uncaught exception or unhandled rejected Promise stops the Server. As an
+  unexpected stop, it also [ends its Process](/docs/runtime/processes#exit-a-process).
+- `context.stop()` stops the Server on purpose. A running Client keeps
+  running; if the Server is the last running Endpoint, it rejects.
+- Everything the run opened through the SDK, such as subscriptions, sockets,
+  requests, and shell commands, is released when it stops.
+
+Everything the Server prints with `console` or to `stdout` and `stderr` is
+kept in the Program's [logs](/docs/system/logs).
+
+## Execution modes
+
+The same code can run as an operating-system `command`, in a Node.js
+`worker`, or in a `sandbox`. The SDK behaves the same in all three; what
+differs is what the code can reach on its own. See
+[Execution](/docs/sdks/server/execution).
+
+## Reference
+
+| Member | See |
+| --- | --- |
+| `context.program()`, `process()`, `name()`, `parent()`, `options()`, `isService()` | [Context](/docs/runtime/context) |
+| `context.answer(event, handler)` | [Answer questions](/docs/runtime/context#answer-questions-server) |
+| `context.subscribe`, `wait`, `events`, `publish` | [Communication](/docs/runtime/communication) |
+| `context.client` | [Endpoints](/docs/runtime/endpoints) |
+| `context.permissions` | [Permissions](/docs/system/security/permissions) |
+| `context.stop()` | [Context](/docs/runtime/context#stop-this-run) |
+| `system` | [System](/docs/system) |
+
+<Cards>
+  <Card title="Execution" description="Command, worker, and sandbox modes." href="/sdks/server/execution" />
+</Cards>

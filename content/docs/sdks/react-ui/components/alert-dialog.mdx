@@ -1,0 +1,38 @@
+---
+title: Alert Dialog
+description: A dialog that asks for an explicit decision, such as confirming a deletion.
+---
+
+<AlertDialogShowcase />
+
+`AlertDialog` asks a question that needs an answer. It works like
+[`Dialog`](/docs/sdks/react-ui/components/dialog), with the same parts, but
+clicking outside and pressing Escape do not close it. Every outcome is a
+button.
+
+```tsx
+<AlertDialog>
+  <AlertDialog.Trigger color="danger">Delete</AlertDialog.Trigger>
+  <AlertDialog.Backdrop>
+    <AlertDialog.Content>
+      <AlertDialog.Header>
+        <AlertDialog.Title>Delete this note?</AlertDialog.Title>
+        <AlertDialog.Description>This cannot be undone.</AlertDialog.Description>
+      </AlertDialog.Header>
+      <AlertDialog.Footer>
+        <AlertDialog.Close>Cancel</AlertDialog.Close>
+        <AlertDialog.Close color="danger" onPress={remove}>Delete</AlertDialog.Close>
+      </AlertDialog.Footer>
+    </AlertDialog.Content>
+  </AlertDialog.Backdrop>
+</AlertDialog>
+```
+
+To allow Escape or outside clicks anyway, set `keyboardDismissable` or
+`dismissable` on the backdrop.
+
+## Parts
+
+The same as [Dialog](/docs/sdks/react-ui/components/dialog#parts). On
+`AlertDialog.Backdrop`, both `dismissable` and `keyboardDismissable` default to
+`false`.
