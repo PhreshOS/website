@@ -1,4 +1,6 @@
 import type { Metadata } from "next"
+import type { ComponentProps } from "react"
+import Image, { type StaticImageData } from "next/image"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { StructuredData, blogPostData } from "@/components/structured-data"
@@ -18,8 +20,13 @@ export default async function Post(props: PageProps<"/blog/[...slug]">) {
     </p>
     <h1>{post.data.title}</h1>
     <p className="article-lede">{post.data.description}</p>
-    <div className="article-body"><Body /></div>
+    <div className="article-body"><Body components={{ img: PostImage }} /></div>
   </article>
+}
+
+/** An image in a post. Posts keep their images beside them, so each arrives imported with its size. */
+function PostImage({ src, alt }: ComponentProps<"img">) {
+  return <Image src={src as unknown as StaticImageData} alt={alt ?? ""} sizes="(max-width: 760px) 100vw, 760px" />
 }
 
 export function generateStaticParams() {

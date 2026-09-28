@@ -36,9 +36,9 @@ await process.client.stop()
 ## Where Windows are
 
 Standard Windows live on a plane larger than the screen. The plane is five
-views across and five down, each view the size of the space the Desktop leaves
-for Windows. Zero is the center of the middle view, so a Desktop that has not
-moved shows exactly that view.
+views across and five down, each view the size of the whole Desktop. Zero is
+the center of the middle view, so a Desktop that has not moved shows exactly
+that view.
 
 A Window's position is its top-left corner on this plane: `{ x: 0, y: 0 }` puts
 the corner at the center, and negative values go left and up. Positions and
@@ -60,18 +60,27 @@ Desktop.
 
 Each Desktop shows one view of the plane at a time, and can move it: the **Map**
 in the Taskbar shows every Window where it is, and moving across it moves the
-view. Pressing a Window, in the Map or the Taskbar, brings the view to it; in
-the Map, Windows can also be dragged to another view. This makes the plane a set
-of workspaces that continue into each other: one view for a task, another for
-the next, or one where an agent works while you watch by moving there.
+view. Pressing a Window in the Map brings the view to it, and dragging it moves
+the Window to another view. Pressing a Window in the Taskbar shows or minimizes
+it where it is.
+
+A Window's menu is the same in the Taskbar and in the Map: **Go to** brings the
+view to the Window, **Bring here** moves the Window into the view on screen,
+keeping its place within a view, and the rest show, minimize, maximize, restore,
+or close it where it is.
+
+This makes the plane a set of workspaces that continue into each other: one
+view for a task, another for the next, or one where an agent works while you
+watch by moving there.
 
 Where a Desktop looks belongs to that Desktop alone. It starts at the center
 each time the Desktop opens, is never stored, and another Desktop showing the
 same System can look elsewhere. The System records only the Windows' positions;
 it knows nothing about views.
 
-A maximized Window fills whichever view is shown, without changing its stored
-geometry, so maximizing is also a quick way to bring a Window into view.
+A maximized Window fills the view it is in, the one its center is in, without
+changing its stored geometry. Each view can have its own maximized Window, and
+moving one's geometry to another view takes its maximized state there.
 
 ### What the Desktop shows
 
@@ -80,12 +89,18 @@ show them:
 
 - A Window recorded beyond the plane is shown at its edge, and one larger than
   two views in either direction is shown at that size.
-- A zero size is no size at all, and the Desktop shows the Window at its own
-  default size.
+- A zero size is no size at all, and the Desktop shows the Window at half the
+  view in that dimension.
 - No Window is shown smaller than 260 × 160 pixels, as far as the screen allows.
+- An edge on the Desktop's own edge is drawn clear of it by the Appearance
+  spacing, and clear of the Taskbar on its side, and Windows side by side keep
+  the same gap between them. Margins and gaps are drawn, never recorded, so a
+  maximized Window is simply the whole view.
 
 None of this changes what is stored. Only moving or resizing the Window records
-new values, and those are what the Desktop showed.
+new values, and those are what the Desktop showed. A Window placed in another
+view is recorded in views, such as `"100% - 450"` one view to the right, so it
+stays in that view on a Desktop of any size.
 
 A Window opened from the Start Menu is placed in the middle of the current view,
 stepped slightly from the Windows already there, unless its Program declares a

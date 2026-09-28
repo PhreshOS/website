@@ -1,0 +1,61 @@
+---
+title: Close the browser. Your programs keep running.
+description: On PhreshOS, your programs live on your machine, not in a browser tab. The browser is only a window onto them, and every screen you open looks at the same garden from its own place.
+date: 2026-09-28
+author: Zohayr Slileh
+---
+
+Most web apps live and die with a tab. Close it by accident and the work inside
+it stops; open the same app on another device and you get a second, separate
+copy that knows nothing about the first.
+
+PhreshOS is an open-source operating system for programs built with web
+technology, running on your own machine. Think of it as a garden: your programs
+are what grows in it, and the browser is a window in the garden wall.
+
+## The short answer
+
+Close the window and the garden does not stop growing. Whatever your programs do
+in the background goes on, and when you look again, every window is where you
+left it.
+
+Closing a program's *window* is different: it ends that program's run, the way
+closing an app does on any desktop. Closing the *browser* only closes your view.
+
+## One System, many screens
+
+A garden can have more than one window. Open PhreshOS in two browsers, or on two
+screens, and both show the same programs and the same windows, because there is
+only one of each: the System's. Move a window in one and it moves in the other;
+minimize it and it is minimized in both. Nothing is copied or synced after the
+fact.
+
+## Each screen looks from its own place
+
+What the screens share is what lives in the garden. How each one looks at it is
+its own:
+
+- **Where it looks.** On PhreshOS, windows live on a field larger than the
+  screen, and each screen can look at a different part of it. One can stay on
+  your project while the other watches the view where your agent is working.
+- **How it looks.** Light or dark, and how large everything is, belong to each
+  browser. The System's own colors, set in Appearance, are the same everywhere.
+
+The System keeps none of this. It knows where each window is, not who is looking
+or from where.
+
+## Your agent does not need a screen
+
+An AI agent reaches the same programs from outside, through the `phresh`
+command line or the SDK, and uses what those programs were built to offer. It
+works whether or not a browser is open. A screen is for you, when you want to
+watch.
+
+## Plant it
+
+PhreshOS is free and open source.
+
+```sh
+npm install --global @phreshos/cli
+phresh system install
+```
