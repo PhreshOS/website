@@ -80,10 +80,12 @@ const result = await system.execute(request)
 | --- | --- |
 | `operation` | `list`, `describe` |
 | `system` | `logs` |
+| `connection` | `list`, `find`, `session`, `signIn`, `wait` |
+| `session` | `list`, `find`, `connections`, `signOut`, `wait` |
 | `program` | `list`, `find`, `agent`, `definition`, `getStartup`, `enableStartup`, `disableStartup`, `pinned`, `pin`, `unpin`, `getPermission`, `listPermissions`, `allowsPermission`, `allowPermission`, `denyPermission`, `logs`, `wait` |
 | `process` | `list`, `find`, `create`, `findOrCreate`, `exit`, `wait` |
-| `endpoint` | `inspect`, `start`, `stop`, `waitReady`, `ask`, `publish`, `wait`, `waitLifecycle` |
-| `service` | `list`, `search`, `inspect`, `waitReady`, `ask`, `publish`, `wait`, `waitLifecycle`, `waitDiscovery` |
+| `endpoint` | `inspect`, `start`, `stop`, `waitReady`, `ask`, `publish`, `wait`, `waitLifecycle`, `memoryGet`, `memorySet`, `memoryDelete`, `memoryEntries` |
+| `service` | `list`, `inspect`, `waitReady`, `ask`, `publish`, `wait`, `waitLifecycle`, `waitDiscovery` |
 | `window` | `inspect`, `move`, `resize`, `setGeometry`, `minimize`, `maximize`, `setTitle`, `setHeader`, `raise`, `wait` |
 
 `system.logs` and `program.logs` take a read-only SQL statement over the `logs`
@@ -91,3 +93,9 @@ table; see [Logs](/docs/system/logs).
 
 Each operation behaves like its SDK counterpart, documented in
 [Runtime](/docs/runtime) and [System](/docs/system).
+
+Connection and Session operations resolve identities through
+`system.authentication`. `connection.signIn` creates a Session for an unsigned
+browser Connection. `session.signOut` ends that Session and removes its
+authorization from every attached Connection while leaving the browser
+Connections open. See [Authentication](/docs/system/security/authentication).

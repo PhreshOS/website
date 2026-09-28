@@ -1,6 +1,6 @@
 ---
 title: Runtime commands
-description: Inspect and control Programs, Processes, Endpoints, Services, and Windows from the terminal.
+description: Inspect and control the running System from the terminal.
 ---
 
 Runtime commands work on the running System, the same way the SDK does. Each
@@ -20,9 +20,11 @@ Add `--json` to any of them for the full result as JSON.
 | Command | Subcommands |
 | --- | --- |
 | `program` | `list`, `inspect`, `agent`, `definition`, `get-startup`, `enable-startup`, `disable-startup`, `pinned`, `pin`, `unpin`, `get-permission`, `list-permissions`, `allows-permission`, `allow-permission`, `deny-permission`, `logs`, `wait` |
+| `connection` | `list`, `inspect`, `session`, `sign-in`, `wait` |
+| `session` | `list`, `inspect`, `connections`, `sign-out`, `wait` |
 | `process` | `list`, `inspect`, `create`, `find-or-create`, `exit`, `wait` |
 | `endpoint` | `inspect`, `start`, `stop`, `wait-ready`, `ask`, `publish`, `wait`, `wait-lifecycle`, `memory get/set/delete/entries` |
-| `service` | `list`, `search`, `inspect`, `wait-ready`, `ask`, `publish`, `wait`, `wait-lifecycle`, `wait-discovery` |
+| `service` | `list`, `inspect`, `wait-ready`, `ask`, `publish`, `wait`, `wait-lifecycle`, `wait-discovery` |
 | `window` | `inspect`, `move`, `resize`, `set-geometry`, `minimize`, `maximize`, `set-title`, `set-header`, `raise`, `wait` |
 | `operation` | `list`, `describe` |
 | `system logs` | Query the System log |
@@ -62,6 +64,24 @@ phresh process wait --event exit --program notes --process main
 keep it stopped. `--server-service` and `--client-service` make it a Service.
 `--replace` replaces a Process with the same name. See
 [Processes](/docs/runtime/processes).
+
+## Connections and Sessions
+
+```sh
+phresh connection list --json
+phresh connection session --connection <identity>
+phresh connection sign-in --connection <identity>
+phresh session list
+phresh session connections --session <identity>
+phresh session sign-out --session <identity>
+phresh connection wait --event connectionCreate
+phresh session wait --event end --session <identity>
+```
+
+`sign-in` authorizes an unsigned browser Connection by creating a Session.
+`sign-out` ends the selected Session and removes authorization from every
+Connection using it; those browser Connections remain open. See
+[Authentication](/docs/system/security/authentication).
 
 ## Endpoints and Services
 
