@@ -1,0 +1,121 @@
+---
+title: How components work
+description: Every component is a Surface; what it is decides which props it takes. Learn the kinds once and the rest follows.
+---
+
+Every component that draws something is a [Surface](/docs/sdks/react-ui/components/surface):
+a painted area with a color, a depth, a material, and corners. What a
+component *is* decides which of those you set, so components of the same kind
+take the same props. Every component also takes `className` and `style`, and
+yours always win over React UI's.
+
+## Four kinds
+
+**Controls** are what you act on or fill in: Button, Input, Select, Checkbox,
+Switch, Slider, and the date, time, number, and color fields. You set their
+`color`, `size`, `radius`, `material`, and `disabled`. They have a size
+because they sit in a line of text and other controls and must match it.
+
+```tsx
+<Button color="primary" size="large">Install</Button>
+<Input size="small" label="Filter" disabled />
+```
+
+**Containers** hold your content: Surface, Panel, Window, Dialog, Popover,
+Tooltip, Alert. You set the Surface itself: `color`, `depth`, `material`,
+`shadow`, `radius`. They have no `size`, because their size is their content's.
+
+```tsx
+<Panel material="extended">…</Panel>
+<Surface depth="flat" color="info:soft">…</Surface>
+```
+
+**Collections** are lists of items: ListBox, Menu, GridList, Tabs, Table,
+Tree, Accordion. You set `size`, `radius`, and `disabled` for all their items,
+and `color` for the part you choose, such as the selected item.
+
+**Marks** label something: Badge, Avatar, tags. You set `color` and `size`.
+
+A few components have a single look with nothing to set, such as Snippet and
+App Layout.
+
+## Depth follows what a thing is
+
+A Surface is `raised` when it stands on its own or you act on it, and
+`recessed` when it holds something. Nesting alternates them, which is what
+gives an interface its depth:
+
+- a raised container, such as a Window or a card;
+- inside it, a recessed area that holds content, such as a field or a list;
+- on that area, raised or flat items you choose from.
+
+A recessed thing inside a recessed thing loses the effect, so keep the
+alternation.
+
+## Fields
+
+Everything that holds a value is a field and is written the same way:
+
+```tsx
+<Input
+  label="Email"
+  description="Used only for sign-in."
+  invalid={!valid}
+  errorMessage="Enter a valid email."
+  value={email}
+  onChange={setEmail}
+/>
+```
+
+Pass `value` and `onChange` to own the value, or `defaultValue`, or nothing, to
+let the field keep it. Checkbox and Switch use `checked` and `defaultChecked`,
+since their value is on or off. Without a visible `label`, name the field with
+`aria-label`.
+
+## Items
+
+Collections are written as the family, then its items, each with a string `id`:
+
+```tsx
+<Select label="Program" value={program} onChange={setProgram}>
+  <Select.Item id="notes">Notes</Select.Item>
+  <Select.Item id="tilo" disabled>Tilo</Select.Item>
+</Select>
+```
+
+The selection is the `id` of the selected item, or a list of them when several
+can be selected. Actions report the `id` through `onAction(id)`. RadioGroup is
+the one exception: its items use `value`, because that is what a form submits.
+
+## Parts
+
+A component with parts exposes them on itself, and the parts work only inside
+it:
+
+```tsx
+<Dialog>
+  <Dialog.Trigger>Rename</Dialog.Trigger>
+  <Dialog.Backdrop>
+    <Dialog.Content>
+      <Dialog.Title>Rename note</Dialog.Title>
+      …
+    </Dialog.Content>
+  </Dialog.Backdrop>
+</Dialog>
+```
+
+Overlays share one shape: the root owns whether it is open, `Trigger` opens
+it, and `Content` is the floating Surface around your content. Focus, keyboard
+handling, closing, and entrance and exit belong to the component.
+
+## Pressing
+
+Pressable parts use `onPress`, which behaves the same for mouse, touch, and
+keyboard:
+
+```tsx
+<Button onPress={save}>Save</Button>
+```
+
+`pending` keeps a Button focusable but ignores presses while something runs;
+`disabled` removes it from focus entirely.

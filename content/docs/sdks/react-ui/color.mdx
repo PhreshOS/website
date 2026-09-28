@@ -64,23 +64,16 @@ Any CSS color works too:
   component is neutral. An invalid field outlines itself in `danger`. There is
   no separate hover, pressed, or focus color to set.
 
-## Use colors in your own components
+## In your own components
 
 ```tsx
-import { resolveColor, useColor, useContrastingColor, useThemedValue, useAppearance } from "@phreshos/react-ui"
+import { useColor, useContrastingColor } from "@phreshos/react-ui"
 
-const scale = useColor("primary")          // { subtle, soft, base, strong, intense }
-const text = useContrastingColor("primary") // the readable text color on it
+const primary = useColor("primary")          // { subtle, soft, base, strong, intense }
+const text = useContrastingColor("primary")  // the readable text color on it
 
-const colors = useThemedValue(useAppearance().colors)
-const primary = resolveColor("primary:soft", colors)  // a CSS color
+<div style={{ background: primary.base, color: text }} />
 ```
 
-## Reference
-
-| Export | Result |
-| --- | --- |
-| `Color` | A role, a `role:level`, or any CSS color |
-| `resolveColor(color, colors)` | A concrete CSS color from a set of colors |
-| `useColor(color)` | Every level of a color |
-| `useContrastingColor(color)` | The readable text color on it |
+Outside a component, `resolveColor("primary:soft", colors)` turns one color
+into a CSS color from a set of Appearance colors.

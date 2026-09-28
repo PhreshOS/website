@@ -4,11 +4,11 @@
   "icon": "PanelsTopLeft",
   "pages": [
     "index",
-    "appearance",
+    "setup",
+    "scale",
     "color",
-    "size-and-radius",
+    "how-components-work",
     "icons",
-    "shared-props",
     "components"
   ]
 }

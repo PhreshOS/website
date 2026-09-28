@@ -46,25 +46,22 @@ import { Button, Input, Select } from "@phreshos/react-ui"
 Components work without any setup. They use the default Appearance and follow
 the browser's light or dark setting.
 
-## Six ideas behind every component
+## The model
 
-1. **Appearance** is one set of values, colors, spacing, radius, shadow,
-   material, and timing, that every component derives from. Change it once and
-   everything follows. See [Appearance](/docs/sdks/react-ui/appearance).
-2. **Surface** is the one visual building block. Every component that paints
-   something is a Surface: raised when it stands on its own or you act on it,
-   recessed when it holds a value you enter. See [Surface](/docs/sdks/react-ui/components/surface).
-3. **Color** is a role and a level, such as `primary` or `danger:soft`. Text
-   color and hover, press, and focus states are derived for you. See
+Five ideas explain the whole library, in this order:
+
+1. **Setup.** Components read an Appearance, preferences, and a direction from
+   the nearest `UIProvider`, or use the defaults. See [Setup](/docs/sdks/react-ui/setup).
+2. **Scale.** Every size, space, and corner is one of five levels applied to an
+   Appearance value, so nothing is fixed. See [Scale](/docs/sdks/react-ui/scale).
+3. **Color.** A color is a role and a level, such as `primary` or
+   `danger:soft`; text and interaction colors follow on their own. See
    [Color](/docs/sdks/react-ui/color).
-4. **Size and radius** come from five levels, and corners follow rules instead
-   of fixed values. See [Size and radius](/docs/sdks/react-ui/size-and-radius).
-5. **Three rules** give every component the same props: anything painted,
-   anything that holds a value, and any collection. Learn `Button`, `Input`,
-   and `Select`, and you know the rest. See
-   [Shared props](/docs/sdks/react-ui/shared-props).
-6. **Families** keep related parts together: `Dialog.Title`, `Select.Item`,
-   `Window.Header`.
+4. **Surface.** Everything painted is a Surface: raised when you act on it,
+   recessed when it holds something. See [Surface](/docs/sdks/react-ui/components/surface).
+5. **Kinds.** What a component is (a control, a container, a collection, or a
+   mark) decides which props it takes. See
+   [How components work](/docs/sdks/react-ui/how-components-work).
 
 ## Built for any interface
 
@@ -77,7 +74,7 @@ the browser's light or dark setting.
 - **Reduced motion:** animations stop when the user asks for less motion.
 
 <Cards>
-  <Card title="Appearance" description="Provide values, preferences, and direction." href="/sdks/react-ui/appearance" />
-  <Card title="Shared props" description="The three rules every component follows." href="/sdks/react-ui/shared-props" />
-  <Card title="Components" description="Every component, with live examples." href="/sdks/react-ui/components/surface" />
+  <Card title="Setup" description="Provide the Appearance, preferences, and direction." href="/docs/sdks/react-ui/setup" />
+  <Card title="How components work" description="The kinds of components and the props each takes." href="/docs/sdks/react-ui/how-components-work" />
+  <Card title="Components" description="Every component, with live examples." href="/docs/sdks/react-ui/components/surface" />
 </Cards>

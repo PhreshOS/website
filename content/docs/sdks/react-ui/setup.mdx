@@ -1,0 +1,144 @@
+---
+title: Setup
+description: What components read from their surroundings, and how to provide it with UIProvider.
+---
+
+Every component reads three things from its surroundings. With no setup it
+uses the defaults, so components work as soon as they are imported:
+
+| | Is | Without setup |
+| --- | --- | --- |
+| **Appearance** | The visual values: colors, spacing, radius, shadow, material, timing | `defaultAppearance` |
+| **Preferences** | `theme` (`"light"` or `"dark"`) and `animations` | The browser's settings |
+| **Direction** | `"ltr"` or `"rtl"` | The document's `<html dir>` |
+
+`UIProvider` sets any of them for everything inside it:
+
+```tsx
+import { UIProvider } from "@phreshos/react-ui"
+
+<UIProvider appearance={{ radius: 14 }} preferences={{ theme: "dark" }} direction="rtl">
+  <App />
+</UIProvider>
+```
+
+## In a Program
+
+A Program passes the System's Appearance and the Desktop's preferences, so it
+looks and changes with the Desktop, and places `DocumentTheme` once:
+
+```tsx
+import { desktop, system } from "@phreshos/client"
+import { DesktopProvider, SystemProvider, useDesktopPreferences, useSystemAppearance } from "@phreshos/react"
+import { DocumentTheme, UIProvider } from "@phreshos/react-ui"
+
+function Themed({ children }) {
+  return <UIProvider appearance={useSystemAppearance()} preferences={useDesktopPreferences()}>
+    <DocumentTheme />
+    {children}
+  </UIProvider>
+}
+
+<SystemProvider system={system}>
+  <DesktopProvider desktop={desktop}>
+    <Themed><App /></Themed>
+  </DesktopProvider>
+</SystemProvider>
+```
+
+Both hooks follow every change. See [React providers](/docs/sdks/react/providers).
+
+`DocumentTheme` writes the theme into the page's `<meta name="color-scheme">`
+before the browser paints, and follows every change. It renders nothing.
+A Program needs it because the browser paints a frame opaque when the color
+scheme of the page inside differs from the frame's, instead of letting the
+Desktop show through. The System serves the page already declaring the
+Desktop's theme, so the first paint is right; `DocumentTheme` keeps it right
+when the theme changes. A page that declares its own `color-scheme` keeps it,
+so a Program's `index.html` leaves it out.
+
+## Appearance
+
+`appearance` takes only the values you change; the rest comes from the
+nearest outer provider, or the default:
+
+```tsx
+<UIProvider appearance={{ spacing: 14, colors: { light: { primary: "#3f7de0" } } }}>
+  <App />
+</UIProvider>
+```
+
+What the Appearance contains and its limits are described in
+[System Appearance](/docs/system/appearance#what-it-contains). React UI uses
+its visual values and ignores the rest.
+
+## Preferences
+
+```tsx
+<UIProvider preferences={{ theme: "dark" }}>…</UIProvider>
+<UIProvider preferences={{ animations: false }}>…</UIProvider>
+```
+
+The theme picks the `light` or `dark` branch of each Appearance value.
+Everything else, such as which way a recessed Surface darkens, is derived from
+the colors themselves, so a dark palette in the `light` branch still looks
+right. With `animations: false` every change happens at once.
+
+## Direction
+
+With a direction, components lay out, place popovers, and handle arrow keys
+for it. Without one they follow `<html dir>`. The provider adds no layout box
+of its own.
+
+## Links
+
+A Button or Link with an `href` is a real link. Give the provider your
+router's `navigate`, and links inside your app go through it instead of
+reloading the page:
+
+```tsx
+"use client"
+import { useRouter } from "next/navigation"
+
+function Providers({ children }) {
+  const router = useRouter()
+  return <UIProvider navigate={href => router.push(href)}>{children}</UIProvider>
+}
+```
+
+Links to other sites, links with a `target`, and clicks with a modifier key
+are left to the browser.
+
+## Nesting
+
+Providers nest, and each value is inherited on its own. A provider with no
+props changes nothing:
+
+```tsx
+<UIProvider preferences={{ theme: "dark" }}>
+  <Sidebar />
+  <UIProvider appearance={{ spacing: 8 }}>
+    <DenseTable />   {/* dark, with tighter spacing */}
+  </UIProvider>
+</UIProvider>
+```
+
+This is why `UIProvider` never changes the page itself: a nested provider,
+such as a preview forced to dark, must not turn the whole page dark. Only
+`DocumentTheme`, placed on purpose, does.
+
+## Read the values
+
+Your own components read what React UI uses:
+
+```tsx
+import { useAppearance, usePreferences, useThemedValue, useDirection } from "@phreshos/react-ui"
+
+const appearance = useAppearance()
+const { theme, animations } = usePreferences()
+const colors = useThemedValue(appearance.colors)   // the branch for the current theme
+const direction = useDirection()
+```
+
+`useBrowserPreferences()` returns the browser's own settings, whatever any
+provider says.

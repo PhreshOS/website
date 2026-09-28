@@ -1,0 +1,84 @@
+---
+title: Scale
+description: Five levels over one Appearance value decide every size, space, and corner.
+---
+
+React UI has no fixed sizes. Every size, space, and corner is a **level**
+applied to one Appearance value:
+
+| Level | Share of the value |
+| --- | --- |
+| `xsmall` | A quarter |
+| `small` | Half |
+| `medium` | All of it |
+| `large` | One and a half |
+| `xlarge` | Double |
+
+The same five levels are used everywhere, so a component written as
+`gap="small"` stays in proportion when the Appearance `spacing` or `radius`
+changes.
+
+## Size
+
+A control's `size` is a level:
+
+```tsx
+<Button size="small">Cancel</Button>
+<Input size="large" label="Search" />
+```
+
+It sets the height, padding, gaps, and indicators together from the Appearance
+`spacing`, and the text size relative to the text around the control.
+
+Text is compact by default, because React UI is an interface, not a document.
+A component sizes its own text only. Content you place in a region, such as a
+Tab panel, a Disclosure, or a Dialog body, keeps the size around it; the items
+of a collection take the collection's size, because they are part of it.
+
+## Spacing
+
+Layout props such as `gap` and `padding` take a level of the Appearance
+`spacing`, a number of pixels, or any CSS length:
+
+```tsx
+<Flex gap="small">…</Flex>
+<Grid gap={12} columns={2}>…</Grid>
+```
+
+Two rules decide the padding components use:
+
+- **A control pads at `medium`:** a button around its label, a field around its value.
+- **A Surface that holds content pads one level above, at `large`:** a dialog,
+  a panel's content, an alert, a toast, the content of an App Layout.
+
+A container never wraps its content as tightly as a button wraps its label.
+
+## Radius
+
+`radius` takes a level of the Appearance `radius`, `"full"`, a number of
+pixels, or any CSS radius. You rarely set it, because two rules decide every
+default:
+
+1. **Every Surface uses the Appearance radius.** Shells and containers, such
+   as Window, Panel, Dialog, and Popover, use it as it is. A control scales it
+   with its height, so every size keeps the same shape: a `medium` control has
+   exactly the Appearance radius. The items of a list and the selected Tab are
+   controls, so they take the control radius wherever they sit.
+2. **Shapes defined by their form stay round.** Radio buttons, Switches,
+   Sliders, progress bars, and scrollbar thumbs are always fully rounded.
+
+```tsx
+<Button radius="full">Rounded</Button>
+<Surface radius={4}>Sharp</Surface>
+```
+
+## In your own components
+
+```tsx
+import { useAppearance, useScale } from "@phreshos/react-ui"
+
+const appearance = useAppearance()
+const space = useScale(appearance.spacing)   // { xsmall, small, medium, large, xlarge }
+
+<div style={{ padding: space.large, gap: space.small }} />
+```

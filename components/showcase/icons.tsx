@@ -25,7 +25,7 @@ export function IconsShowcase() {
           <Button size={size}><Palette />Appearance</Button>
           <Button size={size} color="primary"><Download />Install</Button>
           <Button size={size} color="danger"><Trash2 />Delete</Button>
-          <Button size={size} aria-label="Settings"><Settings /></Button>
+          <Button size={size} iconOnly aria-label="Settings"><Settings /></Button>
         </Flex>
         <Grid columns="repeat(auto-fill, minmax(4.5rem, 1fr))" gap="small" style={{ fontSize: '1.25em' }}>
           {Object.entries(icons).map(([name, Icon]) => (

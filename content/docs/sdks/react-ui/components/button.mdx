@@ -29,7 +29,7 @@ A link accepts `target`, `rel`, `download`, and the other link attributes, but
 not `pending` or `type`. A disabled link has no destination.
 
 Links inside your app, such as `/blog`, go through the `navigate` you give
-[`UIProvider`](/docs/sdks/react-ui/appearance#links-inside-your-app), so your
+[`UIProvider`](/docs/sdks/react-ui/setup#links), so your
 router can follow them without a page load.
 
 ## Color
@@ -60,12 +60,27 @@ jump away mid-action. `disabled` removes it from focus entirely.
 <Button disabled>Unavailable</Button>
 ```
 
-## Icons and forms
+## Depth
 
-An icon-only Button needs a name for screen readers:
+A Button is raised, since it stands out as something you act on. `depth="flat"`
+keeps its color but lets it sit level with what is around it. Use it where many
+Buttons share a place and one of them should stand out, such as the active item
+of a bar:
 
 ```tsx
-<Button aria-label="Close" onPress={close}><CloseIcon /></Button>
+<Button depth={active ? "raised" : "flat"} color={active ? "primary:soft" : undefined}>
+  {name}
+</Button>
+```
+
+## Icons and forms
+
+A Button that holds only an icon takes `iconOnly`: it is square, as wide as
+it is tall, instead of padding its sides for text. With no text to name it, it
+needs `aria-label` for screen readers:
+
+```tsx
+<Button iconOnly aria-label="Close" onPress={close}><CloseIcon /></Button>
 ```
 
 A Button is `type="button"` by default. Set `type="submit"` to submit a form.
@@ -77,6 +92,8 @@ A Button is `type="button"` by default. Set `type="submit"` to submit a form.
 | `onPress` | — | What happens when pressed |
 | `color` | `"default"` | Its color |
 | `size` | `"medium"` | Its size |
+| `iconOnly` | `false` | Square, for a Button holding only an icon |
+| `depth` | `"raised"` | `flat` keeps its color level with what is around it, without a shadow |
 | `radius` | Scaled to its size | Its corners |
 | `material`, `shadow` | `"basic"`, the Appearance shadow | Its Surface |
 | `href` | — | Where it goes; renders an `<a>` |
