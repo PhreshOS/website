@@ -196,9 +196,35 @@ Payloads and answers can hold more than JSON:
   arrive as themselves;
 - binary data arrives as a `Uint8Array`, including any `ArrayBuffer` or typed
   array you send;
+- a `ReadableStream` arrives as a stream you read on the other side;
 - functions and symbols arrive as `null`.
 
 This is the same between Client, Server, and Node.
+
+## Send a stream
+
+A `ReadableStream` anywhere in a payload or an answer, even inside an object,
+reaches the other side as a stream. Its chunks follow the message on their
+own, only as fast as the reader reads, so a stream can be far larger than any
+single message:
+
+```ts
+// Server
+context.answer("file.read", async ({ payload }) => {
+  const { size } = await stat(payload.path)
+  return { size, content: Readable.toWeb(createReadStream(payload.path)) }
+})
+
+// Client
+const { size, content } = await context.server.ask("file.read", { path })
+const blob = await new Response(content).blob()
+```
+
+Canceling the stream you received stops its source on the other side, and a
+source that fails ends the received stream with its error. A stream ends when
+either Endpoint stops, and one nobody reads is released after a minute.
+Between the browser and the System, a stream's chunks travel over their own
+HTTP requests, so a large stream never delays other messages.
 
 ## Observe traffic
 
