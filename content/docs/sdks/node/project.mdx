@@ -57,8 +57,10 @@ for await (const event of await project.start(system, {
 ```
 
 In development, the Server always runs its `devCommand`. The Client's
-`devCommand` receives `PHRESHOS_CLIENT_PORT` and `PHRESHOS_CLIENT_BASE`, and
-if that command ends, the development Process ends too. A Client `devUrl`
+`devCommand` receives `PHRESHOS_CLIENT_HOST`, `PHRESHOS_CLIENT_PORT`, and
+`PHRESHOS_CLIENT_BASE`: the address to listen on, `127.0.0.1` unless a `devUrl`
+names another, its port, and the path to serve under. If that command ends,
+the development Process ends too. A Client `devUrl`
 uses a server that is already running instead.
 
 `start()` runs the `buildCommand` first.

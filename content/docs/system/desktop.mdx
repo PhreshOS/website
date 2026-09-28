@@ -60,12 +60,13 @@ Desktop.
 
 Each Desktop shows one view of the plane at a time, and can move it: the **Map**
 in the Taskbar shows every Window where it is, and moving across it moves the
-view. Pressing a Window in the Map brings the view to it, and dragging it moves
+view. Pressing a Window in the Map brings the view to the view the Window is
+in, and dragging it moves
 the Window to another view. Pressing a Window in the Taskbar shows or minimizes
 it where it is.
 
 A Window's menu is the same in the Taskbar and in the Map: **Go to** brings the
-view to the Window, **Bring here** moves the Window into the view on screen,
+view to the view the Window is in, **Bring here** moves the Window into the view on screen,
 keeping its place within a view, and the rest show, minimize, maximize, restore,
 or close it where it is.
 
@@ -89,8 +90,6 @@ show them:
 
 - A Window recorded beyond the plane is shown at its edge, and one larger than
   two views in either direction is shown at that size.
-- A zero size is no size at all, and the Desktop shows the Window at half the
-  view in that dimension.
 - No Window is shown smaller than 260 × 160 pixels, as far as the screen allows.
 - An edge on the Desktop's own edge is drawn clear of it by the Appearance
   spacing, and clear of the Taskbar on its side, and Windows side by side keep
@@ -102,10 +101,12 @@ new values, and those are what the Desktop showed. A Window placed in another
 view is recorded in views, such as `"100% - 450"` one view to the right, so it
 stays in that view on a Desktop of any size.
 
-A Window opened from the Start Menu is placed in the middle of the current view,
-stepped slightly from the Windows already there, unless its Program declares a
-position. A Window created anywhere else starts at what its launch or its
-Program declares; anything left out is zero. See
+A Window's launch, then its Program, say its size and position. What neither
+says, the System fills the same way in every layer: 500 × 500 pixels, centered
+on zero. The Start Menu launches with what it sees instead: a Window whose
+Program declares no size gets a square three fifths of the view's shorter side,
+and one that declares no position opens in the middle of the current view,
+stepped slightly from the Windows already there. See
 [Program configuration](/docs/sdks/core/program-configuration#the-window).
 
 ## Control your Window

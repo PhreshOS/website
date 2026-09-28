@@ -82,7 +82,7 @@ client: {
 | Field | Meaning |
 | --- | --- |
 | `location` | The folder with the built Client and its `index.html` |
-| `devCommand` | Starts a development server; it receives `PHRESHOS_CLIENT_PORT` and `PHRESHOS_CLIENT_BASE` |
+| `devCommand` | Starts a development server; it receives `PHRESHOS_CLIENT_HOST`, `PHRESHOS_CLIENT_PORT`, and `PHRESHOS_CLIENT_BASE` |
 | `devUrl` | Or: an already running development server |
 | `sandbox` | Run in a sandboxed frame. Defaults to `true`; see [Endpoint execution](/docs/system/security/execution#client-modes) |
 | `start`, `service` | As for the Server |
@@ -90,16 +90,16 @@ client: {
 ### The Window
 
 The Client can set how its Window starts. Anything left out uses the System
-default. The System records Window values without choosing how they look: an
-unset size or position stays zero, and each Desktop decides how to show it.
+default, the same in every layer and for every screen; a launch can name any of
+these values itself.
 
 | Field | Default |
 | --- | --- |
 | `title` | The Program name |
-| `size` | None: the System records zero, and the Desktop shows a standard Window at half the view in each dimension left out |
-| `position` | `{ x: 0, y: 0 }`, where positions count from the center of the layer's space. The Start Menu opens a Window it launches in the middle of what the Desktop shows |
+| `size` | `{ width: 500, height: 500 }` |
+| `position` | Centered on zero, the center of the layer's space: half the size up and to the left |
 | `layer` | `"window"`; see [Layers](/docs/system/desktop#layers) |
-| `header` | `true` in the `window` layer, `false` elsewhere |
+| `header` | `true`; only standard Windows draw it |
 | `minimize`, `maximize` | `false` |
 
 A launch can override each of these for one Process.
