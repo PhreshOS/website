@@ -89,12 +89,21 @@ See [Desktop](/docs/system/desktop).
 ## Read the Desktop
 
 ```ts
-const { size } = await desktop.viewport.snapshot()
-desktop.viewport.subscribe("resize", ({ size }) => layout(size))
+const size = await desktop.viewport.size()       // { width, height }
+const offset = await desktop.viewport.offset()   // { x, y }
+desktop.viewport.subscribe("resize", size => layout(size))
+desktop.viewport.subscribe("move", offset => follow(offset))
 
 const { theme, animations, scale } = await desktop.preferences.snapshot()
 desktop.preferences.subscribe("change", preferences => apply(preferences))
 ```
+
+The offset is the point of the standard-Window plane shown at the center of
+this Desktop, where positions count from the plane's center. It starts at zero
+and belongs to this Desktop alone: another Desktop showing the same System can
+look elsewhere. `desktop.viewport.move(offset)` moves the view, with the
+`desktopViewport` permission. In React, `useDesktopViewport()` returns both as
+`{ size, offset }` and follows each change.
 
 By default, `theme` follows the browser's light or dark setting, `animations`
 turns off when the browser asks for reduced motion, and `scale` is `1`.

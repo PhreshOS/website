@@ -90,13 +90,14 @@ client: {
 ### The Window
 
 The Client can set how its Window starts. Anything left out uses the System
-default:
+default. The System records Window values without choosing how they look: an
+unset size or position stays zero, and each Desktop decides how to show it.
 
 | Field | Default |
 | --- | --- |
 | `title` | The Program name |
-| `size` | `{ width: 520, height: 340 }` |
-| `position` | `{ x: 120, y: 80 }`, shifted for each open Window |
+| `size` | None: the System records zero, and the Desktop shows a standard Window at its own size |
+| `position` | `{ x: 0, y: 0 }`, where positions count from the center of the layer's space. The Start Menu opens a Window it launches in the middle of what the Desktop shows |
 | `layer` | `"window"`; see [Layers](/docs/system/desktop#layers) |
 | `header` | `true` in the `window` layer, `false` elsewhere |
 | `minimize`, `maximize` | `false` |
