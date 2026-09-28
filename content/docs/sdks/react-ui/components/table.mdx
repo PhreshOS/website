@@ -74,6 +74,25 @@ const [sort, setSort] = useState({ column: "name", direction: "ascending" })
 
 An arrow appears on the column the table is sorted by.
 
+## Drag and drop
+
+Rows can be dragged out and things dropped onto them, with `useDragAndDrop`.
+Drags are the browser's own: they reach other frames and other applications,
+and files dragged in from the machine arrive as drop items of kind `file` or
+`directory`.
+
+```tsx
+const { dragAndDropHooks } = useDragAndDrop({
+  getItems: ids => [...ids].map(id => ({ "text/plain": String(id) })),
+  onItemDrop: event => move(event.items, event.target.key)
+})
+
+<Table aria-label="Files" dragAndDropHooks={dragAndDropHooks}>…</Table>
+```
+
+A row a drag would drop onto shows as selected, and a Table that takes the drop
+as a whole is outlined as focus is.
+
 ## Look
 
 Selected rows show the `subtle` level of the Table's `color`, `primary` by default,

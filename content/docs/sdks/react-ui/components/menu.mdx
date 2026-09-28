@@ -40,10 +40,37 @@ line between them.
 The arrow keys, typing to jump, and focus are handled for you. Keyboard focus
 highlights items the same way the pointer does.
 
-## Parts
+## Submenus
+
+An Item can open another Menu beside it. Wrap the Item and the Submenu's
+content in `Menu.Submenu`:
+
+```tsx
+<Menu aria-label="Picture" onAction={run}>
+  <Menu.Item id="open">Open</Menu.Item>
+  <Menu.Submenu>
+    <Menu.Item id="wallpaper">Set as wallpaper</Menu.Item>
+    <Menu.Submenu.Content>
+      <Menu aria-label="Where" onAction={setWallpaper}>
+        <Menu.Item id="desktop">Desktop</Menu.Item>
+        <Menu.Item id="sign-in">Sign-in screen</Menu.Item>
+      </Menu>
+    </Menu.Submenu.Content>
+  </Menu.Submenu>
+</Menu>
+```
+
+The Item shows a chevron toward where the Submenu opens, at the end of the
+reading direction. Pressing the Item, resting on it, or the arrow toward its
+end opens the Submenu; the opposite arrow returns to the Item. Choosing in a
+Submenu reports to the Submenu's own Menu and closes every Menu. Submenus work
+the same in a DropdownMenu and a ContextMenu, and can nest.
+
 
 | Part | Props |
 | --- | --- |
 | `Menu` | `onAction`, `selectionMode` (`"none"`), `value`, `defaultValue`, `onChange`, `closeOnSelect` (`true`), `focusWrap`, `aria-label`, `color` (`"primary"`), `size`, `radius` |
 | `Menu.Item` | `id`, `disabled`, `color`, `closeOnSelect` |
 | `Menu.Section`, `Menu.Header`, `Menu.Separator` | Grouping |
+| `Menu.Submenu` | Its Item, then its `Menu.Submenu.Content`; `delay` |
+| `Menu.Submenu.Content` | Surface props; holds the Submenu's `Menu` |
