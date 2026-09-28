@@ -1,0 +1,63 @@
+---
+title: Try PhreshOS without installing anything
+description: The PhreshOS demo gives every visitor a whole machine of their own for an hour, set up the same way PhreshOS is installed on yours, always on the latest release. Plant what you like; when the hour is up, it returns to seed.
+date: 2026-09-28
+author: Zohayr Slileh
+---
+
+The honest way to see an operating system is to use one. Screenshots show what
+it looks like; they cannot show what it is like to open a program, arrange your
+windows, or watch it keep working.
+
+PhreshOS is an open-source operating system for programs built with web
+technology, running on your own machine. Installing it takes one command, but
+you should not have to commit to anything to find out whether you want to.
+
+So there is a demo: [demo.phreshos.com](https://demo.phreshos.com).
+
+## The short answer
+
+Open the demo and you get a machine of your own, with PhreshOS installed on it,
+for one hour. It is not a recording, and it is not shared with anyone else: it
+is a real System, and everything you do happens on it. When the hour is up, the
+machine is removed, and nothing from it is kept.
+
+## A machine, not a mockup
+
+The demo machine is set up the way PhreshOS is set up anywhere: the same public
+command line installs the same System. Nothing about it is special to the demo,
+except that it does not last.
+
+That means what you try is what you would get. Plant a program and it installs
+for real. Plant the Terminal and you are on the machine itself. Arrange windows
+across the Map, close the browser, come back, and they are where you left them,
+because the programs never lived in the tab.
+
+## It starts empty
+
+PhreshOS ships with nothing in it but Sprout, a welcome that helps you plant your
+first programs, or keep the garden empty. Sprout is an ordinary program, like
+any you plant after it: it is not part of the System, and nothing in PhreshOS
+depends on it. The demo starts there, as a new installation would.
+
+## An hour, and then it returns to seed
+
+The hour is fixed from the moment your machine is created; a small clock behind
+your windows shows what is left. When it ends, the machine is removed with
+everything in it, so it is a good place to experiment and a poor place for
+anything private.
+
+## Always the latest
+
+Each time a new version of PhreshOS or Sprout is released, the demo builds a new
+machine from it, checks that it comes up, and only then offers it to visitors.
+The demo you open is the newest PhreshOS there is.
+
+## Plant it
+
+When an hour is not enough, install PhreshOS on a machine you keep:
+
+```sh
+npm install --global @phreshos/cli
+phresh system install
+```

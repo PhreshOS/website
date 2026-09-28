@@ -1,0 +1,92 @@
+---
+title: Reload the page. Your interface remembers.
+description: On PhreshOS, a program's interface keeps its state in a small memory held by the System, not in the page. It survives a reload, is shared by every screen showing it, and lasts exactly as long as that run of the program.
+date: 2026-09-28
+author: Zohayr Slileh
+---
+
+Every web interface carries small pieces of state: which tab is open, what is
+selected, how far a panel is scrolled, the half-written text in a box. They
+matter while you work and mean nothing after.
+
+Usually they live in the page. Reload it and they are gone. Open the same app on
+a second screen and it starts from nothing. The alternative is to save them in a
+database, where they outlive the moment they belonged to and someone has to
+clean them up.
+
+PhreshOS is an open-source operating system for programs built with web
+technology, running on your own machine. It gives that state a third place to
+live.
+
+## The short answer
+
+Every running interface on PhreshOS has a small memory, held by the System. The
+interface keeps its state there instead of in the page. Reload the page and the
+state is still there. Show the same interface on two screens and they share it.
+Close the program and the memory goes with it, with nothing left to clean up.
+
+## A memory with the right lifetime
+
+Think of the interface as a plant and the page as one look at it. The memory
+belongs to the plant, not to the look: it lasts as long as that run of the
+interface does.
+
+- **Longer than a page.** A reload, a closed tab, or a second browser does not
+  touch it.
+- **Shorter than the program's data.** When the interface stops, or you close
+  the program's window, the memory ends. The next run starts clean.
+
+State that must last beyond a run, like documents or settings, belongs in the
+program's storage. The memory is for everything in between.
+
+## Every screen, one state
+
+When two screens show the same interface, they are two looks at the same plant.
+Switch a tab on one and the other switches too. Neither is copying the other;
+both read the same memory, and each can follow its changes.
+
+## Your agent can read it
+
+The memory is not locked inside the browser. The program's server can read and
+change it, and so can your AI agent, from the `phresh` command line:
+
+```sh
+phresh endpoint memory get --program notes --process main --key tab
+phresh endpoint memory set --program notes --process main --key tab --value '"outline"'
+```
+
+An agent can read the state an interface keeps there, and a program built for it
+can let the agent change it, all through the same memory the interface itself
+uses.
+
+## For developers
+
+In the interface, the memory is `context.memory`:
+
+```ts
+import { context } from "@phreshos/client"
+
+await context.memory.set("tab", "outline")
+const tab = await context.memory.get("tab")
+context.memory.subscribe("tab", tab => showTab(tab))
+```
+
+In React, one hook keeps a value in the memory and follows changes from every
+screen:
+
+```tsx
+const [tab, setTab] = useClientMemory("tab", "outline")
+```
+
+Values are small JSON. `update()` changes a value atomically, so two screens
+updating it at once do not lose either change. See
+[Client memory](/docs/runtime/endpoints#client-memory).
+
+## Plant it
+
+PhreshOS is free and open source.
+
+```sh
+npm install --global @phreshos/cli
+phresh system install
+```
