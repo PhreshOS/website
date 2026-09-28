@@ -48,6 +48,12 @@ choose an explicit answer.
 ## Look
 
 The dialog is a raised Surface with the Appearance radius and a deeper shadow.
+It is 32rem wide unless its content sets another `width`, and it stays in the
+middle of the screen at any width, never wider than the screen allows:
+
+```tsx
+<Dialog.Content style={{ width: "26rem" }}>…</Dialog.Content>
+```
 
 The backdrop holds back the interface behind it in one of two ways:
 
