@@ -73,6 +73,15 @@ of a bar:
 </Button>
 ```
 
+`depth="none"` makes a quiet Button: nothing is drawn until it is hovered or
+pressed, so it reads as part of the text or the place around it. Use it for
+actions that belong to what they sit in rather than standing apart, such as a
+step of a path that opens a menu, or an option at the end of a list:
+
+```tsx
+<Button depth="none" size="xsmall" onPress={showHidden}>Show 12 hidden</Button>
+```
+
 ## Icons and forms
 
 A Button that holds only an icon takes `iconOnly`: it is square, as wide as
@@ -93,7 +102,7 @@ A Button is `type="button"` by default. Set `type="submit"` to submit a form.
 | `color` | `"default"` | Its color |
 | `size` | `"medium"` | Its size |
 | `iconOnly` | `false` | Square, for a Button holding only an icon |
-| `depth` | `"raised"` | `flat` keeps its color level with what is around it, without a shadow |
+| `depth` | `"raised"` | `flat` keeps its color level with what is around it, without a shadow; `none` draws nothing until it is hovered or pressed |
 | `radius` | Scaled to its size | Its corners |
 | `material`, `shadow` | `"basic"`, the Appearance shadow | Its Surface |
 | `href` | — | Where it goes; renders an `<a>` |

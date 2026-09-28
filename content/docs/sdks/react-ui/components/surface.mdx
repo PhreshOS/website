@@ -30,14 +30,20 @@ with `style` or `className`, or use a component that has a structure, such as
 | `raised` (default) | Something you act on | A lit edge and a soft shadow | Buttons, windows, menus, the selected tab |
 | `flat` | Level with its surroundings | A softer edge | Regions and groups |
 | `recessed` | Something that holds a value you enter | Slightly sunk, a dim edge | Text fields, tracks, switches when off |
+| `none` | Part of its surroundings | Nothing at rest; hover and press show as a veil | Quiet actions, the items of lists and menus |
 
 ```tsx
 <Surface>Raised</Surface>
 <Surface depth="flat">Flat</Surface>
 <Surface depth="recessed">Holds content</Surface>
+<Surface depth="none">Part of what is around it</Surface>
 ```
 
-Every depth uses the same edge: light along the top and bottom, faint along
+Without depth, a Surface paints nothing and has no edge or shadow until it is
+hovered, pressed, or focused. A meaning color, such as `danger`, then colors its
+content instead of a fill.
+
+Every other depth uses the same edge: light along the top and bottom, faint along
 the sides, and a fine dark line around it. How deep a recess sinks and how
 bright the edge is follow the background's actual lightness, so the effect
 matches on any background.
@@ -95,7 +101,7 @@ Your `className` and `style` always win over the Surface's own styles.
 
 | Prop | Default | Sets |
 | --- | --- | --- |
-| `depth` | `"raised"` | `raised`, `flat`, or `recessed` |
+| `depth` | `"raised"` | `raised`, `flat`, `recessed`, or `none` |
 | `color` | `"background"` | Its color |
 | `material` | `"basic"` | `none`, `basic`, `extended`, `full`, or material overrides |
 | `radius` | The Appearance radius | Its corners |
