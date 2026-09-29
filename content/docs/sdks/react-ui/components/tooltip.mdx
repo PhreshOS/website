@@ -20,6 +20,23 @@ typically to explain an icon.
 The trigger still needs its own name, such as `aria-label`: a tooltip does not
 replace it.
 
+`Tooltip.Trigger` is a Button. A Button you already have is described the same
+way when it stands inside the `Tooltip`, even one wrapped in its own
+[context menu](/docs/sdks/react-ui/components/context-menu):
+
+```tsx
+<Tooltip>
+  <ContextMenu>
+    <ContextMenu.Trigger><Button aria-label="Notes"><NotesIcon /></Button></ContextMenu.Trigger>
+    <ContextMenu.Content>…</ContextMenu.Content>
+  </ContextMenu>
+  <Tooltip.Content>Notes</Tooltip.Content>
+</Tooltip>
+```
+
+Like other overlays, `Tooltip.Content` takes a `portalContainer`: the element
+it is drawn in, such as one whose scale it should share.
+
 Keep tooltips to a few words, and never put anything required or clickable in
 them. Use [`Popover`](/docs/sdks/react-ui/components/popover) for that.
 
@@ -29,4 +46,4 @@ them. Use [`Popover`](/docs/sdks/react-ui/components/popover) for that.
 | --- | --- |
 | `Tooltip` | `open`, `defaultOpen`, `onOpenChange`, `delay`, `closeDelay`, `closeOnPress`, `disabled` |
 | `Tooltip.Trigger` | Button props |
-| `Tooltip.Content` | `placement` (`"top"`), Surface props |
+| `Tooltip.Content` | `placement` (`"top"`), `portalContainer`, Surface props |
