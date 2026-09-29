@@ -1,0 +1,45 @@
+---
+title: Drawer
+description: A narrow layout's sidebar, over the content from the start side.
+---
+
+<DrawerShowcase />
+
+`Drawer` holds what a narrow layout gives up to its content, such as the
+sidebar of an [`AppLayout`](/docs/sdks/react-ui/components/app-layout), and
+keeps it one press away. It opens over the content from the start side.
+
+```tsx
+const [open, setOpen] = useState(false)
+
+<AppLayout sidebarWidth={0}>
+  <AppLayout.Header>
+    <Button iconOnly aria-label="Places" aria-expanded={open} onPress={() => setOpen(!open)}><PanelLeft /></Button>
+  </AppLayout.Header>
+  <AppLayout.Content>…</AppLayout.Content>
+</AppLayout>
+<Drawer open={open} onClose={() => setOpen(false)} title="Files">
+  <nav aria-label="Places">…</nav>
+</Drawer>
+```
+
+The layout decides when it is narrow and keeps whether the Drawer is open. A
+choice inside the Drawer usually closes it too.
+
+It is placed in its nearest positioned container, so give the element it covers
+`position: relative`. A press outside it or Escape calls `onClose`. Escape stops
+at the Drawer, so a menu or dialog that holds it stays open.
+
+It is a frosted Surface with the `full` material. It slides in and back out along
+the same path, timed by the Appearance transaction, and simply shows and goes
+when animations are off. Only its position moves, so it keeps showing what is
+behind it through its material.
+
+## Props
+
+| Prop | Default | Sets |
+| --- | --- | --- |
+| `open` | — | Whether it is shown |
+| `onClose` | — | Called for a press outside or Escape |
+| `title` | — | What it shows at its top, such as the program's name |
+| `aria-label` | — | Its name for screen readers |

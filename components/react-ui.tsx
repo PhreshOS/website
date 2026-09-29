@@ -38,6 +38,7 @@ export {
   DatePicker,
   DateRangePicker,
   Dialog,
+  Drawer,
   DropZone,
   Disclosure,
   DropdownMenu,

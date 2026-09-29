@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { AlertDialog, Button, ContextMenu, Dialog, DropdownMenu, Input, Menu, Popover, Tooltip } from '../react-ui';
+import { AlertDialog, Button, ContextMenu, Dialog, Drawer, DropdownMenu, Input, Menu, Popover, Tooltip, Tree } from '../react-ui';
 import { WindowScene } from './frames';
 import { ControlSelect, Showcase, attribute } from './showcase';
 
@@ -171,6 +171,26 @@ export function TooltipShowcase() {
           <Tooltip.Trigger size="small">Info</Tooltip.Trigger>
           <Tooltip.Content>Visible to this Program</Tooltip.Content>
         </Tooltip>
+      </WindowScene>
+    </Showcase>
+  );
+}
+
+export function DrawerShowcase() {
+  const [open, setOpen] = useState(false);
+  return (
+    <Showcase code={`<Drawer open={open} onClose={() => setOpen(false)} title="Files">
+  <Tree aria-label="Places" selectionMode="single">…</Tree>
+</Drawer>`}>
+      <WindowScene title="Drawer" contentStyle={{ position: 'relative', minHeight: 220, overflow: 'hidden' }}>
+        <Button size="small" aria-expanded={open} onPress={() => setOpen(!open)}>Places</Button>
+        <Drawer open={open} onClose={() => setOpen(false)} title="Files">
+          <Tree aria-label="Places" selectionMode="single" defaultValue="home" onChange={() => setOpen(false)}>
+            <Tree.Item id="home" textValue="Home"><Tree.Content>Home</Tree.Content></Tree.Item>
+            <Tree.Item id="documents" textValue="Documents"><Tree.Content>Documents</Tree.Content></Tree.Item>
+            <Tree.Item id="downloads" textValue="Downloads"><Tree.Content>Downloads</Tree.Content></Tree.Item>
+          </Tree>
+        </Drawer>
       </WindowScene>
     </Showcase>
   );

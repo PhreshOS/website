@@ -75,6 +75,7 @@
     "popover",
     "dropdown-menu",
     "context-menu",
+    "drawer",
     "dialog",
     "alert-dialog",
     "tooltip"
