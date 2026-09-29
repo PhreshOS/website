@@ -66,6 +66,20 @@ function renderEntry(entry: Entry) {
 
 The Tree has no background or scrolling of its own.
 
+## Long lists
+
+A level with many items, such as a large folder, can be shown in parts, so
+opening it stays quick. Show the first part, and place `Tree.LoadMore` after
+it, at the same level. When scrolling brings it near, it calls `onLoadMore`,
+and the next part is shown. It draws nothing.
+
+```tsx
+<>
+  {entries.slice(0, count).map(renderEntry)}
+  {entries.length > count && <Tree.LoadMore onLoadMore={() => setCount(count + 100)} />}
+</>
+```
+
 ## Drag and drop
 
 Items take drops, and can be dragged out, as in
@@ -81,3 +95,4 @@ shows as chosen.
 | `Tree.Item` | `id`, `textValue`, `disabled` |
 | `Tree.Content` | Its content |
 | `Tree.Collection` | `items` |
+| `Tree.LoadMore` | `onLoadMore` |
