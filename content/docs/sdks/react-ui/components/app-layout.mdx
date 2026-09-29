@@ -33,7 +33,9 @@ header, and the footer have no Surface. They sit on whatever holds the layout,
 such as a Window, and spacing alone separates them.
 
 - The title and the header share one row, as tall as a Window or Panel header.
-- The sidebar and the content each scroll on their own.
+- The sidebar and the content each scroll on their own. What is given as the
+  sidebar's `footer` stays at its foot while the rest of it scrolls, such as
+  work in progress.
 - The content is padded as a container, the same as Panel content, and
   clips what scrolls inside it to its corners.
 - The layout sits `small` spacing inside whatever holds it.
@@ -49,7 +51,7 @@ that branches: sections that open into pages.
 | --- | --- |
 | `AppLayout` | The frame. `sidebarWidth` sets the sidebar's width |
 | `AppLayout.Title` | The program's title above the sidebar, an `h1` |
-| `AppLayout.Sidebar` | The sidebar, an `aside` |
+| `AppLayout.Sidebar` | The sidebar, an `aside`. `footer` stays at its foot |
 | `AppLayout.Header` | The row above the content, a `header` |
 | `AppLayout.Content` | The content on its Surface, the page's `main` |
 | `AppLayout.Footer` | An optional row below the content, a `footer` |
