@@ -108,9 +108,10 @@ To reuse a named Process when it already runs, use
 const main = await program.findOrCreateProcess({ name: "main", client: true })
 ```
 
-It returns the existing Process when its launch matches, creates it when the
-name is free, and rejects when the name is held by a Process launched
-differently.
+It finds the Process by its name and returns it, however it was launched. Only
+when no Process holds the name does it create one, and the launch is used for
+that. When your launch must win over the running Process, create it with
+`replace` instead.
 
 ## Reach its Endpoints
 
