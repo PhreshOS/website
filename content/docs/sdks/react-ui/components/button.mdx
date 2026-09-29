@@ -49,13 +49,13 @@ press, and focus ring follow from the color. See
 
 ## While something runs
 
-`pending` ignores presses but keeps the Button focusable, so focus does not
-jump away mid-action. `disabled` removes it from focus entirely.
+`pending` shows a [Spinner](/docs/sdks/react-ui/components/spinner) in place of
+the content while the work the Button started runs. The Button keeps its size
+and its name, ignores presses, and stays focusable, so focus does not jump away
+mid-action. `disabled` removes it from focus entirely.
 
 ```tsx
-<Button color="primary" pending={saving} onPress={save}>
-  {saving ? "Saving…" : "Save"}
-</Button>
+<Button color="primary" pending={saving} onPress={save}>Save</Button>
 
 <Button disabled>Unavailable</Button>
 ```
@@ -106,6 +106,6 @@ A Button is `type="button"` by default. Set `type="submit"` to submit a form.
 | `radius` | Scaled to its size | Its corners |
 | `material`, `shadow` | `"basic"`, the Appearance shadow | Its Surface |
 | `href` | — | Where it goes; renders an `<a>` |
-| `pending` | `false` | Ignore presses, keep focus |
+| `pending` | `false` | Show a Spinner in place of the content, ignore presses, keep focus |
 | `disabled` | `false` | Off |
 | `type` | `"button"` | The native button type; not with `href` |

@@ -27,7 +27,12 @@ is not announced twice:
 
 A Spinner needs either a `label` or `decorative`.
 
-It spins in `primary`, and shows a still arc when animations are off.
+It is a comet: a head leading a tail that fades behind it, turning in `primary`
+at the pace of the Appearance transaction, eight of them to a turn. With
+animations off it stays still.
+
+A Button that is `pending` shows it in place of its content, and
+[Loading](/docs/sdks/react-ui/components/loading) shows it while it waits.
 
 ## Props
 
@@ -35,5 +40,5 @@ It spins in `primary`, and shows a still arc when animations are off.
 | --- | --- | --- |
 | `label` | — | Its name for screen readers |
 | `decorative` | `false` | Hide it from screen readers |
-| `color` | `"primary"` | The moving arc |
+| `color` | `"primary"` | The comet |
 | `size` | `"medium"` | Its diameter |
