@@ -28,7 +28,9 @@ Program's Client page with it.
 
 Only the content is a Surface: the same inset region as
 [Panel content](/docs/sdks/react-ui/components/panel), raised, with the
-`extended` material and the Appearance radius. The title, the sidebar, the
+`extended` material and the Appearance radius. With `depth="recessed"` it is
+pressed into what holds the layout instead, such as a list of files that sits
+in the Window rather than on it. The title, the sidebar, the
 header, and the footer have no Surface. They sit on whatever holds the layout,
 such as a Window, and spacing alone separates them.
 
@@ -53,5 +55,5 @@ that branches: sections that open into pages.
 | `AppLayout.Title` | The program's title above the sidebar, an `h1` |
 | `AppLayout.Sidebar` | The sidebar, an `aside`. `footer` stays at its foot |
 | `AppLayout.Header` | The row above the content, a `header` |
-| `AppLayout.Content` | The content on its Surface, the page's `main` |
+| `AppLayout.Content` | The content on its Surface, the page's `main`. `depth` is `raised` or `recessed` |
 | `AppLayout.Footer` | An optional row below the content, a `footer` |
