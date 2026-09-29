@@ -6,8 +6,8 @@ description: A Readiness boundary drawn the way the System draws loading.
 <LoadingShowcase />
 
 `Loading` is a [Readiness](/docs/sdks/react-ui/components/readiness) boundary
-with the System's own loading drawn over it, so a Program does not design its
-own. Wrap the interface that waits, and declare what it needs with
+with the System's own loading drawn in place of the interface that waits, so
+a Program does not design its own. Wrap the interface that waits, and declare what it needs with
 `useRequirement`. The detail of a requirement is its message:
 
 ```tsx
@@ -26,23 +26,17 @@ It shows a Spinner with the message of the first requirement that is waiting.
 A requirement without a string detail is waited for, but not shown. There is
 no default message.
 
-The loading is drawn on a Surface that covers the waiting interface and fills
-the nearest positioned ancestor. It appears at once and fades out with the
-Appearance transaction when everything is ready, then leaves the page. When a
-requirement stops being ready, it appears again.
+While it waits, the interface is hidden, not covered: it keeps its place and
+size, and nothing is painted behind the Spinner, so the Surface it sits on,
+such as the Window's, shows through. The loading fills the nearest positioned
+ancestor. It appears at once; when everything is ready it fades out with the
+Appearance transaction, and the interface appears whole at once. It cannot
+fade in, because the interface stays a direct part of the layout around it,
+with no box of its own that could fade. When a requirement stops being ready,
+the loading appears again.
 
-## Surface
-
-The cover is a [Surface](/docs/sdks/react-ui/components/surface), and
-`Loading` takes its props: `color`, `depth`, `material`, `radius`, `shadow`,
-`className`, and `style`. It is `flat` and has no radius by default, because
-the container it fills owns the shape. A Window already clips it to its
-corners.
-
-```tsx
-<Loading material="full">…</Loading>          // frosted over the Desktop
-<Loading color="primary" depth="recessed">…</Loading>
-```
+`className` and `style` go to the layer that shows the loading, such as to
+move where it stands.
 
 ## Steps
 
@@ -63,7 +57,7 @@ loads.
 | Prop | Does |
 | --- | --- |
 | `children` | The interface that waits |
-| Surface props | Paint the cover, `flat` with no radius by default |
+| `className`, `style` | The layer that shows the loading |
 | `steps` | Lists every step instead of one message |
 | `delay` | Milliseconds to stay held after ready, `0` by default |
 

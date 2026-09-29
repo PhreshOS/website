@@ -1,12 +1,12 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import type { Color, MaterialMode, ScaleLevel } from '@phreshos/react-ui';
+import type { Color, ScaleLevel } from '@phreshos/react-ui';
 import { Bot } from '@phreshos/react-ui/icons';
 import { Avatar, Badge, Breadcrumbs, Button, Code, Flex, Heading, Input, Kbd, Link, Loading, Meter, Readiness, SearchField, Skeleton, Slider, Snippet, Spinner, TagGroup, Text, ToastRegion, toast, useRequirement } from '../react-ui';
 import type { ReadinessState } from '@phreshos/react-ui';
 import { WindowScene } from './frames';
-import { ControlSelect, ControlSwitch, Showcase, attribute, colorOptions, materialOptions, optional, sizeOptions, unset } from './showcase';
+import { ControlSelect, ControlSwitch, Showcase, attribute, colorOptions, optional, sizeOptions, unset } from './showcase';
 
 export function LinkShowcase() {
   const [color, setColor] = useState<string>(unset);
@@ -268,13 +268,11 @@ function Work({ detail }) {
 
 export function LoadingShowcase() {
   const [run, setRun] = useState(0);
-  const [material, setMaterial] = useState<string>('basic');
-  const [color, setColor] = useState<string>(unset);
   const [steps, setSteps] = useState(false);
   const [delay, setDelay] = useState(0);
   return (
     <Showcase
-      code={`<Loading material="${material}"${attribute('color', color)}${steps ? ' steps' : ''}${delay > 0 ? ` delay={${delay}}` : ''}>
+      code={`<Loading${steps ? ' steps' : ''}${delay > 0 ? ` delay={${delay}}` : ''}>
   <Settings />
 </Loading>
 
@@ -284,8 +282,6 @@ useRequirement(settingsLoaded, "Loading settings")
 useRequirement(wallpaperLoaded, "Loading wallpaper")`}
       controls={
         <Flex direction="column" gap="small">
-          <ControlSelect label="Material" value={material} options={materialOptions} onChange={setMaterial} />
-          <ControlSelect label="Color" value={color} options={colorOptions} onChange={setColor} />
           <ControlSwitch label="Steps" checked={steps} onChange={setSteps} />
           <Slider label="Delay" size="small" minValue={0} maxValue={1000} step={100} value={delay} onChange={setDelay} />
           <Button size="small" onPress={() => setRun((value) => value + 1)}>Load again</Button>
@@ -293,7 +289,7 @@ useRequirement(wallpaperLoaded, "Loading wallpaper")`}
       }
     >
       <WindowScene title="Settings" contentStyle={{ minHeight: 180 }}>
-        <Loading key={run} material={material as MaterialMode} color={optional<Color>(color)} steps={steps} delay={delay}>
+        <Loading key={run} steps={steps} delay={delay}>
           <Work after={900} detail="Connecting" />
           <Work after={1800} detail="Loading settings" />
           <Work after={2700} detail="Loading wallpaper" />
