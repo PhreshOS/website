@@ -5,7 +5,8 @@ description: Show how far an operation has come, or that it is still running.
 
 <ProgressBarShowcase />
 
-`ProgressBar` shows progress. It only reports; people cannot change it.
+`ProgressBar` shows long work. It only reports; people cannot change it. For a
+short wait of a few seconds, use a [`Spinner`](/docs/sdks/react-ui/components/spinner).
 
 ```tsx
 <ProgressBar label="Uploading archive" value={64} />
@@ -13,7 +14,8 @@ description: Show how far an operation has come, or that it is still running.
 
 ## Measured progress
 
-`value` sits between `minValue` and `maxValue`, `0` and `100` by default. The
+When the work's progress is known and can be followed, such as files copied out
+of a known number, give its `value`. `value` sits between `minValue` and `maxValue`, `0` and `100` by default. The
 bar fills with `primary` in a recessed track.
 
 ```tsx
@@ -25,15 +27,14 @@ own text, and `formatOptions` changes its number format.
 
 ## Unknown progress
 
-When work is running but you cannot measure it, use `indeterminate`:
+When long work is running and nothing tells when it ends, such as installing a
+Program, use `indeterminate`:
 
 ```tsx
-<ProgressBar aria-label="Connecting to the System" indeterminate />
+<ProgressBar label="Installing Terminal" indeterminate />
 ```
 
 It moves continuously, and stays still when animations are off.
-
-Use [`Spinner`](/docs/sdks/react-ui/components/spinner) where there is little room.
 
 ## Props
 
