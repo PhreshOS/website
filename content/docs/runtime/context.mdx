@@ -106,8 +106,8 @@ A Client's `context` gives it two views of its Window:
 
 - `context.window` is the Window itself, shared by every Desktop that shows
   it: its title, size, position, and state.
-- `context.presentation` is how this Desktop draws it, such as its surface and
-  whether it accepts input.
+- `context.presentation` is how this Desktop actually draws it, in pixels: where
+  it is, how large, whether it takes clicks, and the surface behind it.
 
 ```ts
 await context.window.setTitle("Notes")

@@ -202,30 +202,57 @@ its built-in Taskbar, Start Menu, and dialogs. Replacing the shell changes
 only the interface: the System keeps owning Programs, Processes, and
 permissions.
 
-## Present outside standard Windows
+## Your drawing
 
-In `under`, `over`, and `shell`, the Desktop does not manage the Client as a
-Window. The Client starts at zero size, and the Program places it itself
-through `context.presentation`, with positions counted from the center of the
-whole Desktop:
+`context.window` is the Window the System keeps: values every Desktop follows,
+which may be shares of the view. `context.presentation` is how the Client is
+actually drawn on this Desktop, in pixels, with positions counted from the
+center of the whole Desktop to the drawing's top-left corner. The drawing is
+the Client's own frame, so in a standard Window it leaves out the title bar.
+
+Every layer reads its drawing and hears it change:
+
+```ts
+await context.presentation.position()      // { x: -480, y: -300 }
+await context.presentation.size()          // { width: 960, height: 600 }
+await context.presentation.front()         // the front of its layer
+await context.presentation.interactive()   // clicks reach it
+await context.presentation.surface()       // what the Desktop paints behind it
+
+context.presentation.subscribe("resize", size => {})
+```
+
+| Event | When |
+| --- | --- |
+| `move`, `resize` | The drawing moved or changed size |
+| `front` | It became, or stopped being, the front of its layer |
+| `changeInteractive` | Clicks began, or stopped, passing through it |
+| `changeSurface` | The surface behind it changed |
+
+A change is told once the drawing has arrived, not along the motion that
+carries it there.
+
+### Draw outside standard Windows
+
+In `under`, `over`, and `shell`, the Desktop never draws the Client on its own.
+The Client starts at zero size, and the Program writes its drawing itself, in
+pixels:
 
 ```ts
 await context.presentation.setGeometry({ x: -360, y: -240, width: 720, height: 480 })   // centered
 await context.presentation.raise()
 ```
 
-Animate a change with the Appearance timing, or your own:
+Writes take effect at once. Move them with the Appearance timing, or your own:
 
 ```ts
 await context.presentation.transaction().resize({ width: 360, height: 240 })
 await context.presentation.transactionAndWait(300).move({ x: 0, y: 0 })
-await context.presentation
-  .transaction({ duration: 200, easing: "ease-out" })
-  .setGeometry({ x: "-1/2 + 24", y: "-1/2 + 24", width: 720, height: 480 })   // 24 from the top-left
 ```
 
 `transaction()` resolves once the Desktop accepts the change;
-`transactionAndWait()` resolves when the animation ends.
+`transactionAndWait()` resolves when the motion ends. A share of the screen is
+the Program's to work out, from `desktop.viewport`.
 
 The Desktop can paint a surface behind the Client, using the System's
 Appearance:
@@ -242,14 +269,19 @@ To let clicks pass through to what is behind it:
 await context.presentation.setInteractive(false)
 ```
 
-`context.window` still holds the Window's values in these layers, and the
-Program decides how to use them. The presentation belongs to this Desktop
-only, so each Desktop showing the Client applies it separately.
+`context.window` still holds the Window's values in these layers, and its
+events still arrive; the Program decides what they mean for its drawing, such
+as what maximizing does, and applies that on every Desktop showing it.
+
+A standard Window is drawn by the Desktop from its Window, and the wallpaper
+by the Desktop alone, so both refuse writes. A move gesture works in every
+layer but the wallpaper: in `under`, `over`, and `shell` the Desktop carries
+the drawing with the pointer, and the Program hears where it went.
 
 | Presentation operation | `window` | `under`, `over`, `shell` | `wallpaper` |
 | --- | --- | --- | --- |
-| `layer()` | Yes | Yes | Yes |
-| `beginMoveGesture()` | Yes | No | No |
+| `layer()`, `position()`, `size()`, `front()`, `interactive()`, `surface()`, `subscribe()` | Yes | Yes | Yes |
+| `beginMoveGesture()` | Yes | Yes | No |
 | `move`, `resize`, `setGeometry`, `setSurface`, `transaction` | No | Yes | No |
 | `raise`, `setInteractive` | No | Yes | No |
 
@@ -339,8 +371,10 @@ See [Permissions](/docs/system/security/permissions).
 | `window.minimized()`, `maximized()`, `front()`, `layer()` | Current state |
 | `window.setTitle()`, `setHeader()`, `move()`, `resize()`, `setGeometry()` | Change the Window |
 | `window.minimize(state?)`, `maximize(state?)`, `raise()` | Change its state |
+| `presentation.position()`, `size()`, `front()`, `interactive()`, `surface()`, `layer()` | The drawing on this Desktop |
+| `presentation.subscribe(event, listener)` | Its changes |
 | `presentation.beginMoveGesture(start)` | Hand a drag to the Desktop |
-| `presentation.move()`, `resize()`, `setGeometry()`, `setSurface()` | Place a Client outside standard Windows |
+| `presentation.move()`, `resize()`, `setGeometry()`, `setSurface()` | Draw a Client outside standard Windows |
 | `presentation.transaction(timing?)`, `transactionAndWait(timing?)` | Animate those changes |
 | `presentation.raise()`, `setInteractive()` | Order and hit-testing |
 | `desktop.viewport` | Desktop size, the view's offset, their changes, and moving the view |
