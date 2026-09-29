@@ -229,8 +229,14 @@ context.presentation.subscribe("resize", size => {})
 | `changeInteractive` | Clicks began, or stopped, passing through it |
 | `changeSurface` | The surface behind it changed |
 
-A change is told once the drawing has arrived, not along the motion that
-carries it there.
+Reads and events tell the drawing as it is at the moment: while the Desktop
+carries it with the pointer, and along a motion, not only at rest. An effect
+that only changes how it looks, such as the scale a Window enters with, moves
+nothing and is not a change. The size is the frame's own, the same as
+`innerWidth` and `innerHeight` inside the document.
+
+In React, `usePresentationState(context.presentation)` reads the drawing and
+follows it.
 
 ### Draw outside standard Windows
 
