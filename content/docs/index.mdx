@@ -1,0 +1,155 @@
+---
+title: Quick start
+description: Install PhreshOS, create a Program, and run it.
+icon: Zap
+---
+
+<Steps>
+
+<Step>
+
+### Install the CLI
+
+You need Node.js `24.15.0` or newer.
+
+<Tabs items={["npm", "pnpm", "Bun", "Yarn Classic"]} groupId="package-manager" persist>
+  <Tab value="npm">
+    ```sh
+    npm install --global @phreshos/cli
+    ```
+  </Tab>
+  <Tab value="pnpm">
+    ```sh
+    pnpm add --global @phreshos/cli
+    ```
+  </Tab>
+  <Tab value="Bun">
+    ```sh
+    bun add --global @phreshos/cli
+    ```
+  </Tab>
+  <Tab value="Yarn Classic">
+    ```sh
+    yarn global add @phreshos/cli
+    ```
+  </Tab>
+</Tabs>
+
+</Step>
+
+<Step>
+
+### Install the System
+
+```sh
+phresh system install
+```
+
+This installs the System, starts it, and prints the Desktop's address.
+
+</Step>
+
+<Step>
+
+### Open the Desktop
+
+Open the printed address in your browser, usually `http://localhost:4300`,
+and create your owner account.
+
+</Step>
+
+<Step>
+
+### Create a Program
+
+```sh
+phresh create my-program
+```
+
+The folder name becomes the Program's identity.
+
+</Step>
+
+<Step>
+
+### Run it
+
+```sh
+cd my-program
+phresh dev
+```
+
+Its Window opens in the Desktop. Press `Ctrl+C` in the terminal to stop it.
+
+</Step>
+
+</Steps>
+
+## What the Program does
+
+The Program is a counter. Its Server keeps the count; its Client shows it in
+a Window.
+
+### The Server answers
+
+A Server answers questions, and receives and announces messages:
+
+```ts title="server/main.ts"
+import { context } from "@phreshos/server"
+
+let count = 0
+
+context.answer("read", () => count)
+
+context.subscribe("increment", () => {
+  count += 1
+  context.publish("changed", count)
+})
+```
+
+### The Client asks
+
+A Client asks its Server, follows what it announces, and tells it things:
+
+```ts title="client/app.tsx"
+import { context } from "@phreshos/client"
+
+const count = await context.server.ask<number>("read")
+context.server.subscribe("changed", render)
+context.server.publish("increment")
+```
+
+### The Window
+
+A Client controls its own Window:
+
+```ts
+await context.window.setTitle("Counter")
+```
+
+### Data that lasts
+
+A Program keeps small values in its store, shared by all of its runs:
+
+```ts
+const program = await context.program()
+await program.store.set("count", count)
+```
+
+### Beyond your Program
+
+Anything outside your own Program, such as the network, needs the owner's
+permission:
+
+```ts
+await context.permissions.request("network", ["https://api.example.com"])
+```
+
+## Install it
+
+`phresh dev` runs the Program only while the command runs. Install it to keep
+it in the System, available from the Start Menu:
+
+```sh
+phresh install
+```

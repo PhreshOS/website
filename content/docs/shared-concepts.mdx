@@ -1,0 +1,132 @@
+---
+title: Shared concepts
+description: What every part of PhreshOS shares and none owns, such as handles, reads, events, and deadlines.
+icon: Share2
+---
+
+Program, Desktop, and System each explain their own subject. What they all
+share, and none of them owns, is here.
+
+## Handles
+
+Everything you reach is a handle: `system`, `desktop`, and `context`, and what
+they give you, such as a Program, a Process, an Endpoint, a Window, or a file.
+Every handle is an instance of a class from [Core](/docs/sdks/core), whichever
+package gave it to you:
+
+```ts
+import { Program } from "@phreshos/core"
+
+const program = await context.program()
+program instanceof Program   // true
+```
+
+A handle holds no copy of what it stands for: each of its operations reaches
+the System when you call it.
+
+## Reads are current
+
+A read asks at the moment you call it, and answers with what is true then:
+
+```ts
+await context.window.title()   // the title now
+await context.window.title()   // asked again: the title then
+```
+
+Nothing is cached for you, so a value you kept may already be old. To stay
+current, read once, then follow its changes.
+
+## Events
+
+Every source of events is a `Subscribable`: an Endpoint, a Service, a Window,
+the Appearance, a log, and the others. Each offers the same three ways to
+listen, and each hears only what happens from now on: read the current state
+first, then follow its changes.
+
+### Follow: subscribe
+
+```ts
+const stop = context.window.subscribe("resize", size => layout(size))
+
+stop()   // no longer listening
+```
+
+The subscription stays while its source is away for a while, such as a Server
+that restarts, and ends only when you call `stop()`. Without an event name, it
+hears every event, each as `{ event, message }`:
+
+```ts
+system.program.subscribe(({ event, message }) => console.log(event, message))   // install, uninstall, …
+```
+
+### The next one: wait
+
+```ts
+const { status, code } = await process.wait("exit")
+const appearance = await system.appearance.wait("change", 60_000)   // ten seconds by default
+```
+
+It fails when its time runs out, or when the event can no longer arrive.
+
+### One by one: events
+
+```ts
+for await (const record of system.logs.events("log")) {
+  if (record.level !== "error") continue
+  alert(record.content)   // the first error only
+  break                   // leaving the loop stops listening
+}
+```
+
+Messages wait in order until the loop takes them. The loop ends when you leave
+it, or when its `signal` aborts:
+
+```ts
+const stop = new AbortController()
+
+for await (const { event, message } of desktop.viewport.events({ signal: stop.signal })) {}   // resize and move
+```
+
+Without an event name it goes through every event, each as `{ event, message }`.
+At most 64 messages wait by default; a loop that falls further behind throws
+instead of losing messages. `capacity` changes the bound, and `Infinity`
+removes it:
+
+```ts
+process.server.events("progress", { capacity: 1_000 })   // what its Server publishes
+```
+
+The loop also throws when events can no longer arrive.
+
+### Which to use
+
+| | For |
+| --- | --- |
+| `subscribe()` | Following something for as long as you show it |
+| `wait()` | One moment: an exit, or the next time something happens |
+| `events()` | Handling each message in turn inside async code, with a clear end |
+
+## Deadlines
+
+What waits on another side has a deadline of ten seconds by default: `wait()`,
+and a question with `ask()`. `timeout()` gives a view of the same handle with
+another deadline, for the operations that take one:
+
+```ts
+await process.server.timeout(60_000).ask("report.create")
+await context.permissions.timeout(300_000).request("storage", ["read:Documents/**"])
+```
+
+## Failure
+
+An operation that cannot do what it was asked fails: its promise rejects with
+an `Error` that says why, such as a missing permission, a Process that has
+ended, or a deadline that passed.:
+
+```ts
+try {
+  await process.server.ask("notes.list")
+} catch (error) {
+  show((error as Error).message)
+}
+```

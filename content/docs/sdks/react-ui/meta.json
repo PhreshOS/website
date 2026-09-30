@@ -3,7 +3,6 @@
   "description": "Compose PhreshOS visual primitives in React",
   "icon": "PanelsTopLeft",
   "pages": [
-    "index",
     "setup",
     "scale",
     "color",

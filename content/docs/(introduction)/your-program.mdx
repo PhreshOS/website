@@ -1,0 +1,144 @@
+---
+title: Your Program
+description: What a Program is made of, each time it runs, and its two sides.
+icon: Blocks
+---
+
+## What you created
+
+`phresh create` makes a Program in a folder of its own:
+
+```text
+my-program/
+├── phresh.config.ts   what the Program is
+├── server/main.ts     code that runs on the machine
+└── client/app.tsx     the interface in the Window
+```
+
+`phresh.config.ts` names the Program and says where its two parts are:
+
+```ts title="phresh.config.ts"
+export default defineConfig({
+  identity: "my-program",
+  name: "My Program",
+  server: { location: "dist/server", worker: "main.js" },
+  client: { location: "dist/client", title: "My Program" },
+})
+```
+
+## A Program and its runs
+
+What you created is a **Program**: the software, installed or not. Each time
+it runs, the System creates a **Process**, one run of it. A Program can have
+several Processes at once, such as two notes open side by side, or none at
+all.
+
+<img
+  src="/mental-models/programs.png"
+  alt="The Program my-program runs as two Processes, one run and another run; the Program notes is installed but not running, so it has no Process"
+  className="mental-model"
+/>
+
+A Program keeps what must last across runs, such as its files and settings. A
+Process holds what belongs to one run, and ends when the run ends.
+
+## Your code runs inside a Process
+
+Every line you write runs inside one Process, and that Process belongs to your
+Program. Your code reaches both through `context`:
+
+```ts
+import { context } from "@phreshos/server"
+
+const program = await context.program()   // your Program
+const process = await context.process()   // this run of it
+```
+
+`context` is your code talking about itself. Everything on it means "me": my
+Program, my Process, the options I was started with, the messages sent to me.
+
+## Start with options
+
+A Process can be started with options, such as which document it shows:
+
+```ts
+await program.createProcess({ options: { document: "notes/today.md" } })
+```
+
+The new run reads them from its own `context`:
+
+```ts
+await context.options("document")   // "notes/today.md"
+```
+
+## Server and Client
+
+A Process has two sides, called **Endpoints**:
+
+- the **Server** runs on the machine. It needs no browser, so it keeps working
+  when every Window is closed;
+- the **Client** is the interface: a web page the Desktop shows in a Window.
+
+A Program can have both, or only one. The counter keeps its value in the
+Server and shows it in the Client, so every Desktop sees the same count.
+
+## Ask and publish
+
+The two sides talk in two ways. **Ask** when you need an answer:
+
+```ts title="server/main.ts"
+import { context } from "@phreshos/server"
+
+let count = 0
+context.answer("read", () => count)
+```
+
+```ts title="client/app.tsx"
+import { context } from "@phreshos/client"
+
+const count = await context.server.ask<number>("read")
+```
+
+**Publish** when you announce something and expect no reply:
+
+```ts title="server/main.ts"
+context.subscribe("increment", () => {
+  count += 1
+  context.publish("changed", count)
+})
+```
+
+```ts title="client/app.tsx"
+context.server.publish("increment")
+context.server.subscribe("changed", count => show(count))
+```
+
+A question has exactly one answer, so a Server registers one handler per
+question. A message can have any number of listeners, or none.
+
+<img
+  src="/mental-models/two-sides.png"
+  alt="Inside a Process, the Client asks the Server and the Server answers; the Server also publishes to the Client with no reply; the Server runs on the machine and the Client in a Window"
+  className="mental-model"
+/>
+
+## Each side knows the other
+
+`context.server` in a Client, and `context.client` in a Server, reach the other
+side of the same Process. A Server can open its Client when it needs to show
+something:
+
+```ts
+await context.client.start()
+```
+
+## Keep it
+
+`phresh dev` runs the Program only while the command runs. Installing keeps
+it in the System, available from the Desktop's Start Menu:
+
+```sh
+phresh install
+```
+
+Next: the Desktop your Window is shown in.

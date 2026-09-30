@@ -1,220 +1,148 @@
 ---
 title: Storage
-description: Files, uploads, key-value state, and SQLite for Programs and the System.
+description: Folders and files, the same for your Program's own and for the machine's.
 icon: HardDrive
 ---
 
-PhreshOS gives each kind of data its own place:
+A `Storage` is a folder and a `StorageFile` is a file. The same operations
+reach three places:
 
-| Use | For |
-| --- | --- |
-| `program.data`, `program.cache` | Your Program's own files |
-| `system.storage` | Files anywhere on the machine, with permission |
-| `program.store` | Small values by key, optionally expiring |
-| `context.memory`, `process.client.memory` | Small JSON values shared during one Client run |
-| `program.database` | Structured data in SQLite |
-| `system.uploads` | Files shared by key, such as wallpapers |
-
-Captured output of your Endpoints is in `program.logs`; see
-[Logs](/docs/system/logs).
-
-```ts
-await program.data.file("settings.json").write({ theme: "dark" })
-await program.store.set("draft", { title: "Untitled" })
-const rows = await program.database.query("SELECT * FROM notes")
-```
-
-## Your Program's files
-
-Every Program has two folders of its own, shared by all of its Processes:
-
-- `program.data` for files to keep;
-- `program.cache` for files that can be recreated and may be deleted.
-
-```ts
-const settings = program.data.file("settings.json")
-
-await settings.write({ theme: "dark" })
-const value = await settings.json()
-```
-
-Inside an Endpoint, reach them through your Program:
+| Place | Is | Permission |
+| --- | --- | --- |
+| `program.data` | Your Program's files to keep | None |
+| `program.cache` | Your Program's files that can be made again, and may be deleted | None |
+| `system.storage` | The files on the machine, from the home folder of the user running PhreshOS | `storage` |
 
 ```ts
 const program = await context.program()
-const index = program.cache.file("search", "index.bin")
+
+await program.data.file("settings.json").write({ theme: "dark" })
+await system.storage.navigate("Documents").list()
 ```
 
-Your own `data` and `cache` need no permission.
+Small values and structured data have their own places: the store and the
+database, in [Data](/docs/system/data).
 
-## Work with folders and files
+## Choose a folder or a file
 
-A folder is a `Storage` and a file is a `StorageFile`. Selecting one only
-builds a handle; nothing touches the disk until you call an operation.
+Choosing touches nothing on the disk; only an operation does:
 
 ```ts
 const reports = program.data.navigate("reports", "2026")
 const today = reports.file("today.json")
+const index = program.cache.file("search", "index.bin")
+
+await today.name()   // "today.json"
+await today.path()   // its absolute path
 ```
 
-### Files
+## Files
 
 ```ts
-await today.write({ done: true })          // replace the file, atomically
-await today.append("\nmore")               // add to the end
-await today.json()                         // parse as JSON
-await today.text()                         // read as text
-await today.bytes({ offset: 0, length: 64 }) // read some bytes
-await today.stream()                       // read as a stream
-await today.stat()                         // { size, modifiedAt }, or null
+await today.write({ done: true })              // replaces the file at once
+await today.append("\nmore")                   // adds to the end
+await today.json()                             // reads it as JSON
+await today.text()                             // as text
+await today.bytes({ offset: 0, length: 64 })   // some of its bytes
+await today.stream()                           // as a stream
+await today.stat()                             // { size, modifiedAt }, or null
 await today.delete()
 ```
 
-`write()` and `append()` accept JSON data, a `Blob`, an `ArrayBuffer`, a typed
-array, or a `ReadableStream<Uint8Array>`.
+`write()` and `append()` take JSON, text, a `Blob`, an `ArrayBuffer`, a typed
+array, or a `ReadableStream<Uint8Array>`. A reader or a writer never sees half
+a `write()`: the new file replaces the old one whole. `write(content, { overwrite: false })`
+fails if the file is already there.
 
-### Folders
+## Folders
 
 ```ts
-await reports.create()                        // with missing parents
-await reports.list()                          // direct children
-await reports.list({ recursive: true, depth: 2 })
-await reports.clear()                         // empty it, keep the folder
-await reports.delete()                        // remove it
-await reports.space()                         // { capacity, available, used }
+await reports.create()                              // with any missing parents
+await reports.list()                                // what is directly in it
+await reports.list({ recursive: true, depth: 2 })   // and below it
+await reports.stat()                                // { modifiedAt }, or null
+await reports.clear()                               // empties it, keeps the folder
+await reports.delete()                              // removes it and all in it
+await reports.space()                               // { capacity, available, used }
 ```
 
-### Copy and move
+`list()` gives folders and files together, in path order; tell them apart by
+their class:
+
+```ts
+import { StorageFile } from "@phreshos/core"
+
+for (const entry of await reports.list()) {
+  if (entry instanceof StorageFile) console.log("file", await entry.name())
+  else console.log("folder", await entry.name())
+}
+```
+
+## Copy and move
+
+A file goes to a file, a folder to a folder, each to the exact place given:
 
 ```ts
 await today.copy(reports.file("backup.json"))
 await reports.move(program.data.navigate("archive"))
-await today.copy(target, { overwrite: true })
+await today.copy(reports.file("backup.json"), { overwrite: true })
 ```
 
-Copying and moving never replace an existing destination unless you pass
-`overwrite: true`. Deleting something that does not exist succeeds.
+Copying and moving never replace what is already there, unless
+`overwrite: true`. A folder cannot be copied inside itself. Deleting what does
+not exist succeeds.
 
-### Watch for changes
+## Watch for changes
 
 ```ts
-for await (const change of reports.watch({ recursive: true })) {
-  console.log(change.event, change.path)   // "change" or "rename"
+const stop = new AbortController()
+
+for await (const change of reports.watch({ recursive: true, signal: stop.signal })) {
+  console.log(change.event, change.path)   // "change" or "rename", and where
 }
 ```
 
-Pass a `signal` to stop watching.
+Aborting the signal ends the loop.
 
-## Files on the machine
+## The files on the machine
 
-`system.storage` starts at the home folder of the user running PhreshOS, and
-can reach any path:
+`system.storage` starts at the home folder, and reaches absolute paths too:
 
 ```ts
 const documents = system.storage.navigate("Documents")
-const absolute = system.storage.navigate("/var/data")
+const logs = system.storage.navigate("/var/log")
+
+await documents.file("notes.txt").text()
 ```
 
-It works exactly like your Program's folders, but every operation requires
-the `storage` permission for that path. A permission value is a path,
-optionally limited to some operations:
+Every operation needs the `storage` [permission](/docs/system/permissions)
+for its path. A value is a path, optionally limited to some operations:
 
 | Value | Allows |
 | --- | --- |
-| `Documents/**` | Read, write, and delete anything under `Documents` in the home folder |
-| `read:Documents/**` | Only read under `Documents` |
-| `read,write:/var/data/report.txt` | Read and write one file |
+| `Documents/**` | Reading, writing, and deleting under `Documents` |
+| `read:Documents/**` | Only reading under `Documents` |
+| `read,write:/var/data/report.txt` | Reading and writing one file |
 
-A relative path starts at the home folder; `~` is not expanded. `/**` covers
-everything below a folder and must come last. See
-[Permissions](/docs/system/security/permissions).
+A relative path starts at the home folder, and `~` is not expanded. `/**`
+covers everything below a folder, and comes last.
 
-A Node script connected as the owner accesses these files directly, without
-permissions.
+A Node script running as the owner reaches the files directly, with no
+permission.
 
-## Key-value store
+## How long it lasts
 
-`program.store` keeps small values by key, shared by all of the Program's
-Processes:
+`program.data` and `program.cache` belong to the
+[Program](/docs/program/programs), not to one run: every Process of it sees the
+same files. They stay when the Program is updated or uninstalled, and are
+deleted only when it is uninstalled with `purge`. The files on the machine are
+the machine's: PhreshOS never deletes them on its own.
 
-```ts
-await program.store.set("draft", { title: "Untitled" })
-await program.store.set("session", token, 60_000)   // expires after 60 seconds
-await program.store.get("draft")                    // the value, or undefined
-await program.store.getOrSet("layout", "grid")         // keeps an existing value
-await program.store.update("visits", current => (Number(current) || 0) + 1)
-const stop = program.store.subscribe("draft", draft => { /* follow the value */ })
-stop()
-await program.store.has("draft")
-await program.store.delete(["draft", "session"])
-await program.store.clear()
+## From the terminal
+
+The terminal works on the machine's files directly, as its user. A Program's
+own files go with its data:
+
+```sh
+phresh uninstall notes --purge   # deletes its files, store, and database
 ```
-
-`getOrSet()` writes its initial value only if the key is absent, atomically.
-`subscribe()` reports the current value and subsequent changes to that key,
-including deletion and expiration. `update()` applies a pure read-modify-write
-atomically; its updater may run again if another writer changes the key. An
-update preserves an existing expiration deadline.
-
-## SQLite database
-
-`program.database` is a SQLite database owned by the Program. Each `query`
-runs one statement:
-
-```ts
-await program.database.query("CREATE TABLE IF NOT EXISTS notes (id TEXT, title TEXT)")
-await program.database.query("INSERT INTO notes VALUES (?, ?)", ["1", "Hello"])
-
-const notes = await program.database.query<{ id: string, title: string }>(
-  "SELECT * FROM notes WHERE title = ?",
-  ["Hello"],
-)
-```
-
-Pass values as parameters instead of building them into the statement. A
-template literal does this for you:
-
-```ts
-const title = "Hello"
-await program.database.query`SELECT * FROM notes WHERE title = ${title}`
-```
-
-## Uploads
-
-`system.uploads` stores files under generated keys, for things other parts of
-the System refer to, such as [wallpapers](/docs/system/appearance#set-a-wallpaper).
-An upload never changes after it is written.
-
-```ts
-const upload = await system.uploads.write(imageBlob)
-// { file: "3f2a…c1.png", size, modifiedAt }
-
-await system.uploads.bytes(upload.file)
-await system.uploads.stat(upload.file)   // or null
-```
-
-Uploads have no folders, listing, or deletion. Writing an upload requires the
-`uploads` permission; reading one by its key does not.
-
-## What happens to the data
-
-| Data | Kept until |
-| --- | --- |
-| `data`, `cache`, `store`, `database`, `logs` | The Program is uninstalled with `purge` |
-| Uploads | The System is uninstalled or reinstalled with `purge` |
-
-See [Install and uninstall](/docs/runtime/programs#install-and-uninstall).
-
-## Reference
-
-| Member | Result |
-| --- | --- |
-| `storage.navigate(...path)`, `file(...path)` | Folder and file handles |
-| `storage.create()`, `list()`, `clear()`, `delete()` | Folder operations |
-| `storage.copy()`, `move()`, `space()`, `watch()`, `stat()` | More folder operations |
-| `file.write()`, `append()`, `delete()`, `copy()`, `move()` | Change a file |
-| `file.bytes()`, `text()`, `json()`, `stream()`, `stat()` | Read a file |
-| `name()`, `path()` | The last path part, or the absolute path |
-| `program.store.get()`, `getOrSet()`, `set()`, `update()`, `subscribe()`, `has()`, `delete()`, `clear()` | Persistent key-value state and observation |
-| `program.database.query(statement, values?)` | Run one SQL statement |
-| `system.uploads.write()`, `bytes()`, `text()`, `json()`, `stream()`, `stat()` | Uploads |

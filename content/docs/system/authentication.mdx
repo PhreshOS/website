@@ -1,0 +1,78 @@
+---
+title: Authentication
+description: The owner's sign-in, the browsers connected, and their Sessions.
+icon: KeyRound
+---
+
+A System has one owner, who signs in to the Desktop with a username and a
+password, set on the first visit. Two things describe who is connected:
+
+- a **Connection** is one browser connected to the System, signed in or not;
+- a **Session** is one sign-in. Several Connections can share it, and it
+  outlives them.
+
+A Node script and the terminal run as the owner of the machine: they are not
+Connections and need no Session.
+
+## A Connection
+
+```ts
+const connection = await desktop.connection()   // the one showing this Desktop
+
+await connection.connected()
+await connection.session()   // null when not signed in
+connection.subscribe("sessionChange", session => {})
+```
+
+`signIn()` signs in a connected browser without a password, for example to
+approve a remote browser from a Program trusted with authentication:
+
+```ts
+await connection.signIn()
+```
+
+## A Session
+
+```ts
+await session.valid()
+await session.connections()
+await session.signOut()
+session.subscribe("end", ({ reason }) => {})   // "signedOut" or "expired"
+```
+
+A Session stays valid while a Connection uses it, and for 24 hours after the
+last one leaves. Signing out ends it at once; the browsers stay connected, but
+signed out.
+
+## All of them
+
+```ts
+await system.authentication.connections()
+await system.authentication.sessions()
+system.authentication.subscribe("sessionCreate", session => {})
+await system.authentication.signOutAllSessions()
+```
+
+## The owner's credentials
+
+```ts
+await system.authentication.state()          // { username }
+await system.authentication.requirements()   // allowed lengths
+await system.authentication.setCredentials({ username: "owner", password: "…" })
+```
+
+New credentials apply to the next sign-in; Sessions already signed in stay.
+
+## Permission
+
+The `authentication` [permission](/docs/system/permissions) allows all of
+this. `desktopConnection` allows only reading this Desktop's own Connection.
+
+## From the terminal
+
+```sh
+phresh connection list
+phresh connection sign-in --connection <identity>
+phresh session list
+phresh session sign-out --session <identity>
+```

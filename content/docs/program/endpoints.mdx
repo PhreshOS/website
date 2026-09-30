@@ -1,0 +1,106 @@
+---
+title: Endpoints
+description: Start and stop the Server and the Client of a Process on their own.
+icon: Unplug
+---
+
+A [Process](/docs/program/processes) has two Endpoints: the **Server**, on the
+machine, and the **Client**, in a Window. Each starts and stops on its own
+while the Process runs.
+
+## One handle, many runs
+
+`process.server` and `process.client` always exist, even while that Endpoint is
+stopped, or the Program declares none. Each start is a new run behind the same
+handle, so you can follow an Endpoint before it starts and across restarts.
+
+```ts
+await process.client.running()
+await process.client.isService()   // whether this run is a Service
+```
+
+## Start and stop
+
+```ts
+await process.server.start()
+await process.client.start({ title: "Inspector", size: { width: 520, height: 420 } })
+await process.client.stop()
+```
+
+`start()` does nothing when the Endpoint already runs; its settings apply only
+to a new run. Stopping one Endpoint never ends the Process, so the last running
+one cannot be stopped: end the Process instead.
+
+<img
+  src="/mental-models/endpoints.png"
+  alt="A Process with a running Server and Client: client.stop() leaves the Process running with only its Server, and client.start() opens a fresh Window; if the Server ends by itself, finishing or crashing, the Process ends and its Client stops too; process.exit() or closing its Window ends the Process and stops both Endpoints"
+  className="mental-model"
+/>
+
+## Wait until it is ready
+
+A Server that has started may not answer yet. `waitReady()` resolves once it
+can, within ten seconds unless given another deadline:
+
+```ts
+await process.server.start()
+await process.server.waitReady()
+```
+
+A Client is ready as soon as it runs.
+
+## Follow its runs
+
+```ts
+process.client.lifecycle.subscribe("start", () => {})
+process.client.lifecycle.subscribe("stop", () => {})
+```
+
+These are kept apart from what the Endpoint itself publishes, so an event of
+yours named `start` never collides with them.
+
+## The Server
+
+The Server does what must go on without a Window: background work, files, the
+network. It is the one that answers questions:
+
+```ts
+await process.server.ask("status")
+```
+
+It runs as a command, in Node.js, or in a sandbox: see
+[Execution](/docs/system/execution).
+
+## The Client
+
+Each run of the Client is a web page shown in a
+[Window](/docs/desktop/windows). A restarted Client opens a fresh Window from
+the Program's declaration: position and size do not carry over.
+
+A Client does not answer questions: it can be open on several Desktops at
+once, so a question would have no single Client to answer it.
+
+## Client memory
+
+A running Client keeps a small memory, shared by every Desktop showing it and
+kept across page reloads. It ends with the run:
+
+```ts
+await context.memory.set("tab", "colors")       // inside the Client
+await context.memory.get("tab")                 // "colors"
+await context.memory.update("count", n => (Number(n) || 0) + 1)
+await process.client.memory.entries()           // from outside
+```
+
+Values are JSON, at most 16 KiB each and 64 KiB in all. For what must last,
+use the Program's [data](/docs/system/data).
+
+## From the terminal
+
+```sh
+phresh endpoint inspect --process main --program notes --endpoint server
+phresh endpoint start --process main --program notes --endpoint client
+phresh endpoint stop --process main --program notes --endpoint client
+phresh endpoint wait-ready --process main --program notes --endpoint server
+phresh endpoint memory --help
+```

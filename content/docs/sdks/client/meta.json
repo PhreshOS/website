@@ -1,8 +1,0 @@
-{
-  "title": "Client",
-  "description": "Use PhreshOS inside a Desktop Client Endpoint",
-  "icon": "PanelTop",
-  "pages": [
-    "index"
-  ]
-}

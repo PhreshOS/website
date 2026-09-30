@@ -27,15 +27,13 @@ test("every destination is a link search engines can follow", async () => {
   expect(links).toContain("https://github.com/PhreshOS")
   expect(links).toContain("#install")
   expect(links).toContain("/docs/what-is-phreshos")
-  expect(links).toContain("/docs/first-program")
-  expect(links).toContain("/docs/installation")
 })
 
 test("search engines find the sitemap, with the documentation in it", async () => {
   expect(await built("robots.txt")).toContain("Sitemap: https://phreshos.com/sitemap.xml")
   const sitemap = await built("sitemap.xml")
   expect(sitemap).toContain("<loc>https://phreshos.com</loc>")
-  expect(sitemap).toContain("<loc>https://phreshos.com/docs/system/security/permissions</loc>")
+  expect(sitemap).toContain("<loc>https://phreshos.com/docs/system/permissions</loc>")
 })
 
 test("the home page loads no documentation styles", async () => {
@@ -57,7 +55,7 @@ test("the home page describes PhreshOS as structured data", async () => {
 })
 
 test("a documentation page is a technical article about PhreshOS", async () => {
-  const html = await built("docs/installation.html")
+  const html = await built("docs/what-is-phreshos.html")
   const script = html.match(/<script type="application\/ld\+json">(.*?)<\/script>/)?.[1]
   const article = JSON.parse(script ?? "{}")
   expect(article["@type"]).toBe("TechArticle")

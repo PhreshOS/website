@@ -1,0 +1,109 @@
+---
+title: Communication
+description: Publish messages, ask questions, and listen.
+icon: MessagesSquare
+---
+
+Endpoints talk in two ways: **publish** announces something with no reply;
+**ask** waits for exactly one answer. The same operations work between the
+two sides of a Process, between Processes, and through
+[Services](/docs/program/services). You never deal with frames, workers, or
+connections.
+
+## Who receives
+
+The handle you use decides:
+
+| Handle | Reaches |
+| --- | --- |
+| `context` | Anyone listening to you |
+| `process.server`, `process.client` | That Endpoint |
+| A Service | The Endpoint offering it |
+
+## Publish
+
+```ts
+process.client.publish("theme.changed", { dark: true })   // to that Client
+context.publish("ready")                                  // from you
+```
+
+Publishing returns at once. If nothing listens, or the destination is not
+running, the message is lost.
+
+## Listen
+
+Inside an Endpoint, messages sent to you arrive through `context`, with their
+sender:
+
+```ts
+context.subscribe("theme.changed", ({ from, payload }) => {})
+```
+
+From outside, listening to an Endpoint or a Service hears what it publishes:
+
+```ts
+process.server.subscribe("progress", percent => render(percent))
+```
+
+## Three ways to listen
+
+Every source of events in PhreshOS offers the same three:
+
+```ts
+const stop = target.subscribe("changed", value => {})   // until you stop
+const value = await target.wait("changed")              // the next one
+for await (const value of target.events("changed")) {}  // one by one
+```
+
+Listening hears what happens from now on. To know the current state, read it
+first, then follow its changes. Each way, with its deadline, its end, and
+listening to every event at once, is in [Shared concepts](/docs/shared-concepts#events).
+
+## Ask
+
+A question gets exactly one answer, or fails:
+
+```ts
+const notes = await process.server.ask("notes.list")
+await process.server.timeout(60_000).ask("report.create")   // ten seconds by default
+```
+
+```ts
+context.answer("notes.list", () => loadNotes())   // in the Server
+```
+
+A question fails when the Server is not available, stops before answering,
+throws, or runs out of time.
+
+## Types
+
+```ts
+const notes = await process.server.ask<Note[]>("notes.list")
+```
+
+## More than JSON
+
+Messages and answers carry dates, maps, sets, errors, binary data, and
+streams, and they arrive as themselves. A stream arrives as a stream, read as
+it comes:
+
+```ts
+context.answer("file.read", () => ({ content: fileStream }))   // Server
+const { content } = await context.server.ask("file.read")      // Client
+```
+
+## Watch what an Endpoint sends
+
+```ts
+process.client.traffic.subscribe("theme.changed", ({ to, payload }) => {})
+```
+
+It only watches: nothing it sees is changed or delayed.
+
+## From the terminal
+
+```sh
+phresh endpoint ask --process main --program notes --endpoint server --event notes.list
+phresh endpoint publish --process main --program notes --endpoint client --event changed --payload '{"value":1}'
+phresh endpoint wait --process main --program notes --endpoint client --event changed
+```

@@ -1,9 +1,0 @@
-{
-  "title": "Node",
-  "description": "Connect Node.js tools and compose Program projects",
-  "icon": "Box",
-  "pages": [
-    "index",
-    "project"
-  ]
-}

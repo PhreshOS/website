@@ -1,0 +1,119 @@
+---
+title: Drawing
+description: How your Client is drawn on each Desktop, and how to draw it yourself outside standard Windows.
+icon: PenTool
+---
+
+`context.window` is the Window the System keeps, the same on every Desktop.
+`context.presentation` is how this Desktop actually draws your Client: in
+pixels, its frame without the title bar.
+
+<img
+  src="/mental-models/drawing.png"
+  alt="One Window kept by the System with a width of one half is drawn 720 pixels wide on a 1440 by 900 Desktop and 512 pixels wide on a 1024 by 768 Desktop; each drawing is the Client's frame below the title bar, read through context.presentation"
+  className="mental-model"
+/>
+
+## Read it
+
+Every layer reads its drawing:
+
+```ts
+await context.presentation.position()      // { x: -480, y: -300 }
+await context.presentation.size()          // { width: 960, height: 600 }
+await context.presentation.front()         // the front of its layer
+await context.presentation.interactive()   // whether clicks reach it
+await context.presentation.surface()       // what the Desktop paints behind it
+await context.presentation.anchor()        // "viewport" or "plane"
+```
+
+## Follow it
+
+```ts
+context.presentation.subscribe("resize", size => {})
+```
+
+| Event | When |
+| --- | --- |
+| `move`, `resize` | It moved, or changed size |
+| `front` | It became, or stopped being, the front of its layer |
+| `changeInteractive` | Clicks began, or stopped, passing through it |
+| `changeSurface` | The surface behind it changed |
+| `changeAnchor` | It became fixed to the viewport, or to the plane |
+
+Reads and events tell the drawing as it is at the moment: while the Desktop
+carries it with the pointer, and along a motion. An effect that only changes
+how it looks, such as the scale a Window enters with, moves nothing and is no
+change.
+
+In React, `usePresentationState(context.presentation)` reads it and follows
+it: see [React](/docs/sdks/react/hooks).
+
+## Draw it yourself
+
+In `under`, `over`, and `shell` the Desktop does not place your Client: it
+starts at zero size, and you set where it is and how large, in pixels:
+
+```ts
+await context.presentation.setGeometry({ x: -360, y: -240, width: 720, height: 480 })
+await context.presentation.raise()
+```
+
+Writes take effect at once. They can move on the Appearance timing, or your
+own:
+
+```ts
+await context.presentation.transaction().resize({ width: 360, height: 240 })
+await context.presentation.transactionAndWait(300).move({ x: 0, y: 0 })   // resolves when it arrives
+```
+
+The Desktop can paint a surface behind your Client, from the
+[Appearance](/docs/system/appearance), and let clicks pass through it:
+
+```ts
+await context.presentation.setSurface(true)
+await context.presentation.setSurface({ radius: 16, color: "background" })
+await context.presentation.setInteractive(false)
+```
+
+`context.window` still holds the Window's values in these layers, and its
+events still arrive: the Program decides what they mean for its drawing, such
+as what maximizing does.
+
+## Fixed to the viewport or the plane
+
+A drawing in `under` or `over` stays where it is in the
+[viewport](/docs/desktop/plane#the-view) while the viewport moves across the
+plane. Fixed to the plane, it keeps its place there, and moves
+with the view as standard Windows do:
+
+```ts
+await context.presentation.setAnchor("plane")
+```
+
+Its position is then counted from the center of the plane, and each Desktop
+shows it where its own view is. Changing the anchor keeps the drawing where it
+is in the viewport, so nothing moves.
+
+The Desktop does not keep a drawing within the plane: one placed outside it is
+never shown. `desktop.plane.size()` tells how far the plane reaches.
+
+## What each layer allows
+
+| | `window` | `under`, `over` | `shell` | `wallpaper` |
+| --- | --- | --- | --- | --- |
+| Reads and events | Yes | Yes | Yes | Yes |
+| `beginMoveGesture()` | Yes | Yes | Yes | No |
+| `move`, `resize`, `setGeometry`, `setSurface`, `transaction`, `raise`, `setInteractive` | No | Yes | Yes | No |
+| `setAnchor` | No | Yes | No | No |
+
+In `window` the Desktop draws from the Window, and in `wallpaper` it draws
+alone, so both refuse writes.
+
+## From the terminal
+
+The terminal does not draw: it reaches the Window the System keeps.
+
+```sh
+phresh window inspect --process main --program clock
+```

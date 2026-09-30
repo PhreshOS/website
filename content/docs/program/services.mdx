@@ -1,0 +1,73 @@
+---
+title: Services
+description: Offer one of your Endpoints to other Programs, and reach theirs.
+icon: Waypoints
+---
+
+A Service is an [Endpoint](/docs/program/endpoints) other Programs reach by
+name, without seeing your Program or its Processes. It is not a separate thing
+that runs: it is a named Process whose Endpoint chose to be reached.
+
+## The address
+
+| Part | Is |
+| --- | --- |
+| `program` | The identity of the Program offering it |
+| `process` | The name of its Process: the Service name |
+| `endpoint` | `"server"` or `"client"` |
+
+The address names a role, not a run: when the Endpoint restarts, or the named
+Process is replaced, the same address reaches it again.
+
+## Offer one
+
+```ts
+await program.createProcess({ name: "editor", server: { service: true } })
+```
+
+A Program can also make an Endpoint a Service by default, in its
+[configuration](/docs/sdks/core#program-configuration). The Service is available
+while that Endpoint runs and is ready.
+
+## Reach one
+
+```ts
+const editor = system.service.prepare({ program: "text-studio", process: "editor", endpoint: "server" })
+
+await editor.waitReady()
+const document = await editor.ask("document.open", { path: "welcome.txt" })
+editor.subscribe("document.changed", change => {})
+```
+
+`prepare()` contacts nobody: whether the Service exists and you may reach it is
+checked when you use it. Only Server Services answer questions.
+
+## Find them
+
+```ts
+await system.service.list({ name: "editor" })
+system.service.subscribe("available", service => {})
+```
+
+Several Programs can offer a Service with the same name.
+
+## Who offers it
+
+```ts
+await editor.programMetadata()   // { name, version } of the Program behind it
+await editor.programIcon("small")
+```
+
+## Permission
+
+Reaching a Service needs the `services` [permission](/docs/system/permissions)
+for its name, which covers every Service with that name. It does not reveal
+the Program behind it, and seeing a Program does not grant its Services.
+
+## From the terminal
+
+```sh
+phresh service list --name editor
+phresh service ask --program text-studio --process editor --endpoint server --event document.list
+phresh service wait-ready --program text-studio --process editor --endpoint server
+```

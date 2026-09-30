@@ -1,0 +1,19 @@
+# Addresses of the documentation before it was reorganized, sent to where each subject lives now.
+/docs/first-program /docs/your-program 301
+/docs/installation /docs 301
+/docs/runtime /docs/program 301
+/docs/runtime/communication /docs/program/communication 301
+/docs/runtime/context /docs/program/context 301
+/docs/runtime/endpoints /docs/program/endpoints 301
+/docs/runtime/processes /docs/program/processes 301
+/docs/runtime/programs /docs/program/programs 301
+/docs/runtime/services /docs/program/services 301
+/docs/sdks/core/execute /docs/sdks/core#execute 301
+/docs/sdks/core/program-configuration /docs/sdks/core#program-configuration 301
+/docs/sdks/node/project /docs/sdks/node#a-program-project 301
+/docs/sdks/server/execution /docs/system/execution 301
+/docs/system/desktop /docs/desktop 301
+/docs/system/security /docs/system/permissions 301
+/docs/system/security/authentication /docs/system/authentication 301
+/docs/system/security/execution /docs/system/execution 301
+/docs/system/security/permissions /docs/system/permissions 301

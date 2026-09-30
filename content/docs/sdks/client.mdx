@@ -1,0 +1,45 @@
+---
+title: Client
+description: The package for a Program's Client, in a Window.
+icon: AppWindow
+---
+
+<Tabs items={["npm", "pnpm", "Bun", "Yarn Classic"]} groupId="package-manager" persist>
+  <Tab value="npm">
+    ```sh
+    npm install @phreshos/client @phreshos/core
+    ```
+  </Tab>
+  <Tab value="pnpm">
+    ```sh
+    pnpm add @phreshos/client @phreshos/core
+    ```
+  </Tab>
+  <Tab value="Bun">
+    ```sh
+    bun add @phreshos/client @phreshos/core
+    ```
+  </Tab>
+  <Tab value="Yarn Classic">
+    ```sh
+    yarn add @phreshos/client @phreshos/core
+    ```
+  </Tab>
+</Tabs>
+
+```ts
+import { context, desktop, system } from "@phreshos/client"
+
+const notes = await context.server.ask("notes.list")
+await context.window.setTitle("Notes")
+```
+
+`context`, `desktop`, and `system` are explained in the chapters before: see
+[Context](/docs/program/context), [The Desktop](/docs/desktop),
+and [The System](/docs/system).
+
+## Only in a Client
+
+- `desktop`: the Desktop showing this Client;
+- `context.window` and `context.presentation`: its Window, and how it is drawn;
+- `context.memory`: values kept for one run of the Client.

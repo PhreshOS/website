@@ -1,0 +1,94 @@
+---
+title: The plane
+description: Where Windows are, the view each Desktop shows, and how Windows are shown.
+icon: Map
+---
+
+Standard [Windows](/docs/desktop/windows) live on a plane larger than the
+Desktop: five views across and five down, each view the size of the Desktop.
+Zero is the center of the middle view.
+
+<img
+  src="/mental-models/plane.png"
+  alt="A plane of five by five views; zero is the center of the middle view; a Window at x 0, y 0 has its top-left corner there, and one at x 100%, y 0 has it at the same place one view to the right; a Desktop shows one view, and the Map moves it"
+  className="mental-model"
+/>
+
+## Its size
+
+The plane changes size with the Desktop, and reaches from minus half its size
+to plus half its size in each direction:
+
+```ts
+await desktop.plane.size()   // { width: 7200, height: 4500 } on a 1440 × 900 Desktop
+desktop.plane.subscribe("resize", size => {})
+```
+
+## Positions
+
+A Window's position is its top-left corner on the plane. A number is pixels; a
+string is a share of the view, so the Window fits every screen it is shown on:
+
+```ts
+await context.window.move({ x: -450, y: -320 })          // pixels
+await context.window.move({ x: "-1/2", y: "-1/2" })      // the top-left corner of the view
+await context.window.move({ x: "100% - 450", y: -320 })  // one view to the right
+await context.window.resize({ width: "1/2", height: "100%" })
+```
+
+A Window placed in another view is kept in views, so it stays in that view on
+a Desktop of any size.
+
+## The view
+
+Each Desktop shows one view at a time. The **Map** in the Taskbar shows every
+Window, and moves the view across the plane. In the Map and the Taskbar,
+pressing a Window brings the view to it; its menu offers **Go to**, which moves
+the view there, and **Bring here**, which moves the Window into the view.
+
+Where a Desktop looks belongs to that Desktop alone: it starts at the center
+each time, is never stored, and another Desktop can look elsewhere.
+
+```ts
+await desktop.viewport.size()     // the view's size
+await desktop.viewport.offset()   // the point of the plane at the view's center
+desktop.viewport.subscribe("move", offset => {})
+```
+
+Moving the view changes what the person is looking at, so it needs the
+`desktopViewport` [permission](/docs/system/permissions):
+
+```ts
+await desktop.viewport.move({ x: 1440, y: 0 })
+```
+
+## How Windows are shown
+
+The System keeps a Window's values as they are given; each Desktop decides how
+to show them:
+
+- a Window beyond the plane is shown at its edge;
+- no Window is shown smaller than 260 × 160 pixels, as far as the view
+  allows;
+- Windows keep the Appearance spacing from the view's edges, the Taskbar, and
+  each other. That space is drawn, never stored;
+- a maximized Window fills the view its center is in;
+- a Window moves visibly when where it was, or where it goes, is in the
+  view. Moved between two unseen views, it is simply there.
+
+## Where a new Window opens
+
+A launch, then the Program's [configuration](/docs/sdks/core#program-configuration),
+say a Window's size and position. What neither says is 500 × 500 pixels,
+centered on zero. The Start Menu opens a Program the way a person expects: a
+square three fifths of the view's shorter side, in the middle of the view,
+stepped slightly from the Windows already there.
+
+## From the terminal
+
+The terminal has no view of its own: it moves Windows on the plane.
+
+```sh
+phresh window move --process main --program notes --x 50% --y 0
+phresh window resize --process main --program notes --width 800 --height 600
+```

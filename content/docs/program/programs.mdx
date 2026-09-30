@@ -1,0 +1,128 @@
+---
+title: Programs
+description: Find a Program, read what it is, install it, and follow its changes.
+icon: Package
+---
+
+A Program is the software, installed or not: it stays the same while its files
+are updated and its [Processes](/docs/program/processes) come and go. Your own
+is `await context.program()`; any other is reached through `system`.
+
+## Find one
+
+```ts
+await system.program.find("notes")               // one Program, or null
+await system.program.list()                      // every Program you can see
+await system.program.list({ installed: true })   // installed ones only
+await system.program.list({ opens: "image/png" }) // those that open a type
+```
+
+Seeing another Program needs the `programs` [permission](/docs/system/permissions).
+Without it, `find()` returns `null` and `list()` leaves it out, as if it did
+not exist.
+
+## Read what it is
+
+```ts
+program.identity      // "notes"
+program.name          // "Notes"
+program.version       // "1.2.0", or "0.0.0" when not declared
+program.description   // or null
+program.server        // what a new Process starts by default, or null
+program.client        // the same for the Client, with its Window settings
+
+await program.icon("large")   // a PNG: "small", "medium", or "large"
+await program.definition()    // everything its author declared
+await program.agent()         // its document for AI agents, or null
+```
+
+What it declares is written in its [configuration](/docs/sdks/core#program-configuration).
+
+## Installed and attached
+
+A Program runs in one of two forms:
+
+- **installed**: its files are copied into the System, and it stays after the
+  System restarts;
+- **attached**: it runs from a project folder while `phresh dev` runs, and
+  exists only as long as that command.
+
+```ts
+await program.installed()
+```
+
+## Install and remove it
+
+```ts
+for await (const chunk of program.install()) console.log(chunk.text)
+for await (const chunk of program.uninstall()) console.log(chunk.text)
+```
+
+Installing replaces its files; its running Processes end just before the new
+files take effect. After installing, the System can start one Process:
+
+```ts
+program.install({ launch: { name: "main" } })   // this launch
+program.install({ launch: false })              // nothing
+```
+
+| Call | Removes |
+| --- | --- |
+| `uninstall()` | Its files; its [data](/docs/system/data) and the Program stay |
+| `uninstall({ purge: true })` | Also its Processes, its data, and the Program |
+| `forget()` | Its Processes and the Program; its files stay |
+
+## Create one from a definition
+
+`phresh dev` and `phresh install` create Programs for you. From code, a
+definition, or the path of a `program.json`, creates one, uninstalled:
+
+```ts
+const program = await system.program.create("/path/to/notes/program.json")
+```
+
+`forceCreate()` does the same over a Program with the same identity, keeping
+its files and data.
+
+## Pin it
+
+```ts
+await program.pin()      // keep it among the favorites of Desktop interfaces
+await program.pinned()
+await program.unpin()
+```
+
+## What it owns
+
+| | See |
+| --- | --- |
+| `program.data`, `cache`, `store`, `database` | [Data](/docs/system/data) |
+| `program.logs` | [Logs](/docs/system/logs) |
+| `program.permissions` | [Permissions](/docs/system/permissions) |
+| `program.startup` | [Start with the System](/docs/program/processes#start-with-the-system) |
+
+## Follow its changes
+
+```ts
+program.subscribe("processCreate", process => {})
+program.subscribe("processExit", ({ process, status }) => {})
+program.subscribe("uninstall", ({ purge }) => {})
+
+system.program.subscribe("install", program => {})   // every Program you can see
+```
+
+A Program also announces `forget`, `pinned`, and `permissions`.
+
+## From the terminal
+
+```sh
+phresh program list --installed-only
+phresh program inspect --program notes
+phresh program definition --program notes --json
+phresh program pin --program notes
+phresh program wait --event install
+
+phresh install              # the Program in this folder
+phresh install notes        # an official Program
+phresh uninstall notes --purge
+```

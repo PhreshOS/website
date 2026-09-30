@@ -1,0 +1,25 @@
+---
+title: Uploads
+description: Files kept by key, for things the System refers to, such as wallpapers.
+icon: Upload
+---
+
+An upload is a file the System keeps under a key it generates. Other parts of
+the System refer to it by that key, such as a wallpaper in the
+[Appearance](/docs/system/appearance#a-wallpaper).
+
+```ts
+const upload = await system.uploads.write(image)   // { file: "3f2a…c1.png", size, modifiedAt }
+
+await system.uploads.bytes(upload.file)
+await system.uploads.text(upload.file)
+await system.uploads.stat(upload.file)             // or null
+```
+
+An upload never changes after it is written, and has no folders, listing, or
+deletion. Writing one needs the `uploads` [permission](/docs/system/permissions);
+reading one by its key needs none.
+
+## How long they last
+
+Uploads stay until the System is uninstalled or reinstalled with `purge`.

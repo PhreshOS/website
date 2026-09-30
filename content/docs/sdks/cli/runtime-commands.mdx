@@ -4,7 +4,7 @@ description: Inspect and control the running System from the terminal.
 ---
 
 Runtime commands work on the running System, the same way the SDK does. Each
-one is an [Execute](/docs/sdks/core/execute) operation with terminal options.
+one is an [Execute](/docs/sdks/core#execute) operation with terminal options.
 
 ```sh
 phresh program list
@@ -19,7 +19,7 @@ Add `--json` to any of them for the full result as JSON.
 
 | Command | Subcommands |
 | --- | --- |
-| `program` | `list`, `inspect`, `agent`, `definition`, `get-startup`, `enable-startup`, `disable-startup`, `pinned`, `pin`, `unpin`, `get-permission`, `list-permissions`, `allows-permission`, `allow-permission`, `deny-permission`, `logs`, `wait` |
+| `program` | `list`, `inspect`, `agent`, `definition`, `get-startup`, `set-startup`, `remove-startup`, `pinned`, `pin`, `unpin`, `get-permission`, `list-permissions`, `allows-permission`, `allow-permission`, `deny-permission`, `logs`, `wait` |
 | `connection` | `list`, `inspect`, `session`, `sign-in`, `wait` |
 | `session` | `list`, `inspect`, `connections`, `sign-out`, `wait` |
 | `process` | `list`, `inspect`, `create`, `find-or-create`, `exit`, `wait` |
@@ -40,7 +40,7 @@ phresh program inspect --program notes
 phresh program logs --program notes --statement 'select * from logs order by createdAt desc limit 20'
 ```
 
-See [Programs](/docs/runtime/programs).
+See [Programs](/docs/program/programs).
 
 ## Processes
 
@@ -63,7 +63,7 @@ phresh process wait --event exit --program notes --process main
 `--server` and `--client` start an Endpoint; `--no-server` and `--no-client`
 keep it stopped. `--server-service` and `--client-service` make it a Service.
 `--replace` replaces a Process with the same name. See
-[Processes](/docs/runtime/processes).
+[Processes](/docs/program/processes).
 
 ## Connections and Sessions
 
@@ -81,7 +81,7 @@ phresh session wait --event end --session <identity>
 `sign-in` authorizes an unsigned browser Connection by creating a Session.
 `sign-out` ends the selected Session and removes authorization from every
 Connection using it; those browser Connections remain open. See
-[Authentication](/docs/system/security/authentication).
+[Authentication](/docs/system/authentication).
 
 ## Endpoints and Services
 
@@ -107,7 +107,7 @@ it to start or stop.
 
 Payloads on the command line are JSON, so values such as `Date`, `Map`, or
 binary data that the SDK can send are not available here. See
-[Communication](/docs/runtime/communication).
+[Communication](/docs/program/communication).
 
 ## Windows
 
@@ -119,7 +119,7 @@ phresh window set-title --program notes --process main --title "Notes"
 ```
 
 A number is always pixels, even in quotes: `--height 1` means one pixel. Use
-`100%` or `1/1` for the full height. See [Desktop](/docs/system/desktop).
+`100%` or `1/1` for the full height. See [Desktop](/docs/desktop).
 
 ## Raw JSON
 

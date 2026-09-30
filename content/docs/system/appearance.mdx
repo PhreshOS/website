@@ -1,154 +1,92 @@
 ---
 title: Appearance
-description: The System-wide visual settings every Desktop and Program draws from.
+description: The one set of visual values every Desktop and Program draws with.
 icon: Palette
 ---
 
-Appearance is one set of visual settings shared by the whole System: colors,
-spacing, corner radius, shadow, material, motion timing, the Taskbar, and
-wallpapers. The Desktop draws itself from it, and Programs can read it so
-their interfaces match.
-
-It is stored by the System, so every Desktop and every Program sees the same
-values.
-
-```ts
-const appearance = await system.appearance.snapshot()
-
-system.appearance.subscribe("change", appearance => applyTheme(appearance))
-```
+The Appearance is the System's visual values: colors, spacing, corner radius,
+shadow, material, motion timing, the Taskbar, and wallpapers. The Desktop
+draws itself with them, and Programs read them to match. There is one, kept by
+the System, so every Desktop and every Program sees the same.
 
 ## Read it
 
-`snapshot()` returns the complete current Appearance. `change` delivers the
-complete new value each time it changes, never just the part that changed.
-
 ```ts
 const { colors, spacing, radius } = await system.appearance.snapshot()
-const background = colors.dark.background
+system.appearance.subscribe("change", appearance => {})   // the whole new value
 ```
 
-Values that depend on the theme, such as colors, shadow, material, and
-wallpapers, have a `light` and a `dark` branch. Which one applies is chosen
-by each [Desktop's theme preference](/docs/system/desktop#preferences).
+Reading needs no permission. [React UI](/docs/sdks/react-ui) takes the
+Appearance directly, so a Program built with it matches the Desktop.
 
-[React UI](/docs/sdks/react-ui) accepts an Appearance directly, so a Program built
-with it matches the Desktop without extra work.
+## Light and dark
+
+Values that differ between light and dark have a `light` and a `dark` side:
+
+```ts
+colors.light.background
+colors.dark.background
+```
+
+Each Desktop's own [preference](/docs/desktop/preferences) chooses which one it
+shows. The names choose a side; they do not promise which is lighter. When it
+matters, compare the colors themselves.
+
+## What it holds
+
+| Value | Light and dark | Holds |
+| --- | --- | --- |
+| `colors` | Yes | `background`, `foreground`, `default`, `primary`, `secondary`, `success`, `warning`, `danger`, `info` |
+| `spacing`, `radius` | No | A base spacing and corner radius, `6` to `18` |
+| `shadow` | Yes | `x`, `y`, `blur`, `spread`, `opacity` |
+| `material` | Yes | `grain`, `grainAmount`, `backdrop`, `opacity`, `distortion`, `saturation` |
+| `transaction` | No | The `duration` and `easing` of every visual change |
+| `taskbar` | No | Its `position`, `size`, and whether it lies `overlay` over Windows |
+| `desktopWallpaper`, `signInWallpaper` | Yes | An upload's key, or `null` |
 
 ## Change it
 
-`update()` changes only the fields you pass and keeps the rest:
+`update()` changes only what you pass, and needs the `appearance`
+[permission](/docs/system/permissions):
 
 ```ts
 await system.appearance.update({ spacing: 14 })
-
-await system.appearance.update({
-  colors: { dark: { primary: "#f59a62" } },
-  transaction: { duration: 160 },
-})
-```
-
-The whole result is validated and applied at once, so no Desktop ever shows a
-half-applied change. An invalid value rejects the update and changes nothing.
-
-Changing Appearance requires the `appearance`
-[permission](/docs/system/security/permissions).
-
-## What it contains
-
-| Field | Themed | Contains |
-| --- | --- | --- |
-| `colors` | Yes | `background`, `foreground`, `default`, `primary`, `secondary`, `success`, `warning`, `danger`, `info` |
-| `spacing` | No | A base spacing, `6` to `18` |
-| `radius` | No | A base corner radius, `6` to `18` |
-| `shadow` | Yes | `x`, `y`, `blur`, `spread`, `opacity` |
-| `material` | Yes | `grain`, `grainAmount`, `backdrop`, `opacity`, `distortion`, `saturation` |
-| `transaction` | No | `duration` in milliseconds and `easing` for visual changes |
-| `taskbar` | No | `position`, `size`, `overlay` |
-| `desktopWallpaper`, `signInWallpaper` | Yes | An upload key, or `null` for the built-in wallpaper |
-
-Theme names do not promise which color is lighter: a `light` branch may use a
-dark background. When your code depends on it, compare the colors themselves.
-
-### Limits
-
-| Value | Range |
-| --- | --- |
-| `spacing`, `radius` | `6` to `18` |
-| Shadow `x`, `y` | `-48` to `48` |
-| Shadow `blur` | `0` to `96` |
-| Shadow `spread` | `-24` to `24` |
-| Shadow `opacity` | `0` to `1` |
-| Material `grain`, `grainAmount`, `opacity` | `0` to `1` |
-| Material `backdrop` | `0` to `24` |
-| Material `distortion` | `0` to `140` |
-| Material `saturation` | `1` to `2.6` |
-| Transaction `duration` | `0` to `60000` |
-| Taskbar `size` | `0` to `100` |
-
-`easing` is `linear`, `ease`, `ease-in`, `ease-out`, `ease-in-out`, or a
-cubic Bézier as four numbers.
-
-### Taskbar
-
-| Field | Values |
-| --- | --- |
-| `position` | `"top"`, `"left"`, `"bottom"`, or `"right"` |
-| `size` | Its thickness in pixels |
-| `overlay` | `true` hides it at its edge and shows it over Windows when the pointer reaches that edge |
-
-```ts
+await system.appearance.update({ colors: { dark: { primary: "#f59a62" } }, transaction: { duration: 160 } })
 await system.appearance.update({ taskbar: { position: "left", overlay: true } })
 ```
 
-## Set a wallpaper
+The whole result is checked and applied at once, so no Desktop shows half a
+change: an invalid value changes nothing.
 
-Upload a file, then use its key. Each theme has its own wallpaper:
+## A wallpaper
+
+[Upload](/docs/system/uploads) a file, then use its key. Each theme has its
+own:
 
 ```ts
 const { file } = await system.uploads.write(image)
-
-await system.appearance.update({
-  desktopWallpaper: { dark: file },
-})
+await system.appearance.update({ desktopWallpaper: { dark: file } })
 ```
 
-`signInWallpaper` works the same way for the sign-in screen. `null` restores
-the built-in wallpaper.
+An image covers the screen; a video plays muted and looping; an HTML page runs
+sandboxed, without network. A wallpaper is at most 50 MiB. `null` brings back
+the release's own. `signInWallpaper` is the same, for the sign-in screen.
 
-| Kind | Formats | Shown as |
-| --- | --- | --- |
-| Image | Common browser image formats | Covers the screen |
-| Video | `mp4`, `ogg`, `ogv`, `webm` | Muted, looping, autoplaying |
-| HTML | `html` | A sandboxed page without network access or navigation |
+## Without a System
 
-A wallpaper file can be at most 50 MiB. For a solid color, upload a small SVG
-or HTML file.
-
-See [Storage](/docs/system/storage#uploads) for uploads.
-
-## Work without a System
-
-Core exports the same rules, so tools can build and validate an Appearance
-offline:
+Core has the same rules, to build and check an Appearance offline:
 
 ```ts
-import {
-  applyAppearanceUpdate,
-  appearanceLimits,
-  createAppearanceSnapshot,
-  defaultAppearance,
-} from "@phreshos/core"
+import { applyAppearanceUpdate, defaultAppearance } from "@phreshos/core"
 
 const next = applyAppearanceUpdate(defaultAppearance, { spacing: 14 })
 ```
 
-## Reference
+## From the terminal
 
-| Member | Result |
-| --- | --- |
-| `system.appearance.snapshot()` | The complete Appearance |
-| `system.appearance.update(changes)` | Applies the changes; requires `appearance` |
-| `system.appearance.subscribe("change", …)` | The complete new Appearance on each change |
-| `defaultAppearance`, `appearanceLimits` | Defaults and ranges, from Core |
-| `createAppearanceSnapshot()`, `applyAppearanceUpdate()` | Build and update values offline |
+The terminal has no Appearance command yet. A Node script reaches it:
+
+```ts
+const system = await System.connect()
+await system.appearance.update({ spacing: 14 })
+```

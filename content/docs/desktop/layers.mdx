@@ -1,0 +1,71 @@
+---
+title: Layers
+description: The five layers of the Desktop, from the wallpaper to the Shell.
+icon: Layers
+---
+
+The Desktop stacks five layers, from back to front. Each covers the whole
+Desktop:
+
+| Layer | Holds | Drawn and placed by |
+| --- | --- | --- |
+| `wallpaper` | One background | The Desktop |
+| `under` | Content behind the Windows, such as widgets | The Program |
+| `window` | Standard [Windows](/docs/desktop/windows) | The Desktop |
+| `over` | Content above the Windows, such as notifications | The Program |
+| `shell` | The Taskbar, Start Menu, and dialogs | The Program |
+
+<img
+  src="/mental-models/layers.png"
+  alt="Five layers stacked from back to front: wallpaper, under, window, over, and shell; only the window layer is a plane of five by five views, and every other layer is the size of one view"
+  className="mental-model"
+/>
+
+## Choose one
+
+A Client starts in `window` unless its launch says otherwise:
+
+```ts
+await program.createProcess({ client: { layer: "over" } })
+```
+
+Any layer other than `window` needs the `layers`
+[permission](/docs/system/permissions). Raising a Client only brings it to the
+front of its own layer.
+
+## Who draws
+
+In `window`, the Desktop draws and places the Window; the Program fills it. In
+`under`, `over`, and `shell`, the Desktop draws nothing on its own: the Program
+places and draws its Client itself, through `context.presentation`. See
+[Drawing](/docs/desktop/drawing).
+
+## Viewport or plane
+
+Standard Windows live on the [plane](/docs/desktop/plane) and move with the
+view. The wallpaper and the Shell stay fixed to the viewport. `under` and `over`
+stay fixed to it too, until their Program
+[fixes a drawing to the plane](/docs/desktop/drawing#fixed-to-the-viewport-or-the-plane).
+
+## One wallpaper
+
+The `wallpaper` holds one Client: starting another ends the Process of the one
+before. Without one, the Desktop shows the
+[Appearance](/docs/system/appearance) wallpaper.
+
+## One Shell
+
+The `shell` belongs to one Program at a time, which may show any number of
+Clients there. When another Program takes it, every Process of the one before
+ends. While no Program holds it, the Desktop shows its own Taskbar, Start
+Menu, and dialogs.
+
+Replacing the Shell changes only what the person sees: the System still owns
+every Program, Process, and permission.
+
+## From the terminal
+
+```sh
+phresh process create --program clock --client-layer over
+phresh window inspect --process main --program clock
+```

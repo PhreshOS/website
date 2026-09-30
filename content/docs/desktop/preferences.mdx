@@ -1,0 +1,51 @@
+---
+title: Preferences
+description: Each Desktop's own theme, animations, and scale, and the Connection showing it.
+icon: SlidersHorizontal
+---
+
+Each Desktop has its own preferences, kept in its browser:
+
+| Preference | Values | By default |
+| --- | --- | --- |
+| `theme` | `"light"` or `"dark"` | The browser's |
+| `animations` | `true` or `false` | Off when the browser asks for reduced motion |
+| `scale` | `0.5` to `2` | `1` |
+
+```ts
+const { theme, animations, scale } = await desktop.preferences.snapshot()
+desktop.preferences.subscribe("change", preferences => {})
+```
+
+Reading them is always allowed. Changing them needs the `desktopPreferences`
+[permission](/docs/system/permissions):
+
+```ts
+await desktop.preferences.update({ theme: "dark" })
+await desktop.preferences.update({ theme: "default", scale: "default" })   // back to the browser's
+```
+
+Changing the scale changes the size of the view a Client sees.
+
+Preferences choose between light and dark. What light and dark look like is
+the System's [Appearance](/docs/system/appearance), the same on every Desktop.
+
+## The Connection
+
+`desktop.connection()` returns the browser Connection showing this Desktop, and
+through it the Session signed in. It needs the `desktopConnection` or the
+`authentication` permission. See [Authentication](/docs/system/authentication).
+
+```ts
+const connection = await desktop.connection()
+await connection.session()
+```
+
+## From the terminal
+
+Preferences belong to the browser, so the terminal has none. It sees the
+Connections:
+
+```sh
+phresh connection list
+```

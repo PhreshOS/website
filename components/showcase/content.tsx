@@ -12,11 +12,11 @@ export function LinkShowcase() {
   const [color, setColor] = useState<string>(unset);
   return (
     <Showcase
-      code={`<Text>Read the <Link href="/docs/system/security/permissions"${attribute('color', color)}>permissions guide</Link> first.</Text>`}
+      code={`<Text>Read the <Link href="/docs/system/permissions"${attribute('color', color)}>permissions guide</Link> first.</Text>`}
       controls={<ControlSelect label="Color" value={color} options={colorOptions} onChange={setColor} />}
     >
       <WindowScene title="Link">
-        <Text>Read the <Link href="/docs/system/security/permissions" color={optional<Color>(color)}>permissions guide</Link> before you grant a Program access to your files.</Text>
+        <Text>Read the <Link href="/docs/system/permissions" color={optional<Color>(color)}>permissions guide</Link> before you grant a Program access to your files.</Text>
       </WindowScene>
     </Showcase>
   );

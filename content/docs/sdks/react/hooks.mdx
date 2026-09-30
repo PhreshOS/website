@@ -70,7 +70,7 @@ return <p>{programState.processes.length} running · {serverState?.running ? "on
 | `useEndpointState(endpoint)` | `{ running }` |
 | `useServiceState(service)` | `{ available }` |
 | `useWindowState(window)` | `{ title, header, position, size, minimized, maximized, front, layer }` |
-| `usePresentationState(presentation)` | `{ layer, position, size, front, interactive, surface }`, the drawing as it is now |
+| `usePresentationState(presentation)` | `{ layer, anchor, position, size, front, interactive, surface }`, the drawing as it is now |
 | `useClientMemory(key, initial)` or `useClientMemory(memory, key, initial)` | `[value, setValue]` for one Client run |
 | `useProgramStore(key, initial)` or `useProgramStore(store, key, initial)` | `[value, setValue]` for one Program's persistent store |
 | `useConnectionState(connection)` | `{ connected, session }` |
@@ -110,7 +110,7 @@ TypeScript.
 ### Watch questions and answers
 
 `useSubscribeAsks` and `useSubscribeAnswers` follow what an Endpoint sends,
-through its [`traffic`](/docs/runtime/communication#observe-traffic). They only
+through its [`traffic`](/docs/program/communication). They only
 watch; they never send or answer anything.
 
 ```tsx

@@ -1,0 +1,44 @@
+---
+title: How it works
+description: What the Desktop is, what it shows, and what belongs to each one.
+---
+
+The Desktop is where a person uses the System, in a browser. It represents
+the System: it shows the Programs and Windows the System keeps, and keeps
+none of them itself. Close the browser and nothing stops; open the Desktop
+again, or in another browser, and everything is there.
+
+<img
+  src="/mental-models/desktops.png"
+  alt="A Desktop in this browser and a Desktop in another browser both represent the System, which keeps Programs and their Windows; each Desktop has its own view, preferences, and drawing"
+  className="mental-model"
+/>
+
+## What it shows
+
+Every running Client, in one of five layers, from the wallpaper at the back to
+the Shell, with its Taskbar and Start Menu, at the front. Standard Windows live
+in the middle layer, on a plane larger than the Desktop, and the Desktop shows
+one view of it at a time.
+
+## What belongs to each Desktop
+
+The same System can be open in several browsers at once. Each Desktop has its
+own:
+
+- **view**: the part of the plane it shows;
+- **preferences**: light or dark, animations, and scale;
+- **drawing**: how large each Client is drawn on its screen, in pixels.
+
+Everything else, such as a Window's title, position, and size, is kept by the
+System and shared by every Desktop.
+
+## From the terminal
+
+The terminal is not a Desktop: it has no view and no preferences. It reaches
+what the System keeps, such as Windows and the browsers connected:
+
+```sh
+phresh window inspect --process main --program notes
+phresh connection list
+```

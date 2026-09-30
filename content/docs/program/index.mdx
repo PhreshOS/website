@@ -1,0 +1,57 @@
+---
+title: How they fit
+description: Program, Process, Endpoint, Service, context, and communication, and how each builds on the others.
+---
+
+Each concept in this section builds on the one before it:
+
+- a **Program** is the software. It lasts, and owns what must last, such as
+  its data;
+- a **Process** is one run of a Program. It ends when the run ends;
+- a Process has two **Endpoints**: the **Server**, on the machine, and the
+  **Client**, in a Window. Each can start and stop while the Process runs;
+- a **Service** is a name through which other Programs reach one Endpoint;
+- **context** is how a running Endpoint sees itself;
+- **communication** is how Endpoints reach each other: they ask and publish.
+
+<img
+  src="/mental-models/concepts.png"
+  alt="A Program runs as a Process; a Process has a Server, on the machine, and a Client, in a Window; the Client asks and publishes to the Server; a Service addresses the Server; each running side sees itself through context"
+  className="mental-model"
+/>
+
+Each lives for a different length of time, and that decides what belongs to
+it: what must survive a run belongs to the Program, what lasts one run belongs
+to the Process, and what lasts only while one side runs belongs to its
+Endpoint.
+
+## One object for each
+
+Every Program, Process, Endpoint, and Service your code reaches is a
+**handle**: an instance of its class from `@phreshos/core`. Reaching the same
+one again, in any way, gives the same object for as long as your code runs:
+
+```ts
+import { Program } from "@phreshos/core"
+
+const mine = await context.program()
+const found = await system.program.find(mine.identity)
+
+mine instanceof Program   // true
+mine === found            // true
+```
+
+A handle stays the same object while what it stands for changes: a Process
+that exits, or an Endpoint that stops and starts again, is still reached
+through the same handle.
+
+## From the terminal
+
+The same pieces, from outside any Program:
+
+```sh
+phresh program list
+phresh process list --program notes
+phresh endpoint inspect --process main --program notes --endpoint server
+phresh service list
+```

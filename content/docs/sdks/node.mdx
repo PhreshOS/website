@@ -1,0 +1,79 @@
+---
+title: Node
+description: The package for scripts and tools on the machine, and for building Program projects.
+icon: Terminal
+---
+
+<Tabs items={["npm", "pnpm", "Bun", "Yarn Classic"]} groupId="package-manager" persist>
+  <Tab value="npm">
+    ```sh
+    npm install @phreshos/node @phreshos/core
+    ```
+  </Tab>
+  <Tab value="pnpm">
+    ```sh
+    pnpm add @phreshos/node @phreshos/core
+    ```
+  </Tab>
+  <Tab value="Bun">
+    ```sh
+    bun add @phreshos/node @phreshos/core
+    ```
+  </Tab>
+  <Tab value="Yarn Classic">
+    ```sh
+    yarn add @phreshos/node @phreshos/core
+    ```
+  </Tab>
+</Tabs>
+
+`system` in Node is the same as in a Program. What differs is how you reach it,
+and who you are.
+
+## Connect
+
+```ts
+import { System } from "@phreshos/node"
+
+const system = await System.connect()   // or System.connect("/srv/phreshos")
+await system.program.list()
+await system.disconnect()
+```
+
+`System.connect()` finds the System in its home folder: `PHRESHOS_HOME`, or
+`~/.phreshos`, the same as the `phresh` command.
+
+## As the owner
+
+Only the user running PhreshOS can connect, so a script runs as the owner: it
+sees everything, needs no permissions, and can decide permissions for
+Programs. It has no `context` and no `desktop`: it is not a Program.
+
+## While connected
+
+What a script starts through the connection, such as subscriptions, pending
+calls, shell commands, and open requests, ends when it disconnects or exits.
+The System and its Programs keep running.
+
+## A Program project
+
+`Project` does what `phresh dev`, `phresh install`, and `phresh pack` do, from
+code:
+
+```ts
+import { Project, System } from "@phreshos/node"
+
+const project = await Project.open()   // the folder with phresh.config.ts
+const system = await System.connect()
+
+for await (const event of await project.dev(system)) {
+  if (event.event === "output") process.stdout.write(event.text)
+}
+```
+
+| Method | Does |
+| --- | --- |
+| `dev(system)` | Runs each Endpoint's `devCommand`, while you read its events |
+| `start(system)` | Builds, then runs the production build |
+| `install(system, { launch, purge })` | Builds and installs |
+| `pack()` | Builds and writes a release archive |

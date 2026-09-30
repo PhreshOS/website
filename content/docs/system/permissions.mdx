@@ -1,0 +1,108 @@
+---
+title: Permissions
+description: What a Program may reach beyond itself, how it asks, and how the owner decides.
+icon: ShieldCheck
+---
+
+A Program always has its own things: its Program, Processes, Windows,
+[data](/docs/system/data), and [log](/docs/system/logs); it can read the
+Appearance, and, in a Client, its Desktop. Anything beyond them needs a
+**permission**. Permissions belong to the Program, so its Server and Client
+always have the same ones.
+
+## The permissions
+
+| Permission | Allows | Values |
+| --- | --- | --- |
+| `programs` | Seeing and managing other Programs | Program identities |
+| `services` | Reaching [Services](/docs/program/services) | Service names |
+| `layers` | Starting a Client outside `window` | Layers |
+| `network` | [Requests](/docs/system/network) | URL patterns |
+| `storage` | [Files on the machine](/docs/system/storage#the-files-on-the-machine) | Paths and operations |
+| `uploads` | Creating [uploads](/docs/system/uploads) | — |
+| `logs` | Reading the System log | — |
+| `appearance` | Changing the [Appearance](/docs/system/appearance) | — |
+| `desktopPreferences` | Changing a Desktop's [preferences](/docs/desktop/preferences) | — |
+| `desktopViewport` | Moving a Desktop's [view](/docs/desktop/plane#the-view) | — |
+| `desktopConnection` | Reading a Desktop's Connection | — |
+| `authentication` | [Sign-in](/docs/system/authentication), Connections, and Sessions; includes `desktopConnection` | — |
+| `all` | Everything, including assigning permissions, [shell commands](/docs/system/shell), and deciding [opening](/docs/system/opening) | — |
+
+## Declare them
+
+```ts title="phresh.config.ts"
+permissions: {
+  network: ["https://api.example.com"],
+  uploads: true,
+}
+```
+
+`true` asks for the whole permission; a list asks for some of it. A
+declaration is a default: once the owner decides, the decision applies.
+
+## Check and ask while running
+
+```ts
+await context.permissions.get("network")   // its value now
+await context.permissions.allows("network", ["https://api.example.com"])
+await context.permissions.request("network", ["https://api.example.com"])
+```
+
+`request()` asks the owner and resolves with the decision: what was granted,
+`false` when denied, or `null` when nobody answered within two minutes, or the
+Endpoint that asked stopped. An approval replaces the whole permission with
+what was asked.
+
+```ts
+await context.permissions.timeout(300_000).request("storage", ["read:Documents/**"])
+```
+
+## Without one
+
+Something you look up behaves as if it did not exist: `find()` returns `null`,
+and `list()` leaves it out, so a Program cannot learn what it may not see.
+Using something you already know about, such as changing the Appearance,
+rejects.
+
+## A permission's value
+
+| Value | Means |
+| --- | --- |
+| A list | Granted: an empty list is the whole permission, a list only those values |
+| `false` | Denied |
+| `null` | Not decided: the declaration applies |
+
+A decision of its own wins over `all`, so the owner can grant `all` and still
+deny one thing.
+
+## Decide for others
+
+A Program with `all`, such as Settings, reads and sets any Program's
+permissions:
+
+```ts
+await program.permissions.all()
+await program.permissions.allow("network", ["https://api.example.com"])   // replaces the value
+await program.permissions.deny("network")
+```
+
+A Program that replaces the Shell decides requests as they come:
+
+```ts
+system.permissions.subscribe("permissionRequest", async request => {
+  await request.allow()   // or request.deny(), or request.cancel()
+})
+```
+
+## What permissions do not limit
+
+Permissions govern what a Program does through the System. How its code runs
+decides what it can reach on its own: see [Execution](/docs/system/execution).
+
+## From the terminal
+
+```sh
+phresh program list-permissions --program notes
+phresh program allow-permission --program notes --permission network --value '["https://api.example.com"]'
+phresh program deny-permission --program notes --permission network
+```

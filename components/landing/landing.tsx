@@ -244,7 +244,7 @@ function Developers() {
         know; the SDKs connect it to the System, and React UI gives it the look of the desktop.
       </p>
       <Flex gap="small" wrap className="split-actions">
-        <Button href={`${site.documentation}/first-program`}><BookOpen />Your first program</Button>
+        <Button href={site.documentation}><BookOpen />Your first program</Button>
       </Flex>
     </Reveal>
     <Reveal delay={0.1}>
@@ -308,7 +308,7 @@ function Install() {
     </Reveal>
     <Reveal delay={0.2}>
       <Flex justify="center" gap="small" wrap>
-        <Button href={`${site.documentation}/installation`}><BookOpen />Installation guide</Button>
+        <Button href={site.documentation}><BookOpen />Installation guide</Button>
       </Flex>
     </Reveal>
   </section>

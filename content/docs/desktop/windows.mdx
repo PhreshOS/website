@@ -1,0 +1,83 @@
+---
+title: Windows
+description: Control your Window, follow its changes, and draw your own title bar.
+icon: AppWindow
+---
+
+The Desktop shows every running [Client](/docs/program/endpoints#the-client)
+as a Window. A person moves, resizes, minimizes, and maximizes it; your Client
+does the same through `context.window`. Code outside the Client reaches the
+same Window through `process.client.window`.
+
+## Change it
+
+```ts
+await context.window.setTitle("Notes")
+await context.window.resize({ width: 900, height: 640 })
+await context.window.move({ x: -450, y: -320 })
+await context.window.setGeometry({ x: -450, y: -320, width: 900, height: 640 })
+await context.window.maximize()
+await context.window.minimize()
+await context.window.raise()   // to the front of its layer
+```
+
+`setGeometry()` moves and resizes in one step. Positions and sizes can be
+pixels or shares of the view: see [The plane](/docs/desktop/plane).
+Minimizing and maximizing keep its geometry, so restoring brings it back where
+it was.
+
+## Read and follow it
+
+```ts
+await context.window.size()
+await context.window.maximized()   // also title, header, position, minimized, front, layer
+
+context.window.subscribe("resize", size => {})
+```
+
+| Event | When |
+| --- | --- |
+| `move`, `resize` | Its position or size changed |
+| `minimize`, `maximize` | It was minimized or maximized, or restored |
+| `changeTitle`, `changeHeader` | Its title or title bar changed |
+| `front` | It became, or stopped being, the front of its layer |
+
+## One run, one Window
+
+The Window belongs to one run of the Client. Each time the Client starts, its
+Window starts fresh from the Program's declaration and the launch. Changing a
+Window while its Client is stopped is refused, and closing it ends the
+Process.
+
+## Your own title bar
+
+A Window can hide the Desktop's title bar and draw its own:
+
+```ts
+await context.window.setHeader(false)
+```
+
+To let people drag the Window by it, hand the drag to the Desktop once the
+pointer starts moving:
+
+```ts
+const move = context.presentation.beginMoveGesture({
+  origin: { x: pressedX, y: pressedY },   // where the pointer went down
+  point: { x: currentX, y: currentY },    // where it is now
+})
+
+await move.ready      // the Desktop follows the pointer: release your pointer capture
+await move.finished   // the drag ended
+```
+
+`move.cancel()` ends the drag early.
+
+## From the terminal
+
+```sh
+phresh window inspect --process main --program notes
+phresh window set-title --process main --program notes --title Notes
+phresh window set-geometry --process main --program notes --x 0 --y 0 --width 100% --height 100%
+phresh window maximize --process main --program notes
+phresh window wait --process main --program notes --event move
+```

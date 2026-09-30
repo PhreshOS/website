@@ -1,0 +1,327 @@
+---
+title: Core
+description: The contracts and classes every package shares, the Program configuration, and Execute.
+icon: Box
+---
+
+`@phreshos/core` defines what a Program, a Process, an Endpoint, and every
+capability are. It connects to nothing: install it beside the package for
+where your code runs.
+
+<Tabs items={["npm", "pnpm", "Bun", "Yarn Classic"]} groupId="package-manager" persist>
+  <Tab value="npm">
+    ```sh
+    npm install @phreshos/core
+    ```
+  </Tab>
+  <Tab value="pnpm">
+    ```sh
+    pnpm add @phreshos/core
+    ```
+  </Tab>
+  <Tab value="Bun">
+    ```sh
+    bun add @phreshos/core
+    ```
+  </Tab>
+  <Tab value="Yarn Classic">
+    ```sh
+    yarn add @phreshos/core
+    ```
+  </Tab>
+</Tabs>
+
+## One set of classes
+
+Every handle a package returns is an instance of a Core class:
+
+```ts
+import { Program } from "@phreshos/core"
+
+program instanceof Program   // true
+```
+
+What a handle is, and how every handle is read and heard, is in
+[Shared concepts](/docs/shared-concepts).
+
+## Types
+
+```ts
+import type { Launch, Process, Appearance } from "@phreshos/core"
+```
+
+## Check values from outside
+
+A parser returns a clean value or throws; a guard returns `true` or `false`:
+
+```ts
+import { isServiceAddress, parseLaunch } from "@phreshos/core"
+
+const launch = parseLaunch(JSON.parse(input))
+```
+
+## Constants
+
+| Export | Holds |
+| --- | --- |
+| `programPermissionCatalog` | Every permission and the kind of value it takes |
+| `layers` | The Desktop layers, back to front |
+| `defaultAppearance`, `appearanceLimits` | The default Appearance and its ranges |
+| `desktopPreferencesLimits`, `defaultDesktopScale` | The Desktop scale's bounds and default |
+
+
+## Program configuration
+
+`phresh.config.ts` describes a Program: its name, its Server and Client, and
+what it needs. `phresh dev`, `phresh install`, and
+[`Project`](/docs/sdks/node) read it to run and install the Program.
+
+```ts title="phresh.config.ts"
+import { defineConfig } from "@phreshos/core"
+
+export default defineConfig({
+  identity: "notes",
+  name: "Notes",
+  version: "1.0.0",
+  server: {
+    location: "dist/server",
+    worker: "main.js",
+    devCommand: "vite-node server/main.ts",
+  },
+  client: {
+    location: "dist/client",
+    title: "Notes",
+    devCommand: "vite --config vite.client.ts",
+  },
+})
+```
+
+`defineConfig()` only adds type checking; it returns the object unchanged.
+
+A Program declares a Server, a Client, or both.
+
+### Describe the Program
+
+| Field | Meaning |
+| --- | --- |
+| `identity` | Required. The Program's permanent name: lowercase words joined by hyphens |
+| `name` | The name people see. Defaults to `identity` |
+| `version` | Defaults to `0.0.0` |
+| `description` | A short explanation of what it does |
+| `icon` | A PNG in the project, 128 to 2048 pixels per side, at most 5 MiB |
+| `agent` | A Markdown file in the project explaining the Program to AI agents |
+| `categories`, `keywords`, `website` | Catalog information |
+| `opens` | Media types this Program opens; see [Opening](/docs/system/opening) |
+| `buildCommand` | Runs before a production start, install, or package |
+| `permissions` | What the Program asks for; see [Permissions](/docs/system/permissions) |
+| `installLaunch` | A Process to start after installing; see [below](#start-after-installing) |
+
+### The Server
+
+```ts
+server: {
+  location: "dist/server",                 // built Server files
+  worker: "main.js",                       // or command, or sandbox
+  devCommand: "vite-node server/main.ts",  // how phresh dev runs it
+}
+```
+
+| Field | Meaning |
+| --- | --- |
+| `location` | The folder with the built Server |
+| `command` / `worker` / `sandbox` | Exactly one: how it runs. See [Execution](/docs/system/execution) |
+| `devCommand` | The command `phresh dev` runs instead |
+| `start` | Whether a new Process starts it by default. Defaults to `true` |
+| `service` | Whether it is a [Service](/docs/program/services) by default. Defaults to `false` |
+| `installCommand`, `uninstallCommand` | Run in `location` when installing and uninstalling |
+
+`worker` and `sandbox` are module paths inside `location`. `command`,
+`installCommand`, and `uninstallCommand` run from `location`.
+
+### The Client
+
+```ts
+client: {
+  location: "dist/client",                     // built files, with index.html
+  devCommand: "vite --config vite.client.ts",  // or devUrl
+  title: "Notes",
+  size: { width: 900, height: 640 },
+}
+```
+
+| Field | Meaning |
+| --- | --- |
+| `location` | The folder with the built Client and its `index.html` |
+| `devCommand` | Starts a development server; it receives `PHRESHOS_CLIENT_HOST`, `PHRESHOS_CLIENT_PORT`, and `PHRESHOS_CLIENT_BASE` |
+| `devUrl` | Or: an already running development server |
+| `sandbox` | Run in a sandboxed frame. Defaults to `true`; see [Endpoint execution](/docs/system/execution) |
+| `start`, `service` | As for the Server |
+
+#### The Window
+
+The Client can set how its Window starts. Anything left out uses the System
+default, the same in every layer and for every screen; a launch can name any of
+these values itself.
+
+| Field | Default |
+| --- | --- |
+| `title` | The Program name |
+| `size` | `{ width: 500, height: 500 }` |
+| `position` | Centered on zero, the center of the layer's space: half the size up and to the left |
+| `layer` | `"window"`; see [Layers](/docs/desktop) |
+| `header` | `true`; only standard Windows draw it |
+| `minimize`, `maximize` | `false` |
+
+A launch can override each of these for one Process.
+
+### Paths and commands
+
+- `location` values are relative to the project folder.
+- `buildCommand` and both `devCommand`s run in the project folder, so they can
+  use its development tools.
+- The Program's storage folder is not configured here; the System assigns it.
+
+### Start after installing
+
+`installLaunch` starts one Process after a successful install:
+
+```ts
+installLaunch: { name: "main", client: true }   // this launch
+installLaunch: true                             // the Endpoint defaults
+```
+
+Leave it out to start nothing. The install itself can override it; see
+[Install and uninstall](/docs/program/programs). To start a
+Process each time the System starts, use
+[`program.startup`](/docs/program/processes)
+instead.
+
+### A complete example
+
+```ts title="phresh.config.ts"
+import { defineConfig } from "@phreshos/core"
+
+export default defineConfig({
+  identity: "notes",
+  name: "Notes",
+  version: "1.0.0",
+  description: "Quick notes, synced across your Desktops.",
+  icon: "icon.png",
+  buildCommand: "vite-node scripts/build.ts",
+  permissions: {
+    network: ["https://api.example.com"],
+  },
+  installLaunch: { name: "main", client: true },
+  server: {
+    location: "dist/server",
+    sandbox: "main.js",
+    service: true,
+    devCommand: "vite-node server/main.ts",
+  },
+  client: {
+    location: "dist/client",
+    title: "Notes",
+    size: { width: 900, height: 640 },
+    devCommand: "vite --config vite.client.ts",
+  },
+})
+```
+
+## Execute
+
+Execute lets you call System operations with one JSON object and get JSON
+back. It exists for callers that cannot hold SDK handles: AI agents, shell
+scripts, and generic tools.
+
+```ts
+const notes = await system.execute({
+  $domain: "endpoint",
+  $operation: "ask",
+  program: "notes",
+  process: "main",
+  endpoint: "server",
+  event: "notes.list",
+  input: null,
+})
+```
+
+The same request works from the terminal:
+
+```sh
+phresh execute '{"$domain":"process","$operation":"list"}'
+```
+
+### How a request looks
+
+`$domain` and `$operation` choose the operation; the other fields are its
+input. Handles are replaced by plain names, such as `program`, `process`, and
+`endpoint`.
+
+Execute calls the same SDK operations you would call directly, with the same
+permissions and the same errors. A failed operation rejects.
+
+### Find operations
+
+Execute describes itself, so a caller can discover what it can do:
+
+```ts
+await system.execute({ $domain: "operation", $operation: "list" })
+await system.execute({ $domain: "operation", $operation: "list", domain: "endpoint" })
+
+await system.execute({
+  $domain: "operation",
+  $operation: "describe",
+  domain: "endpoint",
+  operation: "ask",
+})
+```
+
+`describe` returns what the operation does and the JSON Schema of its input
+and result. These schemas are the ones used to check each request.
+
+The same catalog is available without a System, from Core:
+
+```ts
+import { describeExecuteOperation, listExecuteOperations } from "@phreshos/core"
+
+listExecuteOperations("endpoint")
+describeExecuteOperation("endpoint", "ask")   // or null
+```
+
+### Check a request
+
+In TypeScript, `ExecuteRequest` types every request from its schema. For a
+value from outside, check it first:
+
+```ts
+import { parseExecuteRequest } from "@phreshos/core"
+
+const request = parseExecuteRequest(JSON.parse(input))
+const result = await system.execute(request)
+```
+
+### Operations
+
+| Domain | Operations |
+| --- | --- |
+| `operation` | `list`, `describe` |
+| `system` | `about`, `open`, `logs` |
+| `connection` | `list`, `find`, `session`, `signIn`, `wait` |
+| `session` | `list`, `find`, `connections`, `signOut`, `wait` |
+| `program` | `list`, `find`, `agent`, `definition`, `getStartup`, `setStartup`, `removeStartup`, `pinned`, `pin`, `unpin`, `getPermission`, `listPermissions`, `allowsPermission`, `allowPermission`, `denyPermission`, `logs`, `wait` |
+| `process` | `list`, `find`, `create`, `findOrCreate`, `exit`, `wait` |
+| `endpoint` | `inspect`, `start`, `stop`, `waitReady`, `ask`, `publish`, `wait`, `waitLifecycle`, `memoryGet`, `memorySet`, `memoryDelete`, `memoryEntries` |
+| `service` | `list`, `inspect`, `waitReady`, `ask`, `publish`, `wait`, `waitLifecycle`, `waitDiscovery` |
+| `window` | `inspect`, `move`, `resize`, `setGeometry`, `minimize`, `maximize`, `setTitle`, `setHeader`, `raise`, `wait` |
+
+`system.logs` and `program.logs` take a read-only SQL statement over the `logs`
+table; see [Logs](/docs/system/logs).
+
+Each operation behaves like its SDK counterpart, documented in
+[Runtime](/docs/program) and [System](/docs/system).
+
+Connection and Session operations resolve identities through
+`system.authentication`. `connection.signIn` creates a Session for an unsigned
+browser Connection. `session.signOut` ends that Session and removes its
+authorization from every attached Connection while leaving the browser
+Connections open. See [Authentication](/docs/system/authentication).

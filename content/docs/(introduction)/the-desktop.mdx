@@ -1,0 +1,61 @@
+---
+title: The Desktop
+description: Your Window, and the Desktop that shows it.
+icon: PanelsTopLeft
+---
+
+## Your Window
+
+The Desktop shows every running Client as a **Window**. The Window is yours:
+it belongs to your Client, and it ends when your Client stops. Closing it
+exits the Process.
+
+Your Client reaches its Window through `context`, like everything else that
+means "me":
+
+```ts
+await context.window.setTitle("Notes")
+await context.window.resize({ width: 900, height: 640 })
+```
+
+## The Desktop around it
+
+The Desktop is not yours: it is the place your Window is shown in, in one
+browser. Your Client reads it through `desktop`:
+
+```ts
+import { desktop } from "@phreshos/client"
+
+await desktop.viewport.size()         // how large it is
+await desktop.preferences.snapshot()  // light or dark, and more
+```
+
+What `desktop` returns is the same for every Window in that browser: it
+describes the place, not you. The same System can be open in several browsers,
+and each one is its own Desktop showing the same Windows.
+
+<img
+  src="/mental-models/desktop.png"
+  alt="The System keeps a Client Endpoint, which has a Window; a Desktop in this browser and a Desktop in another browser both show that same Window"
+  className="mental-model"
+/>
+
+## Where Windows are
+
+Windows live on a plane larger than the Desktop, and the Desktop shows one view
+of it at a time. A Window's position is a point on that plane:
+
+```ts
+await context.window.move({ x: -450, y: -320 })   // centered in the first view
+```
+
+<img
+  src="/mental-models/plane.png"
+  alt="A plane of five by five views; zero is the center of the middle view; a Window at x 0, y 0 has its top-left corner there, and one at x 100%, y 0 has it at the same place one view to the right; a Desktop shows one view, and the Map moves it"
+  className="mental-model"
+/>
+
+A Program that declares no position has its Window opened where the Desktop is
+looking.
+
+Next: everything beyond you and your Desktop.

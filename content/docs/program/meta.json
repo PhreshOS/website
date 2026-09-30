@@ -1,0 +1,12 @@
+{
+  "title": "Program",
+  "icon": "Package",
+  "pages": [
+    "programs",
+    "processes",
+    "endpoints",
+    "services",
+    "context",
+    "communication"
+  ]
+}

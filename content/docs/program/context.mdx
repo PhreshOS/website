@@ -1,0 +1,88 @@
+---
+title: Context
+description: Everything running code knows about itself.
+icon: Focus
+---
+
+`context` is an [Endpoint](/docs/program/endpoints)'s run seen from the
+inside: it means "me". It exists only in a Server or a Client; a Node script
+has `system`, but no `context`.
+
+## Where you are
+
+```ts
+await context.program()     // your Program
+await context.process()     // this run
+await context.name()        // its name, or null
+await context.parent()      // the Process that started it, or null
+await context.isService()   // whether this run is a Service
+```
+
+## What you were started with
+
+```ts
+await context.options("document")   // see Options, in Processes
+await context.opened()              // what you were started to open, or null
+```
+
+See [Options](/docs/program/processes#options) and
+[Opening](/docs/system/opening).
+
+## Messages sent to you
+
+```ts
+context.subscribe("document.changed", ({ from, payload }) => {})
+context.publish("ready")
+```
+
+See [Communication](/docs/program/communication).
+
+## Answer questions
+
+Only a Server answers. Each question has one handler:
+
+```ts
+context.answer("notes.list", async ({ payload, from }) => loadNotes(payload))
+```
+
+## The other side
+
+```ts
+await context.server.ask("notes.list")   // in a Client
+await context.client.start()             // in a Server
+```
+
+## In a Client
+
+| | See |
+| --- | --- |
+| `context.window`, `context.presentation` | [Windows](/docs/desktop/windows), [Drawing](/docs/desktop/drawing) |
+| `context.memory` | [Client memory](/docs/program/endpoints#client-memory) |
+
+## Your permissions
+
+```ts
+await context.permissions.allows("network", ["https://api.example.com"])
+await context.permissions.request("network", ["https://api.example.com"])
+```
+
+See [Permissions](/docs/system/permissions).
+
+## This run only
+
+Everything you register through `context`, such as a subscription or an
+answer, ends when this run stops. A restarted Endpoint starts with a fresh
+`context`.
+
+```ts
+await context.stop()   // stop this run
+```
+
+## From the terminal
+
+The terminal has no `context`: it is not a run of a Program. It reaches the
+same Process from outside:
+
+```sh
+phresh process inspect --process main --program notes
+```

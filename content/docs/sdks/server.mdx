@@ -1,0 +1,45 @@
+---
+title: Server
+description: The package for a Program's Server, on the machine.
+icon: Server
+---
+
+<Tabs items={["npm", "pnpm", "Bun", "Yarn Classic"]} groupId="package-manager" persist>
+  <Tab value="npm">
+    ```sh
+    npm install @phreshos/server @phreshos/core
+    ```
+  </Tab>
+  <Tab value="pnpm">
+    ```sh
+    pnpm add @phreshos/server @phreshos/core
+    ```
+  </Tab>
+  <Tab value="Bun">
+    ```sh
+    bun add @phreshos/server @phreshos/core
+    ```
+  </Tab>
+  <Tab value="Yarn Classic">
+    ```sh
+    yarn add @phreshos/server @phreshos/core
+    ```
+  </Tab>
+</Tabs>
+
+```ts title="server/main.ts"
+import { context, system } from "@phreshos/server"
+
+context.answer("notes.list", () => loadNotes())
+```
+
+`context` and `system` are explained in the chapters before: see
+[Context](/docs/program/context) and [The System](/docs/system).
+
+## Only in a Server
+
+- `context.answer()`: only a Server answers questions;
+- `context.client`: the Client of the same Process.
+
+There is no `desktop`: a Server is not shown on a Desktop. How it runs is in
+[Execution](/docs/system/execution).

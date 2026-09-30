@@ -4,7 +4,7 @@ description: Create, run, install, and package a Program project.
 ---
 
 Run these commands in a Program project folder. They do the same as the Node
-[`Project`](/docs/sdks/node/project) API.
+[`Project`](/docs/sdks/node) API.
 
 | Command | Does |
 | --- | --- |
@@ -26,7 +26,7 @@ phresh create my-program --no-install    # skip installing dependencies
 
 The folder name becomes the Program's identity, so it must be lowercase words
 joined by hyphens. Without a folder, `create` asks for one. See
-[Your first Program](/docs/first-program).
+[Your first Program](/docs/your-program).
 
 To turn an existing package into a Program:
 
@@ -71,14 +71,14 @@ verified.
 
 After installing, `--run` starts one Process with the Endpoint defaults.
 Without it, the Program's `installLaunch` decides; see
-[Program configuration](/docs/sdks/core/program-configuration#start-after-installing).
+[Program configuration](/docs/sdks/core#start-after-installing).
 
 ```sh
 phresh uninstall            # remove the installed files, keep the data
 phresh uninstall --purge    # also end its Processes and delete its data
 ```
 
-See [Install and uninstall](/docs/runtime/programs#install-and-uninstall).
+See [Install and uninstall](/docs/program/programs).
 
 ## Package it
 

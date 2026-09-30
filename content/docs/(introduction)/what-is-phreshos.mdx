@@ -1,0 +1,44 @@
+---
+title: What is PhreshOS?
+description: What PhreshOS is, and what your code sees in it.
+icon: PhreshOS
+---
+
+PhreshOS is an operating system for software built with web technologies. It
+runs on the machine you install it on, keeps your Programs running there, and gives you
+a Desktop in the browser to use them from.
+
+Two parts matter from the start:
+
+- the **System** is the service running on your machine. It keeps Programs
+  running, stores their data, connects them, and decides what each may do;
+- the **Desktop** is where you use the System. It shows every running Program
+  as a Window. Close the browser and the Programs keep running; open the
+  Desktop again and their Windows are there.
+
+## What your Programs get
+
+A Program written for PhreshOS gets these from the System, without building
+them:
+
+- **A place to run.** Its Server keeps running on the machine, whether or not
+  a browser is open.
+- **One sign-in.** The owner signs in to the System. Programs never handle
+  accounts, sessions, or connections.
+- **Permissions.** The System decides what each Program may reach; a Program
+  only asks.
+- **Any browser.** Open the Desktop from any browser that can reach the
+  machine, and the same Programs are there, as you left them.
+- **Agents alongside you.** An agent works with the same Programs through the
+  System's APIs, at the same time as you use them on the Desktop.
+
+## What your code sees
+
+Code running in PhreshOS sees three things:
+
+1. **Itself**: the Program you write, and this run of it.
+2. **Its Desktop**: the Desktop its Window is shown in.
+3. **The System**: everything else, from other Programs to the files on the
+   machine.
+
+The next chapters take them in this order, starting with a Program of your own.

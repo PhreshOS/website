@@ -1,7 +1,9 @@
-import { loader } from 'fumadocs-core/source';
+import { createElement } from 'react';
+import { loader, type LoaderPlugin } from 'fumadocs-core/source';
 import { lucideIconsPlugin } from 'fumadocs-core/source/lucide-icons';
 import { docsContentRoute, docsImageRoute, docsRoute } from './shared';
 import { defineDocs } from 'fumadocs-mdx/macro';
+import { PhreshOSIcon } from '@/components/phreshos-icon';
 import { metaSchema, pageSchema } from 'fumadocs-core/source/schema';
 
 const docs = defineDocs({
@@ -18,11 +20,26 @@ const docs = defineDocs({
   },
 });
 
+/** The icon named `PhreshOS` is the PhreshOS logo as a line icon; every other name is a Lucide icon. */
+const logoIcon: LoaderPlugin = {
+  name: 'phreshos:logo-icon',
+  transformPageTree: {
+    file(node) {
+      if (node.icon === 'PhreshOS') node.icon = createElement(PhreshOSIcon);
+      return node;
+    },
+    folder(node) {
+      if (node.icon === 'PhreshOS') node.icon = createElement(PhreshOSIcon);
+      return node;
+    },
+  },
+};
+
 // See https://fumadocs.dev/docs/headless/source-api for more info
 export const source = loader({
   baseUrl: docsRoute,
   source: docs.toFumadocsSource(),
-  plugins: [lucideIconsPlugin()],
+  plugins: [logoIcon, lucideIconsPlugin()],
 });
 
 export function getPageImageUrl(page: (typeof source)['$inferPage']) {

@@ -1,15 +1,17 @@
 {
   "title": "System",
-  "description": "Operate the runtime and desktop",
   "icon": "MonitorCog",
   "pages": [
-    "index",
-    "desktop",
-    "appearance",
-    "storage",
+    "permissions",
+    "data",
     "logs",
+    "storage",
+    "uploads",
+    "appearance",
     "network",
     "shell",
-    "security"
+    "opening",
+    "authentication",
+    "execution"
   ]
 }

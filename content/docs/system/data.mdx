@@ -1,0 +1,74 @@
+---
+title: Data
+description: The files, values, and database your Program keeps.
+icon: Database
+---
+
+Everything your Program keeps belongs to the [Program](/docs/program/programs),
+not to one run: every Process of it sees the same data, and the data outlives
+them all. It needs no permission:
+
+```ts
+const program = await context.program()
+```
+
+## Files
+
+A Program has two folders of its own: `program.data` for files to keep, and
+`program.cache` for files that can be made again:
+
+```ts
+await program.data.file("settings.json").write({ theme: "dark" })
+```
+
+They are explained with every file operation in [Storage](/docs/system/storage).
+
+## Values
+
+For small values, the store keeps them by key:
+
+```ts
+await program.store.set("draft", { title: "Untitled" })
+await program.store.set("session", token, 60_000)   // expires after a minute
+await program.store.get("draft")                    // or undefined
+await program.store.getOrSet("layout", "grid")      // keeps what is there
+await program.store.update("visits", n => (Number(n) || 0) + 1)
+await program.store.delete("draft")
+```
+
+Every run sees the same values, and can follow one as it changes, including
+when it is deleted or expires:
+
+```ts
+program.store.subscribe("draft", draft => show(draft))
+```
+
+In React, `useProgramStore("draft", initial)` does both: see
+[React](/docs/sdks/react/hooks).
+
+## A database
+
+For structured data, every Program has its own SQLite database:
+
+```ts
+await program.database.query("CREATE TABLE IF NOT EXISTS notes (title TEXT)")
+
+const title = "Hello"
+await program.database.query`INSERT INTO notes VALUES (${title})`
+await program.database.query("SELECT * FROM notes WHERE title = ?", ["Hello"])
+```
+
+Values in a template literal, or in the list, are passed to SQLite as values,
+never as part of the statement.
+
+## How long it lasts
+
+Files, values, and the database stay when the Program is updated or
+uninstalled, so installing it again finds them. They are deleted only when the
+Program is uninstalled with `purge`.
+
+## From the terminal
+
+```sh
+phresh uninstall notes --purge   # deletes its data too
+```

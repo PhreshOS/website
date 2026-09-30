@@ -1,0 +1,158 @@
+---
+title: Processes
+description: Start a run of a Program, name it, find it, and end it.
+icon: Workflow
+---
+
+A Process is one run of a [Program](/docs/program/programs). It holds the
+Program's two [Endpoints](/docs/program/endpoints), gives them the same name
+and options, and one lifetime.
+
+## Start one
+
+```ts
+const process = await program.createProcess()
+```
+
+Without a launch, each Endpoint starts as the Program declares. A launch
+chooses:
+
+```ts
+await program.createProcess({
+  server: true,                                           // start it
+  client: { title: "Notes", size: { width: 900, height: 640 } },
+})
+```
+
+| Field | Is |
+| --- | --- |
+| `server`, `client` | `true`, `false`, or settings for that Endpoint |
+| `name` | A name unique among the Program's running Processes |
+| `replace` | Replaces the running Process with that `name` |
+| `options` | Strings both Endpoints read |
+
+A Process starts at least one Endpoint, and a Program runs at most 20
+Processes at once.
+
+## Options
+
+```ts
+await program.createProcess({ options: { document: "notes/today.md" } })
+
+await context.options("document")   // inside the Process: "notes/today.md"
+await process.options()             // from outside
+```
+
+Options never change. To tell a running Process something new, send it a
+[message](/docs/program/communication).
+
+## Name it
+
+A name finds the same Process again, without keeping its identity:
+
+```ts
+await program.createProcess({ name: "main" })
+await program.findProcess("main")
+```
+
+Only one running Process of a Program holds a name. To use it when it runs,
+and start it when it does not:
+
+```ts
+const main = await program.findOrCreateProcess({ name: "main" })
+```
+
+To start a new one in its place, as one step:
+
+```ts
+await program.createProcess({ name: "main", replace: true })
+```
+
+## Find Processes
+
+```ts
+await program.processes()        // the runs of this Program
+await program.oldestProcess()    // or null
+await program.newestProcess()    // or null
+await system.process.list()      // every run you can see
+await system.process.find(identity)
+```
+
+## End it
+
+```ts
+await process.exit()
+await process.exited()   // true
+```
+
+A Process also ends when:
+
+- its Server ends by itself, whether it finishes or crashes. Only
+  `server.stop()` stops a Server without ending its Process;
+- its Window is closed.
+
+Its `exit` event says how it ended:
+
+```ts
+const { status, code } = await process.wait("exit")
+```
+
+To follow every run:
+
+```ts
+program.subscribe("processExit", ({ process }) => {})
+system.process.subscribe("create", process => {})
+```
+
+## Run it for as long as you need
+
+`runProcess()` ties a Process to a loop: leaving the loop ends it.
+
+```ts
+for await (const event of program.runProcess({ server: true })) {
+  if (event.event === "output") console.log(event.text)
+  if (event.event === "exited") console.log(event.exit)
+}
+```
+
+This is how `phresh dev` ties a Program to the terminal.
+
+## Parent
+
+```ts
+process.program()        // the Program it belongs to
+await process.parent()   // the Process that started it, or null
+```
+
+A parent is only where a Process came from: a child started by another
+Program's Process still belongs to its own Program, and keeps running when its
+parent ends.
+
+## Start with the System
+
+A Program can have one launch the System starts every time it starts:
+
+```ts
+await program.startup.set({ name: "main" })
+await program.startup.get()     // the launch, or null
+await program.startup.remove()
+```
+
+`set()` without a launch uses the Program's default launch. It is a record,
+not a switch: removing it keeps nothing. Anything else to start at that
+moment, the Program starts from there.
+
+## From the terminal
+
+```sh
+phresh process list --program notes
+phresh process create --program notes --name main
+phresh process find-or-create --program notes --name main
+phresh process inspect --process main --program notes
+phresh process exit --process main --program notes
+phresh process wait --event exit --process main --program notes
+
+phresh program set-startup --program notes --name main
+phresh program get-startup --program notes
+phresh program remove-startup --program notes
+```

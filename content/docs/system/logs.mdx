@@ -1,115 +1,83 @@
 ---
 title: Logs
-description: Query and follow what the System and your Programs have recorded.
+description: What a Program prints, and what the System records, as tables you query and follow.
 icon: ScrollText
 ---
 
-PhreshOS keeps two kinds of logs:
+PhreshOS keeps two logs:
 
-- **Program logs**: everything a Program's Endpoints print, such as Server
-  output and Client console messages, in `program.logs`;
-- **System log**: events the System itself records, such as an Endpoint
-  crashing, in `system.logs`.
+- each **Program's log**: every line its Server and Client print;
+- the **System log**: what the System itself records, such as a Server that
+  stopped unexpectedly.
 
-Both are SQLite tables you can query, and both let you follow new records as
-they arrive.
+Both are SQLite tables named `logs`, that you query and follow as records
+arrive.
 
-```ts
-const errors = await program.logs.query(
-  "SELECT * FROM logs WHERE kind = ? ORDER BY createdAt DESC LIMIT 20",
-  ["error"],
-)
+## Query
 
-program.logs.subscribe("log", record => console.log(record.content))
-```
-
-## Query past records
-
-`query()` runs one SQL statement against the `logs` table. Pass values as
-parameters, or use a template literal, whose values become parameters:
+`query()` runs one read-only statement. Values in a template literal, or in
+the list, are passed as values:
 
 ```ts
-await system.logs.query("SELECT * FROM logs WHERE level = ?", ["error"])
+await program.logs.query("SELECT * FROM logs WHERE kind = ? ORDER BY createdAt DESC LIMIT 20", ["error"])
 
 const since = Date.now() - 60_000
 await program.logs.query`SELECT * FROM logs WHERE createdAt > ${since}`
 ```
 
-Logs are read-only: statements that change them reject.
-
-## Follow new records
+## Follow
 
 ```ts
-const stop = system.logs.subscribe("log", record => {
-  if (record.level === "error") notify(record.content)
-})
+program.logs.subscribe("log", record => show(record.content))
 ```
 
-A record is delivered only after it is stored, so it is already queryable
-when you receive it. Subscribing shows new records only; query to see earlier
-ones.
+A record arrives once it is stored, so it can already be queried. Following
+hears new records only: query for the earlier ones.
 
-## Program records
+## A Program's log
 
-Each line an Endpoint prints becomes one record:
+```ts
+console.log("started")   // in a Server or a Client
+```
 
-| Field | Contains |
+| Field | Is |
 | --- | --- |
-| `createdAt` | When it was captured, in Unix milliseconds |
-| `process` | The Process identity |
-| `source` | `"client"` or `"server"` |
-| `kind` | The console method (`log`, `info`, `warn`, `error`, `debug`), the stream (`stdout`, `stderr`), or `exit` |
+| `createdAt` | When, in Unix milliseconds |
+| `process` | The Process that printed it |
+| `source` | `"server"` or `"client"` |
+| `kind` | `log`, `info`, `warn`, `error`, `debug`, `stdout`, `stderr`, or `exit` |
 | `content` | The text |
 
-Every Endpoint exit is also recorded, with `kind: "exit"`.
+Every Endpoint that stops is recorded too, as `exit`. Your own Program's log
+needs no permission; another's needs the `programs` permission for it.
 
-## System records
-
-| Field | Contains |
-| --- | --- |
-| `createdAt` | When it happened, in Unix milliseconds |
-| `level` | `"debug"`, `"info"`, `"warning"`, or `"error"` |
-| `source` | The part of the System that recorded it |
-| `kind` | A stable name for the event, such as `unexpectedServerEndpointExit` |
-| `content` | A human-readable description |
-| `data` | Details as JSON, or `null` |
-
-In SQL, `data` is JSON text, so you can use SQLite's JSON functions:
+## The System log
 
 ```ts
-await system.logs.query(
-  "SELECT json_extract(data, '$.program.identity') AS program FROM logs WHERE kind = ?",
-  ["unexpectedServerEndpointExit"],
-)
+await system.logs.query("SELECT * FROM logs WHERE level = ?", ["error"])
+system.logs.subscribe("log", record => {})
 ```
 
-A crashing Server appears in both logs: as an `exit` record in its Program's
-log, and as an error in the System log.
-
-The built-in Shell shows new System errors as they happen. They stay in the
-log whether or not anything shows them.
-
-## How long records are kept
-
-Each log keeps its newest 20,000 records and removes older ones. Program logs
-are deleted with the Program's storage; see
-[Storage](/docs/system/storage#what-happens-to-the-data).
-
-## Permissions
-
-| Log | Requires |
+| Field | Is |
 | --- | --- |
-| `program.logs` | Access to that Program: your own, or others through `programs` |
-| `system.logs` | The `logs` permission |
+| `createdAt` | When, in Unix milliseconds |
+| `level` | `"debug"`, `"info"`, `"warning"`, or `"error"` |
+| `source` | The part of the System that recorded it |
+| `kind` | The event, such as `unexpectedServerEndpointExit` |
+| `content` | For people |
+| `data` | The details as JSON, or `null` |
 
-A Node script connected as the owner can read both. See
-[Permissions](/docs/system/security/permissions).
+Reading it needs the `logs` [permission](/docs/system/permissions). A Server
+that crashes appears in both logs.
 
-## Reference
+## How long they last
 
-| Member | Result |
-| --- | --- |
-| `program.logs.query(statement, values?)` | Past records of a Program |
-| `program.logs.subscribe("log", …)` | New records of a Program |
-| `system.logs.query(statement, values?)` | Past System records |
-| `system.logs.subscribe("log", …)` | New System records |
+Each log keeps its newest 20,000 records. A Program's log is deleted with its
+[data](/docs/system/data), when the Program is uninstalled with `purge`.
+
+## From the terminal
+
+```sh
+phresh program logs --program notes --statement "select createdAt, kind, content from logs order by createdAt desc limit 20"
+phresh system logs --statement "select * from logs where level = 'error'"
+```

@@ -1,0 +1,62 @@
+---
+title: The System
+description: Everything around your Program, and when it lets you reach it.
+icon: MonitorCog
+---
+
+## Everything else
+
+Beyond your own run and your Desktop is the System itself: other Programs and
+their Processes, the Appearance every Program draws with, the files on the
+machine, the network. You reach all of it through `system`:
+
+```ts
+import { system } from "@phreshos/server"   // or "@phreshos/client"
+
+await system.about()                     // { name, version, release, startedAt }
+const notes = await system.program.find("notes")
+```
+
+Like `desktop`, `system` describes what surrounds you: `system.about()` gives
+every caller the same answer. Unlike `desktop`, it is everywhere: in a Server,
+in a Client, and in a Node script on the machine.
+
+## Three handles
+
+Your code works with three handles:
+
+| Handle | Is | Example |
+| --- | --- | --- |
+| `context` | You: this run of your Program | `context.options()` |
+| `desktop` | The Desktop showing your Window | `desktop.viewport.size()` |
+| `system` | Everything else | `system.program.find("notes")` |
+
+<img
+  src="/mental-models/handles.png"
+  alt="context, you, this run of your Program, reaches system, everything else such as other Programs, files, and network; in a Client it also reaches desktop, the Desktop showing your Window, which represents the System and is not part of it"
+  className="mental-model"
+/>
+
+When you look for something, ask whose it is. If it only makes sense for you,
+it is on `context`; if it would be the same for anyone, it is on `desktop` or
+`system`.
+
+## What you may reach
+
+Your own things are always yours. Reaching beyond them, such as another
+Program, the network, or the files on the machine, needs a **permission** the
+owner grants. A Program declares what it needs:
+
+```ts title="phresh.config.ts"
+permissions: { network: ["https://api.example.com"] }
+```
+
+and can ask for more while it runs:
+
+```ts
+await context.permissions.request("programs", ["notes"])
+```
+
+Asking is about you, so it is on `context`. Without a permission, something
+you look up behaves as if it did not exist: `system.program.find("notes")`
+returns `null`.

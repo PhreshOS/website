@@ -1,36 +1,17 @@
 ---
 title: Shell
-description: Run an operating-system command and read its output as it runs.
+description: Run a command on the machine and read its output as it runs.
 icon: Terminal
 ---
 
-`system.shell()` runs a command on the machine where PhreshOS is installed and
-streams what happens: when it starts, what it prints, and how it ends.
-
-```ts
-for await (const event of system.shell("git status")) {
-  if (event.event === "output") console.log(event.text)
-}
-```
-
-The command runs in the operating system's shell (`/bin/sh` on macOS and
-Linux, `cmd.exe` on Windows), so pipes and redirections work.
-
-## Read the events
-
-The loop receives three kinds of events, in order:
-
-| Event | Contains |
-| --- | --- |
-| `started` | `pid`, the operating-system process ID |
-| `output` | `stream` (`"stdout"` or `"stderr"`) and `text`, exactly as printed |
-| `exited` | `exit`: `{ status, code, signal }` |
+`system.shell()` runs a command in the machine's shell (`/bin/sh`, or `cmd.exe`
+on Windows), so pipes and redirections work, and streams what happens:
 
 ```ts
 for await (const event of system.shell("npm test", { cwd: "/path/to/project" })) {
   if (event.event === "started") console.log("pid", event.pid)
-  if (event.event === "output") process.stdout.write(event.text)
-  if (event.event === "exited") console.log("exit code", event.exit.code)
+  if (event.event === "output") console.log(event.stream, event.text)
+  if (event.event === "exited") console.log(event.exit.code)
 }
 ```
 
@@ -41,44 +22,28 @@ command cannot run at all.
 
 ```ts
 system.shell("make build", {
-  cwd: "/path/to/project",            // default: the user's home folder
-  env: { NODE_ENV: "production" },    // added to the System's environment
-  signal: controller.signal,          // stop the command
+  cwd: "/path/to/project",           // the user's home folder by default
+  env: { NODE_ENV: "production" },   // added to the System's environment
+  signal: controller.signal,         // stops the command
 })
 ```
 
-## Stop a command
+## How long it runs
 
-The command lives as long as your loop. Any of these stops it, together with
-every process it started:
+The command lives as long as the loop. Leaving the loop, aborting its
+`signal`, or losing the Endpoint or connection that started it stops the
+command and every process it started.
 
-- leaving the loop early, with `break` or `return`;
-- aborting its `signal`;
-- losing the connection or Endpoint that started it.
+A shell command is not a [Process](/docs/program/processes): it has no
+Endpoints, no Service, and no place on the Desktop. Use a Process when the work
+belongs to a Program.
 
-```ts
-const controller = new AbortController()
-setTimeout(() => controller.abort(), 5_000)
+## Permission
 
-for await (const event of system.shell("tail -f app.log", { signal: controller.signal })) {}
-```
+A command can do anything its user can, so a Program needs the `all`
+[permission](/docs/system/permissions). A Node script running as the owner
+needs none.
 
-## Shell commands and Processes
+## From the terminal
 
-A shell command is not a PhreshOS [Process](/docs/runtime/processes). It has no
-Endpoints, no Service, and no place in the Desktop. Use a Process when the work
-should belong to a Program and be managed by the System.
-
-## Permissions
-
-A Program needs the `all` permission to use `system.shell()`, because a shell
-command can do anything its user can. A Node script connected as the owner
-runs the command in the Node process, without permissions.
-
-See [Permissions](/docs/system/security/permissions).
-
-## Reference
-
-| Member | Result |
-| --- | --- |
-| `system.shell(command, { cwd, env, signal }?)` | Events: `started`, `output`, `exited` |
+The terminal is a shell already.

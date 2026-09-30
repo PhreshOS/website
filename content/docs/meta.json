@@ -1,3 +1,13 @@
 {
-  "pages": ["(start)", "runtime", "system", "sdks"]
+  "pages": [
+    "index",
+    "---Introduction---",
+    "...(introduction)",
+    "---In depth---",
+    "shared-concepts",
+    "program",
+    "desktop",
+    "system",
+    "sdks"
+  ]
 }

@@ -3,7 +3,6 @@
   "description": "Adapt PhreshOS contracts to React",
   "icon": "Atom",
   "pages": [
-    "index",
     "providers",
     "hooks"
   ]

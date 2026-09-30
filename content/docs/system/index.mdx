@@ -1,71 +1,64 @@
 ---
-title: Overview
-description: What the System provides to Programs, and how to reach it.
-icon: MonitorCog
+title: How it works
+description: What the System is, how code reaches it, and what decides what it may reach.
 ---
 
-The System is PhreshOS itself: the service running on your machine. It keeps
-Programs running, carries their messages, stores their data, controls what they
-may access, and serves the Desktop.
+The System is PhreshOS itself: the service running on the machine. It keeps
+[Programs](/docs/program/programs) running, stores their data, reaches the
+files on the machine and the network, and decides what each Program may do.
 
-Everything it offers is reached through one object, `system`. It is the same
-in a Client, a Server, and a Node script; only the permissions that apply
-differ.
+Code reaches it through `system`, the same way everywhere:
 
 ```ts
-import { system } from "@phreshos/server"   // or @phreshos/client, or System.connect() in Node
+import { system } from "@phreshos/server"   // in a Server
+import { system } from "@phreshos/client"   // in a Client
 
-const programs = await system.program.list()
-const appearance = await system.appearance.snapshot()
+import { System } from "@phreshos/node"     // in a script on the machine
+const system = await System.connect()
 ```
 
-## What it provides
+<img
+  src="/mental-models/system.png"
+  alt="A Program's Server, a Program's Client in a Window, and the owner's Node script all reach the System on the machine through system; permissions decide what a Program may reach, and the owner's script is trusted"
+  className="mental-model"
+/>
 
-| Capability | For |
+## What it is
+
+```ts
+const about = await system.about()
+about.version     // "0.1.108"
+about.release     // { name: "Sprout", program: "sprout" }
+about.startedAt   // a Date: when the System started
+```
+
+`release` names the major version and the Program that looks after it.
+`startedAt` is when the System started this time, so how long it has run is
+`Date.now() - about.startedAt.getTime()`.
+
+## What decides
+
+What a Program may reach through the System is decided by its
+[permissions](/docs/system/permissions), which the owner grants. A Node script
+runs as the owner of the machine, so it needs none.
+
+## What it offers
+
+| | |
 | --- | --- |
-| `system.program`, `system.process`, `system.service` | Programs, their running Processes, and Services; see [Runtime](/docs/runtime) |
-| [`system.appearance`](/docs/system/appearance) | The shared visual settings |
-| [`system.storage`, `system.uploads`](/docs/system/storage) | Files on the machine, and uploaded files |
-| [`system.logs`](/docs/system/logs) | The System log |
-| [`system.network`](/docs/system/network) | HTTP requests and WebSockets |
-| [`system.shell()`](/docs/system/shell) | Operating-system commands |
-| [`system.authentication`](/docs/system/security/authentication) | The owner, Connections, and Sessions |
-| [`system.permissions`](/docs/system/security/permissions#decide-requests) | Pending permission requests |
-| [`system.execute()`](/docs/sdks/core/execute) | The same operations as JSON, for tools and agents |
+| Its Programs, Processes, and Services | [Program](/docs/program) |
+| The data each Program keeps, and what it prints | [Data](/docs/system/data), [Logs](/docs/system/logs) |
+| Folders and files, yours and the machine's, and uploaded files | [Storage](/docs/system/storage), [Uploads](/docs/system/uploads) |
+| The Appearance every Program draws with | [Appearance](/docs/system/appearance) |
+| The network, and shell commands | [Network](/docs/system/network), [Shell](/docs/system/shell) |
+| Opening files, folders, and links | [Opening](/docs/system/opening) |
+| The owner's sign-in, and the browsers connected | [Authentication](/docs/system/authentication) |
 
-## What you see depends on who you are
+## From the terminal
 
-A Program sees only what its [permissions](/docs/system/security/permissions)
-allow. Lists leave out what it cannot see, and lookups return `null`, so
-having `system` does not by itself reveal anything.
+The `phresh` command reaches the System as its owner, like a Node script:
 
-Node scripts and the CLI connect as the owner and see everything.
-
-## Current state and changes
-
-Each capability lets you read the current state, and subscribe to what
-changes next:
-
-```ts
-const processes = await system.process.list()
-system.process.subscribe("create", process => {})
+```sh
+phresh system about
+phresh system status      # whether its service runs
 ```
-
-Subscriptions only report changes from now on, so read first, then subscribe.
-
-## The Desktop
-
-The [Desktop](/docs/system/desktop) is the System's interface in the browser. It
-shows what the System holds, but the state lives in the System: the browser
-does not own the lifecycle of Programs or Processes, and several Desktops can
-show the same System at once.
-
-<Cards>
-  <Card title="Desktop" description="Windows, layers, and Desktop preferences." href="/system/desktop" />
-  <Card title="Appearance" description="Colors, spacing, material, Taskbar, wallpapers." href="/system/appearance" />
-  <Card title="Storage" description="Files, uploads, key-value store, SQLite." href="/system/storage" />
-  <Card title="Network" description="Fetch and WebSocket under permissions." href="/system/network" />
-  <Card title="Shell" description="Run operating-system commands." href="/system/shell" />
-  <Card title="Logs" description="System and Program records." href="/system/logs" />
-  <Card title="Security" description="Authentication, permissions, execution modes." href="/system/security" />
-</Cards>

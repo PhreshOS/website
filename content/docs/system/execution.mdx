@@ -1,0 +1,51 @@
+---
+title: Execution
+description: How a Server and a Client run, and what their code can reach on its own.
+icon: Cpu
+---
+
+[Permissions](/docs/system/permissions) decide what a Program does through the
+System. How its Server and Client run decides what their code can reach
+without it. It never changes the SDK or what the System allows.
+
+## Server
+
+A Server runs in exactly one of three ways, declared in its
+[configuration](/docs/sdks/core#program-configuration):
+
+| Way | Runs | Reaches on its own |
+| --- | --- | --- |
+| `command` | Any program, such as Python or Go | Everything its user can |
+| `worker` | A JavaScript module in a Node.js Worker | Everything Node.js can |
+| `sandbox` | A bundled JavaScript module, contained | Nothing but the System |
+
+```ts title="phresh.config.ts"
+server: { location: "dist/server", worker: "main.js" }
+server: { location: "dist/server", command: "./server" }
+server: { location: "dist/server", sandbox: "main.js" }
+```
+
+All three use the same Server SDK.
+
+## Client
+
+A Client runs in a sandboxed frame by default: scripts and forms work, but the
+page has no origin of its own, so `localStorage`, `IndexedDB`, and cookies are
+not there. Keep data with the System instead, in its
+[data](/docs/system/data) or [memory](/docs/program/endpoints#client-memory).
+
+```ts title="phresh.config.ts"
+client: { location: "dist/client", sandbox: false }   // an ordinary page
+```
+
+`sandbox: false` gives the page the Desktop's origin. Use it only for browser
+features the sandbox blocks.
+
+## Fully under the owner's control
+
+A `sandbox` Server and a sandboxed Client reach nothing on their own, so
+everything the Program does goes through the System and its permissions.
+
+## From the terminal
+
+The terminal runs outside any Program, as the owner.

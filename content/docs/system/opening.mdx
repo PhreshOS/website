@@ -1,0 +1,83 @@
+---
+title: Opening
+description: Open a file, a folder, or a link with the Program its type opens with.
+icon: SquareArrowOutUpRight
+---
+
+A Program can ask the System to open something without knowing which Program
+opens it:
+
+```ts
+await system.open({ type: "image/png", uri: "file:///Users/me/leaf.png" })
+```
+
+## What can be opened
+
+Anything is a media type and a URI:
+
+| Thing | `type` | `uri` |
+| --- | --- | --- |
+| A link | `x-scheme-handler/https` | `https://example.com` |
+| An email address | `x-scheme-handler/mailto` | `mailto:someone@example.com` |
+| A file | Its own type, such as `image/png` | `file:///Users/me/leaf.png` |
+| A folder | `inode/directory` | `file:///Users/me/Projects` |
+| Content you hold | Its type | An [upload](/docs/system/uploads)'s address |
+
+The type is exact: `image/png`, not `image/*`.
+
+## Declare what you open
+
+```ts title="phresh.config.ts"
+opens: ["image/*", "application/pdf"]
+```
+
+`image/*` stands for every image. To find the Programs that open a type:
+
+```ts
+await system.program.list({ opens: "image/png" })
+```
+
+## How the System decides
+
+- When the type has a default Program, it opens with it at once.
+- Otherwise the owner chooses one of the Programs that open the type, and can
+  make it the default.
+- When no installed Program opens it, `open()` rejects.
+
+`open()` resolves once a Process is started for it, and rejects when nothing is
+chosen. A request ends when the Endpoint that asked stops, or after two minutes.
+Asking needs no permission: what opens is always the owner's default or the
+owner's choice.
+
+## Receive it
+
+The chosen Program starts a new Process with its default launch, which reads
+what it was started to open:
+
+```ts
+await context.opened()   // { type, uri }, or null
+```
+
+To keep one Window, the new Process can hand the target to a Process already
+running, and end. Reading a `file:` address goes through
+[Storage](/docs/system/storage), and needs its permission.
+
+## Decide for the owner
+
+A Program that replaces the Shell decides requests and defaults through
+`system.opening`, with the `all` [permission](/docs/system/permissions):
+
+```ts
+system.opening.subscribe("openRequest", async request => {
+  await request.choose(request.programs[0], { always: true })   // or request.cancel()
+})
+
+await system.opening.defaults()   // { "image/png": Program, … }
+await system.opening.setDefault("image/png", program)
+```
+
+## From the terminal
+
+```sh
+phresh system open --type image/png --uri file:///Users/me/leaf.png
+```

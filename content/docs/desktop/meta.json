@@ -1,0 +1,11 @@
+{
+  "title": "Desktop",
+  "icon": "PanelsTopLeft",
+  "pages": [
+    "windows",
+    "plane",
+    "layers",
+    "drawing",
+    "preferences"
+  ]
+}
