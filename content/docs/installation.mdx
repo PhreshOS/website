@@ -1,0 +1,146 @@
+---
+title: Installation
+description: Install, update, run, and remove PhreshOS on your machine.
+icon: Download
+---
+
+PhreshOS has two parts on your machine:
+
+- the **System**, which runs in the background as a service of your user
+  account and keeps your Programs running;
+- the **`phresh` command**, which installs and controls the System and your
+  Programs.
+
+The [Desktop](/docs/desktop) is the System's interface. You open it in a
+browser.
+
+## Requirements
+
+- Node.js `24.15.0` or newer
+- macOS, Linux, or Windows, under a normal user account
+- Permission to register a service for your user
+
+```sh
+node --version
+```
+
+## Install
+
+Install the `phresh` command:
+
+<Tabs items={["npm", "pnpm", "Bun", "Yarn Classic"]} groupId="package-manager" persist>
+  <Tab value="npm">
+    ```sh
+    npm install --global @phreshos/cli
+    ```
+  </Tab>
+  <Tab value="pnpm">
+    ```sh
+    pnpm add --global @phreshos/cli
+    ```
+  </Tab>
+  <Tab value="Bun">
+    ```sh
+    bun add --global @phreshos/cli
+    ```
+  </Tab>
+  <Tab value="Yarn Classic">
+    ```sh
+    yarn global add @phreshos/cli
+    ```
+  </Tab>
+</Tabs>
+
+Then install the System:
+
+```sh
+phresh system install
+```
+
+The System is downloaded, verified, registered as a service of your user, and
+started. Sprout is installed as the first Program and opens to help you choose
+the Programs you want. The command prints the Desktop's address.
+
+## Open the Desktop
+
+Open the printed address in a browser. It is usually `http://localhost:4300`.
+
+The first visit creates the owner account, the only account on the System.
+Later visits sign in. See [Authentication](/docs/system/authentication).
+
+## Update
+
+Run the install command again:
+
+```sh
+phresh system install
+```
+
+It installs the latest release and restarts the service. Your Programs and
+their data are kept.
+
+## Run and stop the System
+
+```sh
+phresh system status     # version and whether it runs
+phresh system stop       # stop it now
+phresh system start      # start it now
+phresh system disable    # do not start it when you log in
+phresh system enable     # start it when you log in
+```
+
+The service uses what your operating system provides: `launchd` on macOS,
+`systemd --user` on Linux when it is available and a background process
+otherwise, and a per-user scheduled task on Windows.
+
+## Uninstall
+
+```sh
+phresh system uninstall          # remove the System, keep its data
+phresh system uninstall --purge  # remove the System and all its data
+```
+
+## Where data lives
+
+The System keeps everything, including installed Programs, their data, and
+your account, in `~/.phreshos`. To use another folder, set `PHRESHOS_HOME` to
+an absolute path:
+
+```sh
+export PHRESHOS_HOME=/absolute/path/to/phreshos
+phresh system install
+```
+
+The `phresh` command and the System must use the same folder, so set it in
+every terminal that runs `phresh`.
+
+To start over with an empty System:
+
+```sh
+phresh system install --purge
+```
+
+## Choose the address
+
+By default, the Desktop listens on `localhost`, on the first free port from
+`4300` to `4399`. Two variables change that:
+
+| Variable | Accepts | Example |
+| --- | --- | --- |
+| `PHRESHOS_PORT` | A port, a range, or a list | `4196,4234,5000-5100` |
+| `PHRESHOS_HOST` | A hostname or IP address | `0.0.0.0` |
+
+```sh
+export PHRESHOS_HOST=0.0.0.0
+export PHRESHOS_PORT=4300
+phresh system start
+```
+
+`0.0.0.0` accepts connections from other machines on your network. Use it
+when PhreshOS runs in a container or behind a reverse proxy, and keep the port
+private when the proxy handles public access.
+
+<Cards>
+  <Card title="Quick start" description="Install PhreshOS, create a Program, and run it." href="/docs" />
+  <Card title="CLI" description="Every phresh command." href="/docs/sdks/cli" />
+</Cards>
