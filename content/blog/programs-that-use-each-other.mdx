@@ -1,0 +1,133 @@
+---
+title: Programs that use each other
+description: On PhreshOS, a program can hand a file or a link to whichever program opens it, and reach another program's features by name. Two simple ways, with the owner deciding, and the same for AI agents.
+date: 2026-09-30
+author: Zohayr Slileh
+---
+
+Most apps live alone. When one needs another, the work goes around it: you
+save a file and open it again elsewhere, you copy and paste, or you connect two
+accounts in the cloud so their companies can talk for you.
+
+PhreshOS is an open-source operating system for programs built with web
+technology, running on your own machine. Its programs grow in the same soil,
+so they can reach each other directly, through the System, in two simple ways.
+
+## The short answer
+
+A program can **open** something: it hands a file, a folder, or a link to the
+System, and the program that opens that kind of thing starts with it. The
+program that asked does not need to know which one it will be.
+
+A program can also **use a Service**: another program's feature, reached by a
+name, the way its own window reaches it.
+
+In both, the owner stays in charge, and AI agents use the same two ways.
+
+## Open it with its program
+
+Everything that can be opened is a media type and an address:
+
+```ts
+await system.open({ type: "image/png", uri: "file:///Users/me/leaf.png" })
+```
+
+A link is `x-scheme-handler/https`, an email address
+`x-scheme-handler/mailto`, a folder `inode/directory`. New kinds of things are
+new addresses, not new features.
+
+A program says what it opens in its configuration:
+
+```ts title="phresh.config.ts"
+opens: ["image/*", "application/pdf"]
+```
+
+When that type has a default program, it opens there at once. When it does
+not, you choose among the programs that open it, and can make your choice the
+default. The program that opens starts a new run and reads what it was given:
+
+```ts
+const target = await context.opened()   // { type, uri }
+```
+
+Asking to open needs no permission, because the program that asks never
+decides: what opens is always your default, or your choice.
+
+## Use another program's feature
+
+A Service is a part of a program that chose to be reached by name. A program
+offers one by marking a named run as a Service:
+
+```ts
+await program.createProcess({ name: "editor", server: { service: true } })
+```
+
+Another program reaches it by its address, and talks to it the same way a
+window talks to its own program: it asks questions and listens to what
+happens.
+
+```ts
+const editor = system.service.prepare({ program: "text-studio", process: "editor", endpoint: "server" })
+
+const document = await editor.ask("document.open", { path: "welcome.txt" })
+editor.subscribe("document.changed", change => render(change))
+```
+
+A name can be offered by more than one program, so a program can look for the
+feature it needs, not for a particular program that has it:
+
+```ts
+await system.service.list({ name: "editor" })
+```
+
+Reaching a Service needs the `services` permission for its name, which the
+owner grants. It reaches the feature, not the program behind it: the program
+that asks does not see the other program, or anything else installed.
+
+## One way of talking, everywhere
+
+In PhreshOS, parts of programs talk in two ways: **ask**, which waits for one
+answer, and **publish**, which announces something to whoever listens. A
+window talks to its own program's Server this way. Two runs of one program
+talk this way. And a program talks to another program's Service the same way.
+
+So a program author learns one thing, and messages keep their shape across
+all of it: dates, errors, binary data, and streams arrive as themselves.
+
+## Your agent, too
+
+An AI agent reaches PhreshOS from your terminal, and uses the same two ways:
+
+```sh
+phresh system open --type image/png --uri file:///Users/me/leaf.png
+phresh service list --name editor
+phresh service ask --program text-studio --process editor --endpoint server --event document.list
+```
+
+What a program offers to other programs, it offers to your agent. Every new
+program adds to what the whole System can do, for you, for the other programs,
+and for the agent you choose.
+[How an AI agent can use your apps the way you do](/blog/agents-use-apps-like-people)
+tells more about that side.
+
+## Worth knowing
+
+What programs can do together is what each program offers. PhreshOS gives
+every program the same two ways to reach others; each program decides what it
+opens and which Services it offers.
+
+The owner and the agents the owner runs are not limited by these permissions:
+they act as the owner of the machine. Permissions limit programs.
+
+## Try it
+
+PhreshOS installs for your own user account, without administrator access, on
+macOS, Linux, or Windows with Node.js 24.15 or newer:
+
+```sh
+npm install --global @phreshos/cli
+phresh system install
+```
+
+Then read [Opening](/docs/system/opening) and
+[Services](/docs/program/services), and plant a program the others can use.

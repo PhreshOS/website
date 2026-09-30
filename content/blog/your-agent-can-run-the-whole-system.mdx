@@ -1,0 +1,130 @@
+---
+title: The command line is how your agent runs PhreshOS
+description: The phresh command is not only a tool to install and start PhreshOS. It reaches the whole running System, so the AI agent you already use can install apps, start them, arrange their windows, and read what happened, the way you would.
+date: 2026-09-30
+author: Zohayr Slileh
+---
+
+Most operating systems have a command line for setting them up, and a
+graphical interface for everything else. An AI agent that wants to help you
+ends up on the wrong side of that line: it can install and configure, but the
+moment the work happens in windows, it has to look at the screen and click.
+
+PhreshOS draws the line somewhere else. PhreshOS is an open-source operating
+system for programs built with web technology, running on your own machine,
+and its `phresh` command is not a setup tool beside the System. It is a way
+into the whole running System, the same one your Desktop shows.
+
+## The short answer
+
+Everything you do on the Desktop happens through the System, and the `phresh`
+command reaches that same System. It installs, starts, and stops PhreshOS, and
+it also lists and installs apps, starts and ends their runs, moves and
+maximizes their windows, talks to their features, and reads the System's logs.
+Every command answers in JSON when asked, and describes itself as data.
+
+So the agent you already use, in your terminal or your editor, can run
+PhreshOS for you. It needs no plugin and no screen reading: only a terminal.
+
+## Setting up is only the beginning
+
+The command line starts where you would expect:
+
+```sh
+phresh system install      # install the System and start it
+phresh system status       # is it running, and which version
+phresh fetch               # the whole System at a glance
+```
+
+`phresh fetch` already shows what lies past setup: the running System itself.
+
+```
+perf@PhreshOS
+─────────────
+System     PhreshOS 0.1.109 · Sprout
+Uptime     4 hours, 4 minutes
+Desktop    http://localhost:4300
+Programs   11 installed · 2 at startup
+Processes  3 running · 2 Windows
+```
+
+## What an agent can do with it
+
+Ask your agent to "open Files and put it on the left half of my screen". It
+does not need to see your screen. It asks the System:
+
+```sh
+phresh install files                                   # plant the app, if it is not there
+phresh process create --program files --name main      # start it; its window opens
+phresh window set-geometry --process main --program files \
+  --x -25% --y 0 --width 50% --height 100%              # the left half of the view
+```
+
+The window appears on your Desktop, beside your own work, exactly as if you had
+opened and moved it yourself, because to the System it is the same request.
+
+Other things your agent can do the same way:
+
+```sh
+phresh program list --json                          # what is installed
+phresh process list --json                          # what is running
+phresh window maximize --process main --program files
+phresh program set-startup --program files --name main   # open it every time PhreshOS starts
+phresh system open --type text/markdown --uri file:///home/you/notes.md
+phresh system logs --statement "SELECT * FROM logs WHERE level = 'error' ORDER BY createdAt DESC LIMIT 10" --json
+phresh session list --json                          # which browsers are signed in
+```
+
+And when an app offers a feature, the agent can use that too, on the same
+running app you see. [How an AI agent can use your apps the way you do](/blog/agents-use-apps-like-people)
+tells that side of the story.
+
+## Built to be read by agents
+
+A command line made for people is full of help text meant to be skimmed. One
+made for agents has to be exact. `phresh` is both:
+
+- **It describes itself.** `phresh describe --all --json` returns every
+  command as data: its options, their choices, and examples. An agent reads a
+  contract, not prose.
+- **Every result is data.** Add `--json` to a command and it answers in one
+  line of JSON, with nothing to parse around it.
+- **Apps explain themselves.** `phresh program agent --program files` returns
+  the document an app's author wrote for AI agents: what the app offers and how
+  to ask for it.
+- **One operation, many ways in.** Every command is one operation of the
+  System, and `phresh operation list` lists them all. The same operations take
+  plain JSON through `phresh execute`, or through `system.execute()` in code,
+  so a script or a tool gets exactly what the command line gets.
+
+## Your agent, not ours
+
+PhreshOS does not ship an assistant and ask you to use it. It gives the System
+a complete, documented way in, and leaves the choice of agent to you: the one
+in your terminal today, or a different one tomorrow. Any agent that can run a
+command can run PhreshOS.
+
+## Worth knowing
+
+An agent that uses the `phresh` command acts as you, the owner of the machine.
+It is trusted the way a terminal you hand it is trusted, so use PhreshOS with
+agents you would trust on that machine.
+
+The command line reaches most of the System, but not every corner of it yet:
+the Appearance and the files on your machine are reached through the Node SDK
+for now, with a short script. What the command line covers grows with each
+release, and `phresh describe` always tells what it covers today.
+
+## Try it
+
+PhreshOS installs for your own user account, without administrator access, on
+macOS, Linux, or Windows with Node.js 24.15 or newer:
+
+```sh
+npm install --global @phreshos/cli
+phresh system install
+```
+
+Then open your agent in a terminal and tell it to start with
+`phresh describe --all --json`. It will find its way around the garden from
+there.
