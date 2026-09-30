@@ -5,7 +5,7 @@
     "permissions",
     "data",
     "logs",
-    "storage",
+    "files",
     "uploads",
     "appearance",
     "network",

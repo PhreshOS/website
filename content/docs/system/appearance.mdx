@@ -5,7 +5,7 @@ icon: Palette
 ---
 
 The Appearance is the System's visual values: colors, spacing, corner radius,
-shadow, material, motion timing, the Taskbar, and wallpapers. The Desktop
+shadow, material, motion tempo, the Taskbar, and wallpapers. The Desktop
 draws itself with them, and Programs read them to match. There is one, kept by
 the System, so every Desktop and every Program sees the same.
 
@@ -40,9 +40,16 @@ matters, compare the colors themselves.
 | `spacing`, `radius` | No | A base spacing and corner radius, `6` to `18` |
 | `shadow` | Yes | `x`, `y`, `blur`, `spread`, `opacity` |
 | `material` | Yes | `grain`, `grainAmount`, `backdrop`, `opacity`, `distortion`, `saturation` |
-| `transaction` | No | The `duration` and `easing` of every visual change |
+| `tempo` | No | How fast everything moves: `1` is the designed pace, from `1/3` (faster) to `4` (slower) |
 | `taskbar` | No | Its `position`, `size`, and whether it lies `overlay` over Windows |
 | `desktopWallpaper`, `signInWallpaper` | Yes | An upload's key, or `null` |
+
+## Motion
+
+The Appearance holds no durations or curves. Each motion is derived from what
+moves and how far it goes, and the `tempo` only stretches or shortens time, so
+every motion keeps its shape. [Motion](/docs/sdks/react-ui/motion) explains
+how.
 
 ## Change it
 
@@ -51,7 +58,7 @@ matters, compare the colors themselves.
 
 ```ts
 await system.appearance.update({ spacing: 14 })
-await system.appearance.update({ colors: { dark: { primary: "#f59a62" } }, transaction: { duration: 160 } })
+await system.appearance.update({ colors: { dark: { primary: "#f59a62" } }, tempo: 1.5 })
 await system.appearance.update({ taskbar: { position: "left", overlay: true } })
 ```
 

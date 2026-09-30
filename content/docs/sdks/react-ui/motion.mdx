@@ -1,0 +1,45 @@
+---
+title: Motion
+description: Every motion comes from what moves and how far; the Appearance tempo only stretches time.
+---
+
+React UI has no fixed durations. Every motion is derived from **what moves**,
+**how far it goes**, and the Appearance [`tempo`](/docs/system/appearance):
+
+| What moves | How it moves |
+| --- | --- |
+| `change` | Something changing in its place: a color, a control's state, an overlay appearing. Short, whatever its size. |
+| `window` | A box carried across a distance. It sets off at once and settles softly. |
+| `view` | A whole scene carried across a distance. It moves on a spring, and a move taken on the way carries on at the speed it already has. |
+
+Across a distance, the time grows with the distance, gently, as the square
+root, within bounds, so a far journey is never crossed so fast that its frames
+show as jumps. Something leaving sight sets off softly instead, or it would be
+gone in the first frames.
+
+## Tempo
+
+The tempo is how fast everything moves, as a share of the designed pace: `1`
+is that pace, `0.5` twice as fast, `2` twice as slow. It changes only time:
+every motion keeps its shape, and its length beside every other motion.
+
+## In a component
+
+`useTiming()` derives a motion from the nearest Appearance, as a complete
+`{ duration, easing }`. With animations off, every motion takes no time:
+
+```tsx
+const timingOf = useTiming()
+
+const fade = timingOf("change")
+const travel = timingOf("window", { distance: 480 })
+```
+
+Outside React, `timing()` does the same from a tempo you pass:
+
+```ts
+timing("view", { distance: 1440, tempo: appearance.tempo })
+```
+
+React UI's components already move this way, so you need these only for a
+motion of your own.

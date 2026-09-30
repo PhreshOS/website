@@ -19,8 +19,9 @@ as its width allows, each card at least `itemWidth` wide:
 ```
 
 A card holds whatever it is given. It is a whole flat Surface with the
-default material: in the `default` color at rest, and once chosen in the
-selection color of the collection, with a check in its corner. The arrow keys
+default material: in its rest color, `default` unless `restColor` says
+otherwise, and once chosen in the selection color of the collection, with a
+check in its corner. The arrow keys
 move between cards.
 
 ## Selection
@@ -46,7 +47,7 @@ shows as chosen.
 
 | Part | Is |
 | --- | --- |
-| `GridList` | The grid. `selectionMode`, `value`, `onChange`, `itemWidth` (sixteen times the `spacing` by default), `color` |
-| `GridList.Item` | One card. `id`, `textValue`, `disabled`, `color` |
+| `GridList` | The grid. `selectionMode`, `value`, `onChange`, `itemWidth` (sixteen times the `spacing` by default), `color`, `restColor` |
+| `GridList.Item` | One card. `id`, `textValue`, `disabled`, `color`, `restColor` |
 | `GridList.Section` | A group of cards across the grid |
 | `GridList.Header` | A Section's heading |

@@ -29,8 +29,8 @@ no default message.
 While it waits, the interface is hidden, not covered: it keeps its place and
 size, and nothing is painted behind the Spinner, so the Surface it sits on,
 such as the Window's, shows through. The loading fills the nearest positioned
-ancestor. It appears at once; when everything is ready it fades out with the
-Appearance transaction, and the interface appears whole at once. It cannot
+ancestor. It appears at once; when everything is ready it fades out as a
+[change in place](/docs/sdks/react-ui/motion), and the interface appears whole at once. It cannot
 fade in, because the interface stays a direct part of the layout around it,
 with no box of its own that could fade. When a requirement stops being ready,
 the loading appears again.

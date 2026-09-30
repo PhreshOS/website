@@ -59,13 +59,20 @@ await context.presentation.setGeometry({ x: -360, y: -240, width: 720, height: 4
 await context.presentation.raise()
 ```
 
-Writes take effect at once. They can move on the Appearance timing, or your
-own:
+Writes take effect at once. They can also move: on the motion the Desktop
+derives for the change, that motion made a number of times as long, or an
+exact motion of your own:
 
 ```ts
 await context.presentation.transaction().resize({ width: 360, height: 240 })
-await context.presentation.transactionAndWait(300).move({ x: 0, y: 0 })   // resolves when it arrives
+await context.presentation.transaction(2).move({ x: 0, y: 0 })   // twice as long
+await context.presentation.transactionAndWait({ duration: 300, easing: "ease-out" }).move({ x: 0, y: 0 })   // resolves when it arrives
 ```
+
+A number keeps the person's [tempo](/docs/system/appearance#motion): with a
+faster tempo, your slower motion is faster too. It goes from `1/3` to `4`. An
+exact motion is the same whatever the tempo. With animations off, nothing
+moves.
 
 The Desktop can paint a surface behind your Client, from the
 [Appearance](/docs/system/appearance), and let clicks pass through it:
