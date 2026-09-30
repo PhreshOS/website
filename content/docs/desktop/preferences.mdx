@@ -21,9 +21,13 @@ Reading them is always allowed. Changing them needs the `desktopPreferences`
 [permission](/docs/system/permissions):
 
 ```ts
-await desktop.preferences.update({ theme: "dark" })
-await desktop.preferences.update({ theme: "default", scale: "default" })   // back to the browser's
+await desktop.preferences.update({ theme: "dark", scale: 1.25 })
+await desktop.preferences.update({ theme: "desktop", animations: "desktop" })   // the Desktop decides
 ```
+
+`"desktop"` hands the theme or the animations back to the Desktop, which
+follows its browser. The scale is always a number, from 0.5 to 2; 1 is its
+normal size.
 
 Changing the scale changes the size of the view a Client sees.
 
