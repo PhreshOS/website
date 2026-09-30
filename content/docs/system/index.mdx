@@ -36,6 +36,16 @@ about.startedAt   // a Date: when the System started
 `startedAt` is when the System started this time, so how long it has run is
 `Date.now() - about.startedAt.getTime()`.
 
+Its icon comes as a PNG, at the same sizes as a Program's: `"small"`,
+`"medium"`, or `"large"`:
+
+```ts
+const icon = await system.icon("large")   // a Blob
+image.src = URL.createObjectURL(icon)
+```
+
+Reading what the System is, and its icon, needs no permission.
+
 ## What decides
 
 What a Program may reach through the System is decided by its

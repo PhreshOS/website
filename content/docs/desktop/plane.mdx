@@ -55,8 +55,14 @@ each time, is never stored, and another Desktop can look elsewhere.
 ```ts
 await desktop.viewport.size()     // the view's size
 await desktop.viewport.offset()   // the point of the plane at the view's center
-desktop.viewport.subscribe("move", offset => {})
+desktop.viewport.subscribe("move", ({ offset, transaction }) => {})
 ```
+
+A move is announced as the view sets off, with where it goes and the motion it
+takes: the Desktop chooses that motion from how far the view goes. Whatever
+draws the plane, such as a wallpaper, takes the same `transaction` from where
+the view was, and arrives with the Windows. It is `null` when the view is
+there at once: while a hand drags it, or with animations off.
 
 Moving the view changes what the person is looking at, so it needs the
 `desktopViewport` [permission](/docs/system/permissions):
