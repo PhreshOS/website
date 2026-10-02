@@ -114,6 +114,7 @@ A Program declares a Server, a Client, or both.
 | `opens` | Media types this Program opens; see [Opening](/docs/system/opening) |
 | `buildCommand` | Runs before a production start, install, or package |
 | `permissions` | What the Program asks for; see [Permissions](/docs/system/permissions) |
+| `process` | What every launch takes unless it says otherwise; see [below](#every-launch) |
 | `installLaunch` | A Process to start after installing; see [below](#start-after-installing) |
 
 ### The Server
@@ -180,6 +181,24 @@ A launch can override each of these for one Process.
 - `buildCommand` and both `devCommand`s run in the project folder, so they can
   use its development tools.
 - The Program's storage folder is not configured here; the System assigns it.
+
+### Every launch
+
+`process` sets what every launch of the Program takes unless the launch says
+otherwise, from the Start menu, the terminal, or code:
+
+```ts
+process: { name: "session", replace: true, options: { mode: "watch" } }
+```
+
+| Field | Meaning |
+| --- | --- |
+| `name` | The name of a Process whose launch names none. Launching again while it runs fails |
+| `replace` | With `name`, a launch replaces the running Process of that name instead of failing, so one runs at a time |
+| `options` | Options every launch starts from |
+
+A launch's own `name` and `replace` win; its `options` are laid over these,
+key by key.
 
 ### Start after installing
 
