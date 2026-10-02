@@ -1,0 +1,84 @@
+---
+title: "PhreshOS vs CasaOS and Umbrel: running software, or growing your own"
+description: CasaOS and Umbrel are home server systems that install existing software in containers from an app store. PhreshOS is an operating system for programs written for it. Here is how they differ, and when to choose each.
+date: 2026-10-02
+author: Zohayr Slileh
+---
+
+If you run a home server, you probably know CasaOS or Umbrel. Both give you a
+beautiful dashboard in the browser and an app store, and with one click you get
+Nextcloud, Jellyfin, or Home Assistant running at home.
+
+PhreshOS also runs on your machine and gives you a desktop in the browser. But
+it answers a different question.
+
+## The short answer
+
+**CasaOS and Umbrel** run software that already exists. Each app in their
+stores is a container image, and the system installs it, starts it, and gives
+you a tile to open it. They are excellent at bringing well-known self-hosted
+apps home.
+
+**PhreshOS** is an operating system for programs built for it, with web
+technology. It does not run existing software in containers. Instead, it gives
+every program the same soil: a place to run on the machine, one sign-in,
+permissions, a way to reach other programs, and a Desktop where each one is a
+window.
+
+## One dashboard of apps, or one system of programs
+
+On CasaOS or Umbrel, each app is its own world. It has its own interface, its
+own accounts, and its own idea of how to talk to other apps, if it talks to
+them at all. The dashboard opens them; it does not join them.
+
+On PhreshOS, programs are written for the System, so they share it:
+
+- **One sign-in.** You sign in to the System, and every program trusts it.
+- **Windows on one Desktop.** Programs open side by side, and you can arrange
+  them across a large Desktop with its Map.
+- **Programs that use each other.** A program can hand a file to whichever
+  program opens it, or use another program's feature, a Service, by name.
+- **Permissions.** The System decides what each program may reach in it:
+  other programs, their Services, and the Desktop. Whether a program may touch
+  the machine itself depends on whether it runs in a sandbox.
+
+## Who it is for
+
+CasaOS and Umbrel are for people who want to run the many apps the self-hosting
+world already has, with as little work as possible.
+
+PhreshOS is for people who build their own tools, or want tools that work
+together: for managing a server, automating tasks, or anything a small web
+program can do. A program is a web project, and it can be small: no container
+image, no reverse proxy, no login screen of its own.
+
+## AI agents
+
+On PhreshOS, an AI agent you already use, such as Claude Code or Codex,
+connects from outside through the `phresh` command-line tool and uses the same
+programs you use, at the same time. Programs describe themselves to agents, so
+an agent can learn what each one offers.
+
+## What CasaOS and Umbrel have that PhreshOS does not
+
+To be fair:
+
+- **Hundreds of ready apps.** Umbrel's store lists over 300 apps, and CasaOS
+  can install apps from the whole Docker ecosystem. PhreshOS has a few official
+  programs, and its store is still on its way.
+- **Existing software.** If you need Nextcloud or Jellyfin, they run it today.
+  PhreshOS does not run software that was not written for it.
+- **Hardware.** Umbrel also sells ready home servers, and CasaOS is made by a
+  hardware company, IceWhale.
+
+## They can live side by side
+
+These are not rivals for the same place. You can run your media server and
+photo backup with CasaOS or Umbrel, and grow your own tools with PhreshOS on the
+same machine.
+
+On licenses: CasaOS is open source under Apache 2.0. Umbrel's source is
+available under the PolyForm Noncommercial license, which allows personal use
+but is not an open-source license. PhreshOS is open source under the MIT
+license. The facts about CasaOS and Umbrel here are from their own repositories
+as of October 2026.
