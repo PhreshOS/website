@@ -15,6 +15,17 @@ phresh describe --all --json           # every command, as JSON
 
 It works without a running System.
 
+## Where an agent starts
+
+`phresh skill` explains PhreshOS to an agent before its first command: what the
+System is, that `phresh` acts with the owner's authority, how Programs offer
+what they do, and where to find the documentation. The top-level `--help`
+points agents to it.
+
+```sh
+phresh skill
+```
+
 ## What a description contains
 
 - the command path and its aliases, such as `set-geometry` for `setGeometry`;
