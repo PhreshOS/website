@@ -2,7 +2,7 @@ import { site } from "@/components/site/links"
 
 /** What PhreshOS is, in the words every page and profile uses for it. */
 export const phreshosDescription =
-  "An open-source operating system for programs built with web technology, used by you and your AI agents from one desktop in the browser."
+  "An open-source, self-hosted system for apps built with web technology, used by you and your AI agents from one desktop in the browser."
 
 const website = { "@type": "WebSite", "@id": `${site.url}/#website`, name: "PhreshOS", url: site.url }
 

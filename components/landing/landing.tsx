@@ -23,7 +23,7 @@ import Roots from "./roots"
 function Hero() {
   return <header className="hero" id="top">
     <Reveal>
-      <p className="eyebrow">An open-source operating system for web programs</p>
+      <p className="eyebrow">An open-source, self-hosted system for web apps</p>
     </Reveal>
     <Reveal delay={0.08}>
       <h1>The soil for your software.<br /><em>You choose what grows.</em></h1>

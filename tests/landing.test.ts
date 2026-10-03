@@ -6,7 +6,7 @@ const built = (path: string) => readFile(new URL(`../out/${path}`, import.meta.u
 
 test("the home page is prerendered with its content, title, and canonical address", async () => {
   const html = await built("index.html")
-  expect(html).toContain("<title>PhreshOS · The operating system for web programs</title>")
+  expect(html).toContain("<title>PhreshOS · The self-hosted system for web apps</title>")
   expect(html).toContain('<link rel="canonical" href="https://phreshos.com"/>')
   expect(html).toContain("The soil for your software.")
   expect(html).toContain("How it compares.")
