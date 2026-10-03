@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     template: '%s · PhreshOS',
   },
   description:
-    'PhreshOS is an open-source, server-authoritative operating system for running and managing web-based programs in a unified web desktop environment, with native agent access through shared APIs.',
+    'PhreshOS is an open-source, self-hosted system that runs and manages programs built with web technology on your own machine, with one desktop in the browser and native agent access through the same APIs.',
 };
 
 export const viewport: Viewport = {
