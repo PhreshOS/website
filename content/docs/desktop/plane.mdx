@@ -24,8 +24,8 @@ await desktop.plane.size()   // { width: 7200, height: 4500 } on a 1440 × 900 D
 desktop.plane.subscribe("resize", size => {})
 ```
 
-In React, `usePlaneState(desktop.plane)` reads it and follows it while mounted:
-see [React](/docs/sdks/react/hooks).
+In React, `useDesktopPlane()` reads it and follows it: see
+[React providers](/docs/sdks/react/providers#hooks).
 
 ## Positions
 

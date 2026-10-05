@@ -71,7 +71,6 @@ return <p>{programState.processes.length} running · {serverState?.running ? "on
 | `useServiceState(service)` | `{ available }` |
 | `useWindowState(window)` | `{ title, header, position, size, minimized, maximized, front, layer }` |
 | `usePresentationState(presentation)` | `{ layer, anchor, position, size, front, interactive, surface }`, the drawing as it is now |
-| `usePlaneState(desktop.plane)` | `{ size }`, the plane's size as the Desktop resizes |
 | `useClientMemory(key, initial)` or `useClientMemory(memory, key, initial)` | `[value, setValue]` for one Client run |
 | `useProgramStore(key, initial)` or `useProgramStore(store, key, initial)` | `[value, setValue]` for one Program's persistent store |
 | `useConnectionState(connection)` | `{ connected, session }` |
@@ -133,7 +132,6 @@ const answer = useSubscribeAnswers(process.server.traffic, ({ questionId, messag
 | `useProgramState`, `useProcessState`, `useEndpointState`, `useServiceState` | Runtime state |
 | `useWindowState` | Window state |
 | `usePresentationState` | How the Client is drawn |
-| `usePlaneState` | The Desktop's plane |
 | `useConnectionState`, `useSessionState` | Authentication state |
 | `useSubscribe(target, event?, project?)` | The latest event |
 | `useSubscribeAsks(traffic, project)` | The latest question sent |
