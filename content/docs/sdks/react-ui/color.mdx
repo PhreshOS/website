@@ -77,3 +77,10 @@ const text = useContrastingColor("primary")  // the readable text color on it
 
 Outside a component, `resolveColor("primary:soft", colors)` turns one color
 into a CSS color from a set of Appearance colors.
+
+What draws on a Surface and must match it, such as a terminal telling its
+programs what it stands on, takes the color that Surface is painted with:
+
+```tsx
+const well = useSurfaceColor("background", "recessed")
+```
