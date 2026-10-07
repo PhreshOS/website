@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next"
 import { Fraunces, Geist, Geist_Mono } from "next/font/google"
+import Analytics from "@/components/site/analytics"
 import SiteShell from "@/components/site/site-shell"
 import { site } from "@/components/site/links"
 import { phreshosDescription as description } from "@/components/structured-data"
@@ -35,6 +36,7 @@ export default function HomeLayout({ children }: LayoutProps<"/">) {
   return <html lang="en" className={`${sans.variable} ${mono.variable} ${display.variable}`}>
     <body>
       <SiteShell>{children}</SiteShell>
+      <Analytics />
     </body>
   </html>
 }

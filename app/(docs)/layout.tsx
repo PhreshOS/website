@@ -1,6 +1,7 @@
 import { Geist, JetBrains_Mono } from 'next/font/google';
 import type { Metadata, Viewport } from 'next';
 import { Provider } from '@/components/provider';
+import Analytics from '@/components/site/analytics';
 import { site } from '@/components/site/links';
 import './global.css';
 
@@ -39,6 +40,7 @@ export default function Layout({ children }: LayoutProps<'/docs'>) {
     <html lang="en" className={`${geist.variable} ${mono.variable}`} suppressHydrationWarning>
       <body className="flex min-h-screen flex-col">
         <Provider>{children}</Provider>
+        <Analytics />
       </body>
     </html>
   );
