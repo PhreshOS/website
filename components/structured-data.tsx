@@ -18,7 +18,7 @@ export const homeData = {
       description: phreshosDescription,
       url: site.url,
       applicationCategory: "UtilitiesApplication",
-      operatingSystem: "macOS, Linux, Windows",
+      operatingSystem: "macOS, Linux",
       softwareRequirements: "Node.js 24.15.0 or newer",
       license: "https://opensource.org/licenses/MIT",
       isAccessibleForFree: true,
