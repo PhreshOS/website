@@ -84,6 +84,8 @@ permissions:
 await program.permissions.all()
 await program.permissions.allow("network", ["https://api.example.com"])   // replaces the value
 await program.permissions.deny("network")
+
+program.permissions.subscribe("change", permissions => {})   // the complete new value
 ```
 
 A Program that replaces the Shell decides requests as they come:

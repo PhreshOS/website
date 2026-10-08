@@ -15,6 +15,7 @@ await system.program.find("notes")               // one Program, or null
 await system.program.list()                      // every Program you can see
 await system.program.list({ installed: true })   // installed ones only
 await system.program.list({ opens: "image/png" }) // those that open a type
+await system.program.list({ startup: true })     // those that start with the System
 ```
 
 Seeing another Program needs the `programs` [permission](/docs/system/permissions).
@@ -89,7 +90,7 @@ its files and data.
 ```ts
 await program.pin()      // keep it among the favorites of Desktop interfaces
 await program.pinned()
-await program.unpin()
+await program.pin(false) // unpin it
 ```
 
 ## What it owns
@@ -107,11 +108,20 @@ await program.unpin()
 program.subscribe("processCreate", process => {})
 program.subscribe("processExit", ({ process, status }) => {})
 program.subscribe("uninstall", ({ purge }) => {})
+program.subscribe("pin", pinned => {})
 
 system.program.subscribe("install", program => {})   // every Program you can see
 ```
 
-A Program also announces `forget`, `pinned`, and `permissions`.
+A Program also announces `forget`. Its startup and permissions announce their
+own `change`, and `system.program` announces them for every Program as
+`changeStartup` and `changePermissions`, with the Program:
+
+```ts
+program.startup.subscribe("change", launch => {})   // the launch, or null
+program.permissions.subscribe("change", permissions => {})
+system.program.subscribe("changeStartup", ({ program, launch }) => {})
+```
 
 ## From the terminal
 

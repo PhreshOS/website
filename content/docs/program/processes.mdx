@@ -142,6 +142,13 @@ await program.startup.remove()
 not a switch: removing it keeps nothing. Anything else to start at that
 moment, the Program starts from there.
 
+Whoever sets or removes it, the Program itself or the owner in Settings, it
+announces the change:
+
+```ts
+program.startup.subscribe("change", launch => {})   // the launch, or null
+```
+
 ## From the terminal
 
 ```sh
