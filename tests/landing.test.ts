@@ -51,7 +51,7 @@ test("the home page describes PhreshOS as structured data", async () => {
   const software = graph.find(node => node["@type"] === "SoftwareApplication") as Record<string, unknown>
   expect(software.name).toBe("PhreshOS")
   expect(software.license).toBe("https://opensource.org/licenses/MIT")
-  expect(software.operatingSystem).toBe("macOS, Linux, Windows")
+  expect(software.operatingSystem).toBe("macOS, Linux")
 })
 
 test("a documentation page is a technical article about PhreshOS", async () => {
