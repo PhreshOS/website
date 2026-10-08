@@ -310,6 +310,7 @@ function Install() {
       <Flex justify="center" gap="small" wrap>
         <Button href={site.documentation}><BookOpen />Installation guide</Button>
       </Flex>
+      <p className="footnote">Windows is not fully supported yet: some programs do not work there.</p>
     </Reveal>
   </section>
 }
