@@ -1,6 +1,5 @@
 # Addresses of the documentation before it was reorganized, sent to where each subject lives now.
 /docs/first-program /docs/your-program 301
-/docs/installation /docs 301
 /docs/runtime /docs/program 301
 /docs/runtime/communication /docs/program/communication 301
 /docs/runtime/context /docs/program/context 301
