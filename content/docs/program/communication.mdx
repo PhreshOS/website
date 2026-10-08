@@ -94,11 +94,23 @@ const { content } = await context.server.ask("file.read")      // Client
 
 ## Watch what an Endpoint sends
 
+Subscribing to an Endpoint hears only what it publishes from itself, with
+no destination. What it sends to a particular Endpoint is seen through its
+`traffic`: messages, questions, and, for a Server, its answers.
+
 ```ts
 process.client.traffic.subscribe("theme.changed", ({ to, payload }) => {})
+process.client.traffic.subscribeAsks(({ event, questionId, message }) => {})
+process.server.traffic.subscribeAnswers(({ event, questionId, message }) => {})
 ```
 
-It only watches: nothing it sees is changed or delayed.
+`to` is the Endpoint it went to, or `null` when that Endpoint is outside
+what you can see. An answer carries its question's `questionId`, and its
+`outcome` holds either the `result` or the `error`. Questions and answers
+also come one by one through `asks()` and `answers()`.
+
+Traffic only watches: nothing it sees is changed or delayed, and it cannot
+answer a question.
 
 ## From the terminal
 
