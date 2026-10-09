@@ -21,6 +21,7 @@ Anything is a media type and a URI:
 | An email address | `x-scheme-handler/mailto` | `mailto:someone@example.com` |
 | A file | Its own type, such as `image/png` | `file:///Users/me/leaf.png` |
 | A folder | `inode/directory` | `file:///Users/me/Projects` |
+| A shell at a folder | `x-scheme-handler/terminal` | `terminal:///Users/me/Projects` |
 | Content you hold | Its type | An [upload](/docs/system/uploads)'s address |
 
 The type is exact: `image/png`, not `image/*`.

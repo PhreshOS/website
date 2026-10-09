@@ -59,13 +59,20 @@ The backdrop darkens the interface behind it, toward whichever Appearance color
 is darker, so it works on any palette. Where the Appearance material blurs, the
 backdrop blurs too, at half its strength. Every Dialog's backdrop is the same.
 
+A Dialog is drawn in the document's body. Over an interface that scales what it
+holds, give the backdrop that container instead, so the Dialog scales with it:
+
+```tsx
+<Dialog.Backdrop portalContainer={scaled}>…</Dialog.Backdrop>
+```
+
 ## Parts
 
 | Part | Props |
 | --- | --- |
 | `Dialog` | `open`, `defaultOpen`, `onOpenChange` |
 | `Dialog.Trigger` | Button props |
-| `Dialog.Backdrop` | `dismissable` (`false`), `keyboardDismissable` (`true`) |
+| `Dialog.Backdrop` | `dismissable` (`false`), `keyboardDismissable` (`true`), `portalContainer` |
 | `Dialog.Content` | `aria-label`, Surface props |
-| `Dialog.Header`, `Title`, `Description`, `Body`, `Footer` | Layout and names |
+| `Dialog.Header`, `Title`, `Description`, `Body`, `Footer` | Layout and names; each keeps what it holds apart |
 | `Dialog.Close` | Button props; closes the dialog |
