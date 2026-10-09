@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@internationalized/date": "^3.12.3",
-    "@phreshos/react-ui": "^0.2.0",
+    "@phreshos/react-ui": "^0.2.1",
     "cnfast": "^0.1.0",
     "fumadocs-core": "16.15.14",
     "fumadocs-mdx": "15.4.5",
