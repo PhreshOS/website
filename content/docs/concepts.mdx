@@ -63,7 +63,7 @@ system.program.subscribe(({ event, message }) => console.log(event, message))   
 
 ```ts
 const { status, code } = await process.wait("exit")
-const appearance = await system.appearance.wait("change", 60_000)   // ten seconds by default
+const appearance = await system.appearance.wait("change", 60_000)   // within a minute; ten seconds by default
 ```
 
 It fails when its time runs out, or when the event can no longer arrive.
@@ -121,7 +121,7 @@ await context.permissions.timeout(300_000).request("storage", ["read:Documents/*
 
 An operation that cannot do what it was asked fails: its promise rejects with
 an `Error` that says why, such as a missing permission, a Process that has
-ended, or a deadline that passed.:
+ended, or a deadline that passed:
 
 ```ts
 try {
