@@ -46,6 +46,16 @@ await process.options()             // from outside
 Options never change. To tell a running Process something new, send it a
 [message](/docs/program/communication).
 
+## What it opens
+
+A Process started through [`system.open()`](/docs/system/opening) carries what
+it was started to open, as fixed as its options:
+
+```ts
+await context.opened()   // inside the Process: { type, uri }, or null
+await process.opened()   // from outside
+```
+
 ## Name it
 
 A name finds the same Process again, without keeping its identity:

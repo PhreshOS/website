@@ -58,6 +58,7 @@ what it was started to open:
 
 ```ts
 await context.opened()   // { type, uri }, or null
+await process.opened()   // the same, read from outside the Process
 ```
 
 To keep one Window, the new Process can hand the target to a Process already
