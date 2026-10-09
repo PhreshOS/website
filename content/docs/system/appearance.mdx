@@ -42,7 +42,7 @@ matters, compare the colors themselves.
 | `material` | Yes | `grain`, `grainAmount`, `backdrop`, `opacity`, `distortion`, `saturation` |
 | `tempo` | No | How fast everything moves: `1` is the designed pace, from `1/3` (faster) to `4` (slower) |
 | `taskbar` | No | Its `position`, `size`, and whether it lies `overlay` over Windows |
-| `wallpaper` | Yes | `signIn` and `desktop`, each an upload's key |
+| `wallpapers` | Yes | `signIn` and `desktop`, each an upload's key |
 
 ## Motion
 
@@ -73,7 +73,7 @@ its key:
 
 ```ts
 const { file } = await system.uploads.write(image)
-await system.appearance.update({ wallpaper: { dark: { desktop: file } } })
+await system.appearance.update({ wallpapers: { dark: { desktop: file } } })
 ```
 
 An image covers the screen; a video plays muted and looping; an HTML page runs
@@ -86,7 +86,7 @@ pictures behind them, so they bring back the release's wallpapers:
 ```ts
 import { systemWallpapers } from "@phreshos/core"
 
-await system.appearance.update({ wallpaper: { dark: { desktop: systemWallpapers.dark.desktop } } })
+await system.appearance.update({ wallpapers: { dark: { desktop: systemWallpapers.dark.desktop } } })
 ```
 
 ## Without a System
