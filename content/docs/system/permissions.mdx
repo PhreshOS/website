@@ -84,6 +84,7 @@ permissions:
 await program.permissions.all()
 await program.permissions.allow("network", ["https://api.example.com"])   // replaces the value
 await program.permissions.deny("network")
+await program.permissions.reset("network")   // undecided again: the declaration applies
 
 program.permissions.subscribe("change", permissions => {})   // the complete new value
 ```
@@ -107,4 +108,5 @@ decides what it can reach on its own: see [Execution](/docs/system/execution).
 phresh program list-permissions --program notes
 phresh program allow-permission --program notes --permission network --value '["https://api.example.com"]'
 phresh program deny-permission --program notes --permission network
+phresh program reset-permission --program notes --permission network
 ```
