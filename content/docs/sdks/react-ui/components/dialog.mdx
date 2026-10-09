@@ -55,16 +55,8 @@ middle of the screen at any width, never wider than the screen allows:
 <Dialog.Content style={{ width: "26rem" }}>…</Dialog.Content>
 ```
 
-The backdrop holds back the interface behind it in one of two ways:
-
-```tsx
-<Dialog.Backdrop>…</Dialog.Backdrop>               // dim: darkens it
-<Dialog.Backdrop variant="blur">…</Dialog.Backdrop> // blur: blurs it, dims lightly
-```
-
-`dim` darkens toward whichever Appearance color is darker, so it works on any
-palette. `blur` uses the blur of the Appearance material and dims less, so the
-Dialog still stands apart on a light background.
+The backdrop darkens the interface behind it, toward whichever Appearance color
+is darker, so it works on any palette. Every Dialog's backdrop is the same.
 
 ## Parts
 
@@ -72,7 +64,7 @@ Dialog still stands apart on a light background.
 | --- | --- |
 | `Dialog` | `open`, `defaultOpen`, `onOpenChange` |
 | `Dialog.Trigger` | Button props |
-| `Dialog.Backdrop` | `variant` (`"dim"`), `dismissable` (`false`), `keyboardDismissable` (`true`) |
+| `Dialog.Backdrop` | `dismissable` (`false`), `keyboardDismissable` (`true`) |
 | `Dialog.Content` | `aria-label`, Surface props |
 | `Dialog.Header`, `Title`, `Description`, `Body`, `Footer` | Layout and names |
 | `Dialog.Close` | Button props; closes the dialog |
