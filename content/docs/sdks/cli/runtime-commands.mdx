@@ -19,15 +19,20 @@ Add `--json` to any of them for the full result as JSON.
 
 | Command | Subcommands |
 | --- | --- |
-| `program` | `list`, `inspect`, `agent`, `definition`, `get-startup`, `set-startup`, `remove-startup`, `pinned`, `pin`, `get-permission`, `list-permissions`, `allows-permission`, `allow-permission`, `deny-permission`, `reset-permission`, `logs`, `wait` |
+| `program` | `list`, `inspect`, `agent`, `definition`, `get-startup`, `set-startup`, `remove-startup`, `pinned`, `pin`, `get-permission`, `list-permissions`, `allows-permission`, `allow-permission`, `deny-permission`, `reset-permission`, `store get/set/delete`, `query`, `icon`, `exit-processes`, `forget`, `logs`, `wait` |
 | `connection` | `list`, `inspect`, `session`, `sign-in`, `wait` |
 | `session` | `list`, `inspect`, `connections`, `sign-out`, `wait` |
 | `process` | `list`, `inspect`, `create`, `find-or-create`, `exit`, `wait` |
 | `endpoint` | `inspect`, `start`, `stop`, `wait-ready`, `ask`, `publish`, `wait`, `wait-lifecycle`, `memory get/set/delete/entries` |
 | `service` | `list`, `inspect`, `wait-ready`, `ask`, `publish`, `wait`, `wait-lifecycle`, `wait-discovery` |
 | `window` | `inspect`, `move`, `resize`, `set-geometry`, `minimize`, `maximize`, `set-title`, `set-header`, `raise`, `wait` |
+| `appearance` | `get`, `update`, `wait` |
+| `opening` | `defaults`, `set-default`, `clear-default`, `requests`, `choose`, `cancel`, `wait` |
+| `permission` | `requests`, `allow`, `deny`, `cancel`, `wait` |
+| `authentication` | `state`, `requirements`, `set-credentials`, `sign-out-all` |
 | `operation` | `list`, `describe` |
 | `system logs` | Query the System log |
+| `system icon` | Write the System's icon to a file |
 | `execute` | Run any operation as raw JSON |
 
 The camelCase names, such as `setGeometry`, work as well.

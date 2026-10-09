@@ -109,4 +109,8 @@ phresh program list-permissions --program notes
 phresh program allow-permission --program notes --permission network --value '["https://api.example.com"]'
 phresh program deny-permission --program notes --permission network
 phresh program reset-permission --program notes --permission network
+
+phresh permission requests
+phresh permission allow --request <identity>   # or deny, or cancel
+phresh permission wait --event permissionRequest
 ```

@@ -86,4 +86,12 @@ system.opening.subscribe("changeDefault", ({ type, program }) => {})   // progra
 
 ```sh
 phresh system open --type image/png --uri file:///Users/me/leaf.png
+
+phresh opening defaults
+phresh opening set-default --type 'image/*' --program preview
+phresh opening clear-default --type 'image/*'
+phresh opening requests
+phresh opening choose --request <identity> --program preview --always
+phresh opening cancel --request <identity>
+phresh opening wait --event openRequest
 ```

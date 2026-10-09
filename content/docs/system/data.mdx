@@ -70,5 +70,10 @@ Program is uninstalled with `purge`.
 ## From the terminal
 
 ```sh
+phresh program store get --program notes --key tab
+phresh program store set --program notes --key tab --value '"recent"'
+phresh program store delete --program notes --key tab
+phresh program query --program notes --statement 'select * from notes limit 10'
+
 phresh uninstall notes --purge   # deletes its data too
 ```

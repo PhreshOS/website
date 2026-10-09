@@ -325,9 +325,13 @@ const result = await system.execute(request)
 | --- | --- |
 | `operation` | `list`, `describe` |
 | `system` | `about`, `open`, `logs` |
+| `appearance` | `get`, `update`, `wait` |
+| `opening` | `defaults`, `setDefault`, `clearDefault`, `requests`, `choose`, `cancel`, `wait` |
+| `permission` | `requests`, `allow`, `deny`, `cancel`, `wait` |
+| `authentication` | `state`, `requirements`, `setCredentials`, `signOutAll` |
 | `connection` | `list`, `find`, `session`, `signIn`, `wait` |
 | `session` | `list`, `find`, `connections`, `signOut`, `wait` |
-| `program` | `list`, `find`, `agent`, `definition`, `getStartup`, `setStartup`, `removeStartup`, `pinned`, `pin`, `getPermission`, `listPermissions`, `allowsPermission`, `allowPermission`, `denyPermission`, `resetPermission`, `logs`, `wait` |
+| `program` | `list`, `find`, `agent`, `definition`, `getStartup`, `setStartup`, `removeStartup`, `pinned`, `pin`, `getPermission`, `listPermissions`, `allowsPermission`, `allowPermission`, `denyPermission`, `resetPermission`, `storeGet`, `storeSet`, `storeDelete`, `query`, `exitProcesses`, `forget`, `logs`, `wait` |
 | `process` | `list`, `find`, `create`, `findOrCreate`, `exit`, `wait` |
 | `endpoint` | `inspect`, `start`, `stop`, `waitReady`, `ask`, `publish`, `wait`, `waitLifecycle`, `memoryGet`, `memorySet`, `memoryDelete`, `memoryEntries` |
 | `service` | `list`, `inspect`, `waitReady`, `ask`, `publish`, `wait`, `waitLifecycle`, `waitDiscovery` |

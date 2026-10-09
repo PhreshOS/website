@@ -91,9 +91,8 @@ const next = applyAppearanceUpdate(defaultAppearance, { spacing: 14 })
 
 ## From the terminal
 
-The terminal has no Appearance command yet. A Node script reaches it:
-
-```ts
-const system = await System.connect()
-await system.appearance.update({ spacing: 14 })
+```sh
+phresh appearance get --json
+phresh appearance update --value '{"spacing":14}'
+phresh appearance wait --event change
 ```
