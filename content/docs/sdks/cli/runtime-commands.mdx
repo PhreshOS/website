@@ -8,7 +8,7 @@ one is an [Execute](/docs/sdks/core#execute) operation with terminal options.
 
 ```sh
 phresh program list
-phresh process create --program notes --name main --client
+phresh process create --program notes --name main
 phresh endpoint ask --program notes --process main --endpoint server --event notes.list
 phresh window inspect --program notes --process main
 ```
@@ -52,13 +52,15 @@ See [Programs](/docs/program/programs).
 A Process name is unique only within its Program, so commands that use a name
 also need `--program`.
 
+With only `--program`, a Process starts as its Program declares, the same as
+when the owner opens it from the Desktop. Each option changes one thing from
+that; an option left out keeps what the Program declares.
+
 ```sh
-phresh process create \
-  --program notes \
-  --name main \
-  --server \
-  --client --client-width 900 --client-height 640 \
-  --option document=welcome.txt
+phresh process create --program notes                 # as the Program declares
+phresh process create --program notes --name main     # the same, named to find it again
+phresh process create --program notes --option document=welcome.txt   # started with one option
+phresh process create --program notes --client-width 900 --client-height 640   # a Window of another size
 
 phresh process find-or-create --program notes --name main
 phresh process exit --program notes --process main
@@ -116,10 +118,14 @@ binary data that the SDK can send are not available here. See
 
 ## Windows
 
-```sh
-phresh window set-geometry --program notes --process main \
-  --x 0 --y 0 --width 100% --height 100%
+Positions count from the middle of the view: `0, 0` is the middle, not the
+top-left corner, and a Window's position is its own top-left corner. A share
+such as `-1/2` or `1/2` is part of the view, so `-1/2` is its left or top edge.
 
+```sh
+phresh window move --program notes --process main --x -450 --y -320   # a 900 × 640 Window, centered
+phresh window set-geometry --program notes --process main \
+  --x -1/2 --y -1/2 --width 1/2 --height 1/1                          # the left half of the view
 phresh window set-title --program notes --process main --title "Notes"
 ```
 
