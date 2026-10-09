@@ -42,7 +42,7 @@ matters, compare the colors themselves.
 | `material` | Yes | `grain`, `grainAmount`, `backdrop`, `opacity`, `distortion`, `saturation` |
 | `tempo` | No | How fast everything moves: `1` is the designed pace, from `1/3` (faster) to `4` (slower) |
 | `taskbar` | No | Its `position`, `size`, and whether it lies `overlay` over Windows |
-| `desktopWallpaper`, `signInWallpaper` | Yes | An upload's key, or `null` |
+| `wallpaper` | Yes | `signIn` and `desktop`, each an upload's key |
 
 ## Motion
 
@@ -67,17 +67,27 @@ change: an invalid value changes nothing.
 
 ## A wallpaper
 
-[Upload](/docs/system/uploads) a file, then use its key. Each theme has its
-own:
+Each theme has two wallpapers: `signIn`, behind the sign-in form, and
+`desktop`, behind the windows. [Upload](/docs/system/uploads) a file, then use
+its key:
 
 ```ts
 const { file } = await system.uploads.write(image)
-await system.appearance.update({ desktopWallpaper: { dark: file } })
+await system.appearance.update({ wallpaper: { dark: { desktop: file } } })
 ```
 
 An image covers the screen; a video plays muted and looping; an HTML page runs
-sandboxed, without network. A wallpaper is at most 50 MiB. `null` brings back
-the release's own. `signInWallpaper` is the same, for the sign-in screen.
+sandboxed, without network. A wallpaper is at most 50 MiB.
+
+The wallpapers the System comes with are uploads too, under keys it keeps:
+`systemWallpapers` from `@phreshos/core` names them. Each release puts its own
+pictures behind them, so they bring back the release's wallpapers:
+
+```ts
+import { systemWallpapers } from "@phreshos/core"
+
+await system.appearance.update({ wallpaper: { dark: { desktop: systemWallpapers.dark.desktop } } })
+```
 
 ## Without a System
 
