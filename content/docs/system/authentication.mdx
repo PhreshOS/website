@@ -20,6 +20,7 @@ Connections and need no Session.
 const connection = await desktop.connection()   // the one showing this Desktop
 
 connection.connectedAt   // when the browser connected
+connection.device        // "Chrome on macOS", or null when unrecognized
 await connection.connected()
 await connection.session()   // null when not signed in
 connection.subscribe("sessionChange", session => {})
@@ -36,6 +37,7 @@ await connection.signIn()
 
 ```ts
 session.createdAt              // when the owner signed in
+session.device                 // the browser it signed in from, such as "Chrome on macOS"
 await session.lastActiveAt()   // now while a browser uses it, otherwise when the last one left
 await session.valid()
 await session.connections()
