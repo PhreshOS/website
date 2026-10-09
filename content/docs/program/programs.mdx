@@ -31,6 +31,10 @@ program.version       // "1.2.0", or "0.0.0" when not declared
 program.description   // or null
 program.server        // what a new Process starts by default, or null
 program.client        // the same for the Client, with its Window settings
+program.categories    // ["Productivity"]
+program.keywords      // ["notes", "writing"]
+program.opens         // ["text/markdown"]: what it opens
+program.declaredPermissions   // what applies while the owner has decided nothing
 
 await program.icon("large")   // a PNG: "small", "medium", or "large"
 await program.definition()    // everything its author declared
