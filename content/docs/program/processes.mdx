@@ -97,6 +97,9 @@ Its `exit` event says how it ended:
 const { status, code } = await process.wait("exit")
 ```
 
+Ending it with `exit()` reports `signaled` with `SIGTERM`. A Server that
+fails reports `exited` with a code other than `0`.
+
 To follow every run:
 
 ```ts
