@@ -91,12 +91,10 @@ export function ContextMenuShowcase() {
 }
 
 export function DialogShowcase() {
-  const [variant, setVariant] = useState<'dim' | 'blur'>('dim');
-
   return (
     <Showcase code={`<Dialog>
   <Dialog.Trigger>Edit profile</Dialog.Trigger>
-  <Dialog.Backdrop${attribute('variant', variant === 'dim' ? undefined : variant)} dismissable>
+  <Dialog.Backdrop dismissable>
     <Dialog.Content>
       <Dialog.Header><Dialog.Title>Profile</Dialog.Title></Dialog.Header>
       <Dialog.Body>…</Dialog.Body>
@@ -104,15 +102,11 @@ export function DialogShowcase() {
     </Dialog.Content>
   </Dialog.Backdrop>
 </Dialog>`}
-      controls={<ControlSelect label="Backdrop" value={variant} options={[
-        { value: 'dim', label: 'Dim' },
-        { value: 'blur', label: 'Blur' },
-      ]} onChange={value => setVariant(value as 'dim' | 'blur')} />}
     >
       <WindowScene title="Dialog">
         <Dialog>
           <Dialog.Trigger size="small">Edit profile</Dialog.Trigger>
-          <Dialog.Backdrop variant={variant} dismissable>
+          <Dialog.Backdrop dismissable>
             <Dialog.Content>
               <Dialog.Header>
                 <Dialog.Title>Profile</Dialog.Title>
