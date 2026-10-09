@@ -6,28 +6,36 @@ icon: SlidersHorizontal
 
 Each Desktop has its own preferences, kept in its browser:
 
-| Preference | Values | By default |
+| Preference | Chosen | By default |
 | --- | --- | --- |
-| `theme` | `"light"` or `"dark"` | The browser's |
-| `animations` | `true` or `false` | Off when the browser asks for reduced motion |
+| `theme` | `"light"`, `"dark"`, or `"browser"` | `"browser"` |
+| `animations` | `true`, `false`, or `"browser"` | `"browser"` |
 | `scale` | `0.5` to `2` | `1` |
 
+`"browser"` follows the browser: its light or dark mode, and whether it asks
+for reduced motion. So there are two readings: what was chosen, and what the
+Desktop uses now. Only the Desktop knows its browser, so it resolves them.
+
 ```ts
-const { theme, animations, scale } = await desktop.preferences.snapshot()
-desktop.preferences.subscribe("change", preferences => {})
+await desktop.preferences.snapshot()   // chosen: { theme: "browser", animations: true, scale: 1 }
+await desktop.preferences.resolve()    // used now: { theme: "dark", animations: true, scale: 1 }
+
+desktop.preferences.subscribe("change", preferences => {})       // a choice changed
+desktop.preferences.subscribe("changeResolved", resolved => {})  // what is used changed
 ```
+
+A Program draws with what is used now. Only a place that lets the owner
+choose, such as Settings, needs what was chosen.
 
 Reading them is always allowed. Changing them needs the `desktopPreferences`
 [permission](/docs/system/permissions):
 
 ```ts
 await desktop.preferences.update({ theme: "dark", scale: 1.25 })
-await desktop.preferences.update({ theme: "desktop", animations: "desktop" })   // the Desktop decides
+await desktop.preferences.update({ theme: "browser", animations: "browser" })
 ```
 
-`"desktop"` hands the theme or the animations back to the Desktop, which
-follows its browser. The scale is always a number, from 0.5 to 2; 1 is its
-normal size.
+The scale is always a number, from 0.5 to 2; 1 is its normal size.
 
 Changing the scale changes the size of the view a Client sees.
 

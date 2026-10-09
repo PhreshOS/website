@@ -29,11 +29,11 @@ looks and changes with the Desktop, and places `DocumentTheme` once:
 
 ```tsx
 import { desktop, system } from "@phreshos/client"
-import { DesktopProvider, SystemProvider, useDesktopPreferences, useSystemAppearance } from "@phreshos/react"
+import { DesktopProvider, SystemProvider, useResolvedDesktopPreferences, useSystemAppearance } from "@phreshos/react"
 import { DocumentTheme, UIProvider } from "@phreshos/react-ui"
 
 function Themed({ children }) {
-  return <UIProvider appearance={useSystemAppearance()} preferences={useDesktopPreferences()}>
+  return <UIProvider appearance={useSystemAppearance()} preferences={useResolvedDesktopPreferences()}>
     <DocumentTheme />
     {children}
   </UIProvider>

@@ -27,7 +27,7 @@ browser. Your Client reads it through `desktop`:
 import { desktop } from "@phreshos/client"
 
 await desktop.viewport.size()         // how large it is
-await desktop.preferences.snapshot()  // light or dark, and more
+await desktop.preferences.resolve()   // light or dark, and more
 ```
 
 What `desktop` returns is the same for every Window in that browser: it

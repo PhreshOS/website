@@ -57,7 +57,8 @@ outside it.
 | `useDesktop()` | `DesktopProvider` | The `desktop` |
 | `useDesktopViewport()` | `DesktopProvider` | The viewport's `size` and `offset`, following each change |
 | `useDesktopPlane()` | `DesktopProvider` | The plane's `size`, following each change |
-| `useDesktopPreferences()` | `DesktopProvider` | The current preferences |
+| `useDesktopPreferences()` | `DesktopProvider` | The preferences as chosen |
+| `useResolvedDesktopPreferences()` | `DesktopProvider` | What the Desktop uses now |
 | `useDesktopConnection()` | `DesktopProvider` | The browser Connection, or `undefined` while loading |
 
 Because providers wait, these hooks return their value right away, without
