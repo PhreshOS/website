@@ -37,6 +37,18 @@ and `xsmall`.
 text scale. `tone="secondary"` lowers it to the strength of descriptions.
 Inside a field or item, `slot="description"` connects it as the description.
 
+`truncate` keeps it to one line, cut short with an ellipsis where its space
+ends, for a name beside other things in a row too narrow for all of it. `title`
+shows the whole text when a pointer rests on it:
+
+```tsx
+<Flex align="center" gap="small">
+  <Icon />
+  <Text truncate title={name}>{name}</Text>
+  <Badge>New</Badge>
+</Flex>
+```
+
 ## Kbd
 
 A key to press, drawn as a small raised keycap the height of an `xsmall`

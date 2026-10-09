@@ -26,6 +26,26 @@ cell can hold any content.
 Mark the column that names each row with `rowHeader`, so screen readers can
 announce rows by it.
 
+## Column widths
+
+A Table is as wide as its content unless its columns say otherwise. Give
+columns a `width`, and the one that names each row a `minWidth`: it takes the
+room the others leave, and never less than its minimum. The Table never grows
+narrower than all of that together; put it in a horizontal ScrollArea, and
+when its place is narrower it is scrolled, never crushed:
+
+```tsx
+<ScrollArea axis="horizontal">
+  <Table aria-label="Programs">
+    <Table.Header>
+      <Table.Column id="name" rowHeader minWidth={168}>Name</Table.Column>
+      <Table.Column id="version" width={84}>Version</Table.Column>
+    </Table.Header>
+    …
+  </Table>
+</ScrollArea>
+```
+
 ## Rows from data
 
 ```tsx
@@ -100,8 +120,9 @@ under the same veil as hover.
 The Table has no background or scrolling of its own; put it in a Surface, a
 Panel, or a horizontal ScrollArea.
 
-A column's name too long for its column is cut short with an ellipsis. What a
-cell holds is yours, so long text in a cell is yours to cut short.
+In a column too narrow for it, a column's name and a cell's text are cut short
+with an ellipsis. When a cell lays out several things, such as an icon, a name,
+and a badge, `<Text truncate>` says which one gives way.
 
 ## Parts
 
@@ -109,7 +130,7 @@ cell holds is yours, so long text in a cell is yours to cut short.
 | --- | --- |
 | `Table` | `aria-label`, `selectionMode` (`"none"`), `value`, `defaultValue`, `onChange`, `onAction`, `sort`, `onSortChange`, `color` (`"primary"`), `size`, `radius` |
 | `Table.Header` | `columns` |
-| `Table.Column` | `id`, `rowHeader`, `sortable` |
+| `Table.Column` | `id`, `rowHeader`, `sortable`, `width`, `minWidth` |
 | `Table.Body` | `items`, `dependencies`, `renderEmptyState` |
 | `Table.Row` | `id`, `disabled` |
 | `Table.Cell` | Its content |
