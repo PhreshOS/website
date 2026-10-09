@@ -137,6 +137,10 @@ export PHRESHOS_PORT=4300
 phresh system start
 ```
 
+The values apply to that start. `phresh system start` and `phresh system status`
+then show `listening` beside the Desktop's address whenever the System listens
+beyond this machine.
+
 `0.0.0.0` accepts connections from other machines on your network. Use it
 when PhreshOS runs in a container or behind a reverse proxy, and keep the port
 private when the proxy handles public access.
