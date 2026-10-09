@@ -47,6 +47,24 @@ such as a Window, and spacing alone separates them.
 A [`Tree`](/docs/sdks/react-ui/components/tree) in the sidebar makes a navigation
 that branches: sections that open into pages.
 
+## A narrow window
+
+At 640 pixels or less, the sidebar would crowd the content out. The layout then
+gives the content its whole width, and the title and sidebar wait in a
+[`Drawer`](/docs/sdks/react-ui/components/drawer). `AppLayout.SidebarToggle`
+opens it; put it in the header, where it shows only while the layout is narrow:
+
+```tsx
+<AppLayout.Header><AppLayout.SidebarToggle />Appearance</AppLayout.Header>
+```
+
+The width is the layout's own, not the window's. Choosing something in the
+sidebar is the program's, so it puts the Drawer away:
+
+```tsx
+const { narrow, closeSidebar } = useAppLayout()
+```
+
 ## Parts
 
 | Part | Is |
@@ -57,3 +75,4 @@ that branches: sections that open into pages.
 | `AppLayout.Header` | The row above the content, a `header` |
 | `AppLayout.Content` | The content on its Surface, the page's `main`. `depth` is `recessed` (default) or `raised` |
 | `AppLayout.Footer` | An optional row below the content, a `footer` |
+| `AppLayout.SidebarToggle` | Opens the sidebar while the layout is narrow; otherwise nothing |
