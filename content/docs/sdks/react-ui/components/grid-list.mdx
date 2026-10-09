@@ -6,7 +6,10 @@ description: A collection of cards in a grid, with sections, that people can cho
 <GridListShowcase />
 
 `GridList` lays a collection out as a grid of cards. It fits as many columns
-as its width allows, each card at least `itemWidth` wide:
+as its width allows, each card at least `itemWidth` wide. When there are fewer
+cards than columns, the empty columns keep their place, so a card keeps its
+width however many there are. With `stretch`, the cards share the whole width
+instead, as a fixed set such as a row of counts should:
 
 ```tsx
 <GridList aria-label="Programs" selectionMode="multiple" value={chosen} onChange={setChosen}>
@@ -47,7 +50,7 @@ shows as chosen.
 
 | Part | Is |
 | --- | --- |
-| `GridList` | The grid. `selectionMode`, `value`, `onChange`, `itemWidth` (sixteen times the `spacing` by default), `color`, `restColor` |
+| `GridList` | The grid. `selectionMode`, `value`, `onChange`, `itemWidth` (sixteen times the `spacing` by default), `stretch`, `color`, `restColor` |
 | `GridList.Item` | One card. `id`, `textValue`, `disabled`, `color`, `restColor` |
 | `GridList.Section` | A group of cards across the grid |
 | `GridList.Header` | A Section's heading |

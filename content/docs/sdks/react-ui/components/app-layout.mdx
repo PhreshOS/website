@@ -44,6 +44,16 @@ such as a Window, and spacing alone separates them.
 - The sidebar is eighteen times the `spacing` wide unless `sidebarWidth` says
   otherwise.
 
+While there is no content to show, `AppLayout.Placeholder` stands in for it,
+in the middle of what shows of the content: a wait, what went wrong, or that
+there is nothing:
+
+```tsx
+<AppLayout.Content>
+  {loading ? <AppLayout.Placeholder><Spinner label="Reading" /></AppLayout.Placeholder> : <Files />}
+</AppLayout.Content>
+```
+
 A [`Tree`](/docs/sdks/react-ui/components/tree) in the sidebar makes a navigation
 that branches: sections that open into pages.
 
@@ -74,5 +84,6 @@ const { narrow, closeSidebar } = useAppLayout()
 | `AppLayout.Sidebar` | The sidebar, an `aside`. `footer` stays at its foot |
 | `AppLayout.Header` | The row above the content, a `header` |
 | `AppLayout.Content` | The content on its Surface, the page's `main`. `depth` is `recessed` (default) or `raised` |
+| `AppLayout.Placeholder` | What stands in the middle of the content while there is none to show |
 | `AppLayout.Footer` | An optional row below the content, a `footer` |
 | `AppLayout.SidebarToggle` | Opens the sidebar while the layout is narrow; otherwise nothing |
