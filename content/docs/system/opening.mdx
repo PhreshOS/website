@@ -40,6 +40,8 @@ await system.program.list({ opens: "image/png" })
 ## How the System decides
 
 - When the type has a default Program, it opens with it at once.
+- Otherwise, when its family has one, such as `image/*` for `image/png`, it
+  opens with that.
 - Otherwise the owner chooses one of the Programs that open the type, and can
   make it the default.
 - When no installed Program opens it, `open()` rejects.
@@ -72,8 +74,12 @@ system.opening.subscribe("openRequest", async request => {
   await request.choose(request.programs[0], { always: true })   // or request.cancel()
 })
 
-await system.opening.defaults()   // { "image/png": Program, … }
+await system.opening.defaults()   // { "image/png": Program, "image/*": Program, … }
 await system.opening.setDefault("image/png", program)
+await system.opening.setDefault("image/*", program)   // only a Program that opens image/*
+await system.opening.clearDefault("image/png")
+
+system.opening.subscribe("changeDefault", ({ type, program }) => {})   // program is null once cleared
 ```
 
 ## From the terminal
