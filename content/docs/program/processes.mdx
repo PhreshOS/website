@@ -40,7 +40,7 @@ Processes at once.
 await program.createProcess({ options: { document: "notes/today.md" } })
 
 await context.options("document")   // inside the Process: "notes/today.md"
-await process.options()             // from outside
+process.options                     // from outside: held, never asked for
 ```
 
 Options never change. To tell a running Process something new, send it a
@@ -53,7 +53,7 @@ it was started to open, as fixed as its options:
 
 ```ts
 await context.opened()   // inside the Process: { type, uri }, or null
-await process.opened()   // from outside
+process.opened           // from outside: held, never asked for
 ```
 
 ## Name it
