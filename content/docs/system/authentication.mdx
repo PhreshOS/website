@@ -19,6 +19,7 @@ Connections and need no Session.
 ```ts
 const connection = await desktop.connection()   // the one showing this Desktop
 
+connection.connectedAt   // when the browser connected
 await connection.connected()
 await connection.session()   // null when not signed in
 connection.subscribe("sessionChange", session => {})
@@ -34,6 +35,8 @@ await connection.signIn()
 ## A Session
 
 ```ts
+session.createdAt              // when the owner signed in
+await session.lastActiveAt()   // now while a browser uses it, otherwise when the last one left
 await session.valid()
 await session.connections()
 await session.signOut()
