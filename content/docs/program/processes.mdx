@@ -43,7 +43,8 @@ await context.options("document")   // inside the Process: "notes/today.md"
 process.options                     // from outside: held, never asked for
 ```
 
-Options never change. To tell a running Process something new, send it a
+Options are text: at most 64 of them, and 16 KiB in all (`launchOptionLimits`).
+They never change. To tell a running Process something new, send it a
 [message](/docs/program/communication).
 
 ## What it opens
