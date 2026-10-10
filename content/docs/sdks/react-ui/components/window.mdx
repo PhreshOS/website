@@ -75,9 +75,9 @@ import { context } from "@phreshos/client"
 </Window.Header>
 ```
 
-The header waits for an intentional drag, keeps the pointer until it is let
-go, tells the window manager where it goes, and cancels the move if the
-component goes away. See [Your own title bar](/docs/desktop/windows#your-own-title-bar).
+The header waits for an intentional drag, then lets go of the pointer so the
+window manager may take it, tells it whatever of the pointer still reaches the
+page, and cancels the move if the component goes away. See [Your own title bar](/docs/desktop/windows#your-own-title-bar).
 
 For a drag area that is not a `Window.Header`, use `useWindowMoveHandle()`.
 

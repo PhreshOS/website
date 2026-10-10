@@ -58,23 +58,28 @@ await context.window.setHeader(false)
 ```
 
 To let people drag the Window by it, start a move once the pointer has
-travelled a little, keep the pointer, and tell the Desktop where it goes. A
-press that begins in your page stays with it until it ends, so only your page
-hears the pointer; the Desktop carries out the move, with its snapping.
+travelled a little, then let go of the pointer and keep telling the Desktop what
+your page still hears of it. Some browsers then hand the pointer to the Desktop,
+which moves the Window by it; others keep it with your page until the press
+ends, and the Desktop moves the Window by what you tell it. Either way the
+Desktop carries out the move, with its snapping.
 
 ```ts
-const move = context.presentation.beginMoveGesture({
-  origin: { x: pressedX, y: pressedY },   // where the pointer went down
-  point: { x: currentX, y: currentY },    // where it is now
-})
+const move = context.presentation.beginMoveGesture({ x: pressedX, y: pressedY })   // where the pointer went down
+element.releasePointerCapture(event.pointerId)                                      // the Desktop may take it from here
 
-move.move({ x: event.clientX, y: event.clientY })   // on each pointer move
-move.end({ x: event.clientX, y: event.clientY })    // where it is let go
+// Listen on the document: the pointer may be anywhere now.
+move.move({ x: event.clientX, y: event.clientY })   // each time the hand moves the pointer
+move.end()                                          // let go: the move settles at the last point
 ```
 
 Points are in your page's own coordinates; the Desktop places them on the
-screen. `move.cancel()` ends the move early, and `move.finished` resolves once
-it is over. React UI's `Window.Header` does all of this.
+screen. Report only what the hand did: as the Window moves, the browser also
+sends pointer moves with no movement (`movementX` and `movementY` both 0), and
+reporting those would move the Window again for a place nobody chose.
+`move.cancel()` ends the move early, and `move.finished` resolves once it is
+over, or rejects if the move could not begin. React UI's `Window.Header` does
+all of this.
 
 ## From the terminal
 
