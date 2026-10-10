@@ -37,7 +37,10 @@ await desktop.preferences.update({ theme: "browser", animations: "browser" })
 
 The scale is always a number, from 0.5 to 2; 1 is its normal size.
 
-Changing the scale changes the size of the view a Client sees.
+Changing the scale changes the size of the view a Client sees. A Client's
+document is laid out in Desktop pixels, then the whole frame is enlarged or
+reduced as one picture. Its `devicePixelRatio` stays the browser's own, so a
+canvas sized by it keeps the same resolution at any scale.
 
 Preferences choose between light and dark. What light and dark look like is
 the System's [Appearance](/docs/system/appearance), the same on every Desktop.
