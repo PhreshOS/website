@@ -57,8 +57,10 @@ A Window can hide the Desktop's title bar and draw its own:
 await context.window.setHeader(false)
 ```
 
-To let people drag the Window by it, hand the drag to the Desktop once the
-pointer starts moving:
+To let people drag the Window by it, start a move once the pointer has
+travelled a little, keep the pointer, and tell the Desktop where it goes. A
+press that begins in your page stays with it until it ends, so only your page
+hears the pointer; the Desktop carries out the move, with its snapping.
 
 ```ts
 const move = context.presentation.beginMoveGesture({
@@ -66,11 +68,13 @@ const move = context.presentation.beginMoveGesture({
   point: { x: currentX, y: currentY },    // where it is now
 })
 
-await move.ready      // the Desktop follows the pointer: release your pointer capture
-await move.finished   // the drag ended
+move.move({ x: event.clientX, y: event.clientY })   // on each pointer move
+move.end({ x: event.clientX, y: event.clientY })    // where it is let go
 ```
 
-`move.cancel()` ends the drag early.
+Points are in your page's own coordinates; the Desktop places them on the
+screen. `move.cancel()` ends the move early, and `move.finished` resolves once
+it is over. React UI's `Window.Header` does all of this.
 
 ## From the terminal
 

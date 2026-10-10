@@ -75,13 +75,11 @@ import { context } from "@phreshos/client"
 </Window.Header>
 ```
 
-The header waits for an intentional drag, hands the pointer over, and cancels
-the drag if the component goes away. See
-[Draw your own title bar](/docs/desktop).
+The header waits for an intentional drag, keeps the pointer until it is let
+go, tells the window manager where it goes, and cancels the move if the
+component goes away. See [Your own title bar](/docs/desktop/windows#your-own-title-bar).
 
-For a drag area that is not a `Window.Header`, use `useWindowMoveHandle()`. A
-window manager that receives the drag in another part of the page renders
-`Window.MoveCapture` there, so the drag cursor stays visible.
+For a drag area that is not a `Window.Header`, use `useWindowMoveHandle()`.
 
 ## Use the title bar alone
 
@@ -115,4 +113,3 @@ inside.
 | `Window.Header.Identity` | `icon`, `title` |
 | `Window.Header.Minimize`, `Maximize`, `Close`, `Action` | Button props; `Maximize` also takes `maximized` |
 | `Window.Content` | `div` props |
-| `Window.MoveCapture` | `div` props |
