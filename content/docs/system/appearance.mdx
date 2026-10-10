@@ -79,13 +79,15 @@ await system.appearance.update({ wallpapers: { dark: { desktop: file } } })
 An image covers the screen; a video plays muted and looping; an HTML page runs
 sandboxed, without network. A wallpaper is at most 50 MiB.
 
-An HTML page is told the Theme the Desktop shows it in, which may differ from the
-browser's, in its address: `?theme=light` or `?theme=dark`. One page can then serve
-both Themes:
+An HTML page is told the Theme the Desktop opens it in, which may differ from the
+browser's, in its address: `?theme=light` or `?theme=dark`:
 
 ```js
 const night = new URLSearchParams(location.search).get("theme") === "dark"
 ```
+
+A wallpaper is its upload: the same upload in both Themes stays as it is when the
+Theme changes. For one page to show each Theme, upload it once for each.
 
 The wallpapers the System comes with are uploads too, under keys it keeps,
 such as `DESKTOP_DARK_WALLPAPER`: `systemWallpapers` from `@phreshos/core`
