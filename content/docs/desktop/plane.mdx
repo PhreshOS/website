@@ -90,10 +90,12 @@ to show them:
 ## Where a new Window opens
 
 A launch, then the Program's [configuration](/docs/sdks/core#program-configuration),
-say a Window's size and position. What neither says is 500 × 500 pixels,
-centered on zero. The Start Menu opens a Program the way a person expects: a
-square three fifths of the view's shorter side, in the middle of the view,
-stepped slightly from the Windows already there.
+say a Window's size and position. What neither says, the System chooses by
+who asked: a Window opened from another, through `system.open()`, opens
+centered over the Window that asked; any other is 500 × 500 pixels, centered on
+zero. The Start Menu opens a Program the way a person expects: a square three
+fifths of the view's shorter side, in the middle of the view, stepped slightly
+from the Windows already there.
 
 ## From the terminal
 
