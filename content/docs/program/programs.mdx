@@ -16,6 +16,7 @@ await system.program.list()                      // every Program you can see
 await system.program.list({ installed: true })   // installed ones only
 await system.program.list({ opens: "image/png" }) // those that open a type
 await system.program.list({ startup: true })     // those that start with the System
+await system.program.list({ pinned: true })      // those pinned to the Taskbar
 ```
 
 Seeing another Program needs the `programs` [permission](/docs/system/permissions).
@@ -93,10 +94,14 @@ its files and data.
 ## Pin it
 
 ```ts
-await program.pin()      // keep it among the favorites of Desktop interfaces
-await program.pinned()
-await program.pin(false) // unpin it
+await program.pin()        // keep its place on the Taskbar, closed or open
+await program.pinnedAt()   // when it was pinned, or null when it is not
+await program.pin(false)   // unpin it
 ```
+
+Pinned Programs keep the order they were pinned in: pinning one already pinned
+keeps its time, and so its place. A filter only filters: `list({ pinned: true })`
+keeps the list's own order, and a Taskbar orders them by `pinnedAt`.
 
 ## What it owns
 
@@ -113,7 +118,7 @@ await program.pin(false) // unpin it
 program.subscribe("processCreate", process => {})
 program.subscribe("processExit", ({ process, status }) => {})
 program.subscribe("uninstall", ({ purge }) => {})
-program.subscribe("pin", pinned => {})
+program.subscribe("pin", pinnedAt => {})   // a time when pinned, null when unpinned
 
 system.program.subscribe("install", program => {})   // every Program you can see
 ```
