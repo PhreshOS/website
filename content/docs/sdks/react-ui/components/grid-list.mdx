@@ -24,8 +24,10 @@ instead, as a fixed set such as a row of counts should:
 A card holds whatever it is given. It is a whole flat Surface with the
 default material: in its rest color, `default` unless `restColor` says
 otherwise, and once chosen in the selection color of the collection, with a
-check in its corner. The arrow keys
-move between cards.
+check in its corner. A card whose corner is covered, by a picture for instance,
+places a `GridList.Mark` where its check should stand instead, such as beside
+its name; while work the card started is under way, `pending` shows a Spinner
+there in place of the check. The arrow keys move between cards.
 
 ## Selection
 
@@ -52,5 +54,6 @@ shows as chosen.
 | --- | --- |
 | `GridList` | The grid. `selectionMode`, `value`, `onChange`, `itemWidth` (sixteen times the `spacing` by default), `stretch`, `color`, `restColor` |
 | `GridList.Item` | One card. `id`, `textValue`, `disabled`, `color`, `restColor` |
+| `GridList.Mark` | Where a card shows its check, in place of its corner. `pending` |
 | `GridList.Section` | A group of cards across the grid |
 | `GridList.Header` | A Section's heading |
