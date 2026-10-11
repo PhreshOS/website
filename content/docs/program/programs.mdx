@@ -12,12 +12,14 @@ is `await context.program()`; any other is reached through `system`.
 
 ```ts
 await system.program.find("notes")               // one Program, or null
-await system.program.list()                      // every Program you can see
+await system.program.list()                      // every Program you can see, first installed first
 await system.program.list({ installed: true })   // installed ones only
 await system.program.list({ opens: "image/png" }) // those that open a type
 await system.program.list({ startup: true })     // those that start with the System
 await system.program.list({ pinned: true })      // those pinned to the Taskbar
 ```
+
+Programs attached from a project come last. Filters only filter: the order stays.
 
 Seeing another Program needs the `programs` [permission](/docs/system/permissions).
 Without it, `find()` returns `null` and `list()` leaves it out, as if it did
@@ -37,6 +39,7 @@ program.categories    // ["Productivity"]
 program.keywords      // ["notes", "writing"]
 program.opens         // ["text/markdown"]: what it opens
 program.declaredPermissions   // what applies while the owner has decided nothing
+program.createdAt     // when the System made this Program, in this run
 
 await program.icon("large")   // a PNG: "small", "medium", or "large"
 await program.definition()    // everything its author declared
@@ -55,8 +58,11 @@ A Program runs in one of two forms:
   exists only as long as that command.
 
 ```ts
-await program.installed()
+await program.installedAt()   // when it was first installed, or null when attached
 ```
+
+Updating it, or installing it again over the data it kept, keeps that time;
+installing it after its data was purged starts a new one.
 
 ## Install and remove it
 
@@ -75,9 +81,13 @@ program.install({ launch: false })              // nothing
 
 | Call | Removes |
 | --- | --- |
-| `uninstall()` | Its files; its [data](/docs/system/data) and the Program stay |
-| `uninstall({ purge: true })` | Also its Processes, its data, and the Program |
+| `uninstall()` | Its Processes, its files, and the Program; its [data](/docs/system/data) stays |
+| `uninstall({ purge: true })` | Also its data |
 | `forget()` | Its Processes and the Program; its files stay |
+
+Uninstalling ends the handle, as a Process handle ends once its Process exits:
+every call on it fails. Installing it again makes a new Program, which finds
+the data it kept, its pin, and the time it was first installed.
 
 ## Create one from a definition
 
