@@ -63,6 +63,7 @@ await reports.list({ recursive: true, depth: 2 })   // and below it
 await reports.stat()                                // { modifiedAt }, or null
 await reports.clear()                               // empties it, keeps the folder
 await reports.delete()                              // removes it and all in it
+await reports.size()                                // bytes of the files beneath it
 await reports.space()                               // { capacity, available, used }
 ```
 

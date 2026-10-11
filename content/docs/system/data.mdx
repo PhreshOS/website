@@ -23,6 +23,9 @@ await program.data.file("settings.json").write({ theme: "dark" })
 
 They are explained with every file operation in [Files](/docs/system/files).
 
+The cache may be emptied at any time, even while the Program runs, as when the
+owner clears it in Settings: keep there only what can be made again.
+
 ## Values
 
 For small values, the store keeps them by key:
@@ -64,8 +67,17 @@ never as part of the statement.
 ## How long it lasts
 
 Files, values, and the database stay when the Program is updated or
-uninstalled, so installing it again finds them. They are deleted only when the
-Program is uninstalled with `purge`.
+uninstalled, so installing it again finds them. They are deleted when the
+Program is uninstalled with `purge`, or when its storage is cleared:
+
+```ts
+await program.storageSize()    // bytes it keeps in the System, logs included
+await program.cache.size()     // bytes in its cache
+await program.clearStorage()   // ends its Processes, then empties data, cache, store, and database
+```
+
+Clearing its storage keeps what the owner decided about it, such as its
+permissions, startup, and pin, and its logs.
 
 ## From the terminal
 
@@ -74,6 +86,9 @@ phresh program store get --program notes --key tab
 phresh program store set --program notes --key tab --value '"recent"'
 phresh program store delete --program notes --key tab
 phresh program query --program notes --statement 'select * from notes limit 10'
+
+phresh program storage-size --program notes
+phresh program clear-storage --program notes   # ends notes and deletes its data
 
 phresh uninstall notes --purge   # deletes its data too
 ```
