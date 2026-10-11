@@ -22,6 +22,7 @@ Every layer reads its drawing:
 await context.presentation.position()      // { x: -480, y: -300 }
 await context.presentation.size()          // { width: 960, height: 600 }
 await context.presentation.front()         // the front of its layer
+await context.presentation.focused()       // whether this Desktop focuses it
 await context.presentation.interactive()   // whether clicks reach it
 await context.presentation.surface()       // what the Desktop paints behind it
 await context.presentation.anchor()        // "viewport" or "plane"
@@ -37,6 +38,7 @@ context.presentation.subscribe("resize", size => {})
 | --- | --- |
 | `move`, `resize` | It moved, or changed size |
 | `front` | It became, or stopped being, the front of its layer |
+| `focus` | This Desktop focused it, or focused another |
 | `changeInteractive` | Clicks began, or stopped, passing through it |
 | `changeSurface` | The surface behind it changed |
 | `changeAnchor` | It became fixed to the viewport, or to the plane |
@@ -48,6 +50,17 @@ change.
 
 In React, `usePresentationState(context.presentation)` reads it and follows
 it: see [React](/docs/sdks/react/hooks).
+
+## Front and focused
+
+Which Window is in front is one order, the same on every Desktop. Which one is
+focused belongs to each Desktop: the standard Window last raised while any part
+of it was in that Desktop's view. A Window raised where a Desktop does not look
+comes to the front there too, but that Desktop keeps its focus. The focused
+Window is drawn in full; the others plainer, without frost, their titles dimmed.
+
+A Client drawing its own title bar shows itself focused or not by `focused`,
+not by `front`. A drawing in `under`, `over`, or `shell` is always focused.
 
 ## Draw it yourself
 

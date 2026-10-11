@@ -59,7 +59,14 @@ With `maximized` and `onMaximize` on the header, double-clicking the title bar
 maximizes too.
 
 `active={false}` dims the title of an inactive window; its controls keep
-working.
+working. In a PhreshOS Client, a window is active where the Desktop showing it
+focuses it:
+
+```tsx
+const drawing = usePresentationState(context.presentation)
+
+<Window.Header active={drawing?.focused ?? true}>…</Window.Header>
+```
 
 ## Drag the window
 

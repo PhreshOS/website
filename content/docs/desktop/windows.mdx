@@ -57,6 +57,9 @@ A Window can hide the Desktop's title bar and draw its own:
 await context.window.setHeader(false)
 ```
 
+Show it focused or not by `context.presentation.focused()`, which follows the
+Desktop showing it: see [Front and focused](/docs/desktop/drawing#front-and-focused).
+
 To let people drag the Window by it, start a move once the pointer has
 travelled a little, then let go of the pointer and keep telling the Desktop what
 your page still hears of it. Some browsers then hand the pointer to the Desktop,
