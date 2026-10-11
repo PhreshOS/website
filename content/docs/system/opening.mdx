@@ -52,6 +52,20 @@ chosen. A request ends when the Endpoint that asked stops, or after two minutes.
 Asking needs no permission: what opens is always the owner's default or the
 owner's choice.
 
+## Where its Window opens
+
+Its Window opens where its Program declares. When the Program declares no
+place, the one who asks can say where, such as beside its own Window; saying
+nothing, it opens centered on the plane's zero:
+
+```ts
+const at = await context.window.position()
+await system.open(target, { position: { x: at.x + 40, y: at.y + 40 } })
+```
+
+The position is in the same values as moving a Window: pixels, or shares of the
+view.
+
 ## Receive it
 
 The chosen Program starts a new Process with its default launch, which reads
