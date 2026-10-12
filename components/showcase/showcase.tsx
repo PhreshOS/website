@@ -143,9 +143,9 @@ export const radiusOptions = [
 
 export const materialOptions = [
   { value: 'none', label: 'None' },
-  { value: 'basic', label: 'Basic' },
-  { value: 'extended', label: 'Extended' },
-  { value: 'full', label: 'Full' },
+  { value: 'opaque', label: 'Opaque' },
+  { value: 'translucent', label: 'Translucent' },
+  { value: 'frosted', label: 'Frosted' },
 ] as const;
 
 export const depthOptions = [

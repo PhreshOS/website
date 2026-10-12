@@ -20,12 +20,12 @@ export function SurfaceShowcase() {
   const [depth, setDepth] = useState<SurfaceDepth>('raised');
   const [color, setColor] = useState<string>(unset);
   const [radius, setRadius] = useState<string>(unset);
-  const [material, setMaterial] = useState<MaterialMode>('basic');
+  const [material, setMaterial] = useState<MaterialMode>('translucent');
   const [shadow, setShadow] = useState(true);
 
   return (
     <Showcase
-      code={`<Surface${attribute('depth', depth === 'raised' ? undefined : depth)}${attribute('color', color)}${attribute('radius', radius)}${attribute('material', material === 'basic' ? undefined : material)}${shadow ? '' : ' shadow={false}'}>
+      code={`<Surface${attribute('depth', depth === 'raised' ? undefined : depth)}${attribute('color', color)}${attribute('radius', radius)}${attribute('material', material === 'translucent' ? undefined : material)}${shadow ? '' : ' shadow={false}'}>
   …
 </Surface>`}
       controls={
@@ -56,12 +56,12 @@ export function SurfaceShowcase() {
 
 export function PanelShowcase() {
   const [color, setColor] = useState<string>(unset);
-  const [material, setMaterial] = useState<MaterialMode>('basic');
+  const [material, setMaterial] = useState<MaterialMode>('frosted');
   const [header, setHeader] = useState(true);
 
   return (
     <Showcase
-      code={`<Panel${attribute('color', color)}${attribute('material', material === 'basic' ? undefined : material)}>
+      code={`<Panel${attribute('color', color)}${attribute('material', material === 'frosted' ? undefined : material)}>
 ${header ? '  <Panel.Header>Connection</Panel.Header>\n' : ''}  <Panel.Content>Ready on this Desktop.</Panel.Content>
 </Panel>`}
       controls={
@@ -86,11 +86,11 @@ ${header ? '  <Panel.Header>Connection</Panel.Header>\n' : ''}  <Panel.Content>R
 export function WindowShowcase() {
   const [active, setActive] = useState(true);
   const [maximized, setMaximized] = useState(false);
-  const [material, setMaterial] = useState<MaterialMode>('basic');
+  const [material, setMaterial] = useState<MaterialMode>('translucent');
 
   return (
     <Showcase
-      code={`<Window${attribute('material', material === 'basic' ? undefined : material)}>
+      code={`<Window${attribute('material', material === 'translucent' ? undefined : material)}>
   <Window.Header active={${active}} maximized={maximized} onMaximize={toggleMaximize}>
     <Window.Header.Identity title="Notes" />
     <Window.Header.Center />

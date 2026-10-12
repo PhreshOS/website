@@ -24,9 +24,11 @@ because they sit in a line of text and other controls and must match it.
 **Containers** hold your content: Surface, Panel, Window, Dialog, Popover,
 Tooltip, Alert. You set the Surface itself: `color`, `depth`, `material`,
 `shadow`, `radius`. They have no `size`, because their size is their content's.
+What floats above the content, such as a Dialog, a Popover, a Tooltip, or the
+list of a Select or a Menu, is `frosted` by default; the rest is `translucent`.
 
 ```tsx
-<Panel material="extended">…</Panel>
+<Panel material="translucent">…</Panel>
 <Surface depth="flat" color="info:soft">…</Surface>
 ```
 

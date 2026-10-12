@@ -30,7 +30,7 @@ export function usePaintControls(features: PaintFeatures = {}) {
   const [color, setColor] = useState<string>(unset);
   const [size, setSize] = useState<ScaleLevel>('medium');
   const [radius, setRadius] = useState<string>(unset);
-  const [material, setMaterial] = useState<MaterialMode>('basic');
+  const [material, setMaterial] = useState<MaterialMode>('translucent');
   const [disabled, setDisabled] = useState(false);
 
   const props = {
@@ -45,7 +45,7 @@ export function usePaintControls(features: PaintFeatures = {}) {
     attribute('color', color),
     attribute('size', size === 'medium' ? undefined : size),
     withRadius ? attribute('radius', radius) : '',
-    withMaterial ? attribute('material', material === 'basic' ? undefined : material) : '',
+    withMaterial ? attribute('material', material === 'translucent' ? undefined : material) : '',
     withDisabled ? attribute('disabled', disabled) : '',
   ].join('');
 

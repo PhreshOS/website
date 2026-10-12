@@ -62,22 +62,30 @@ color there.
 
 ## Material
 
-`material` sets how much of the Appearance material is drawn:
+`material` sets how much of the Appearance material is drawn, each named by
+what it draws:
 
 | `material` | Draws |
 | --- | --- |
 | `none` | The color only |
-| `basic` (default) | The color, grain, and the edge; fully opaque |
-| `extended` | Also the material's opacity |
-| `full` | Also the backdrop blur, saturation, and distortion behind it |
+| `opaque` | The color, grain, and the edge; solid whatever the Appearance opacity |
+| `translucent` (default) | Also the material's opacity |
+| `frosted` | Also the blur, saturation, and refraction of what lies behind it |
 
 ```tsx
-<Surface material="full">Frosted</Surface>
-<Surface material={{ opacity: 0.7, backdrop: 18 }}>Custom frosted</Surface>
+<Surface material="frosted">Frosted</Surface>
+<Surface material={{ opacity: 0.7, backdropBlur: 18 }}>Custom frosted</Surface>
+<Surface material={{ mode: "translucent", opacity: 0.35 }}>Fainter, without frost</Surface>
 ```
 
-An object selects `full` with your overrides. Backdrop effects are skipped
+An object applies your overrides to `frosted`, or to the mode its `mode`
+names. Over something already frosted, such as a button on a frosted bar, use
+`translucent`: frosting it again only blurs the same backdrop twice. Backdrop effects are skipped
 whenever the result is opaque, since nothing behind would show through.
+
+`grain` moves the grains' count and strength against each other: as it rises
+there are fewer grains, each stronger. At `0` every pixel holds a grain no one
+sees, and at `1` none is left, so neither end draws anything.
 
 ## Color, radius, and shadow
 
@@ -85,14 +93,16 @@ whenever the result is opaque, since nothing behind would show through.
 <Surface color="primary:subtle">Highlighted</Surface>
 <Surface radius="full">Pill</Surface>
 <Surface shadow={false}>No shadow</Surface>
-<Surface shadow={{ blur: 24, opacity: 0.2 }}>Custom shadow</Surface>
+<Surface shadow="large">A stronger shadow</Surface>
 ```
 
 The default color is `background`. Text inside a colored Surface takes the
 most readable color automatically. See [Color](/docs/sdks/react-ui/color) and
 [Size and radius](/docs/sdks/react-ui/scale).
 
-Only a `raised` Surface casts a shadow.
+Only a `raised` Surface casts a shadow. It falls evenly on every side at one
+fixed blur, so `shadow` sets only its strength: a level relative to the
+Appearance, or a number.
 
 ## Choose the element
 
@@ -115,7 +125,7 @@ Your `className` and `style` always win over the Surface's own styles.
 | --- | --- | --- |
 | `depth` | `"raised"` | `raised`, `flat`, `recessed`, or `none` |
 | `color` | `"background"` | Its color |
-| `material` | `"basic"` | `none`, `basic`, `extended`, `full`, or material overrides |
+| `material` | `"translucent"` | `none`, `opaque`, `translucent`, `frosted`, or material overrides |
 | `radius` | The Appearance radius | Its corners |
-| `shadow` | The Appearance shadow | `false`, `true`, or overrides; raised only |
+| `shadow` | The Appearance shadow | `false`, `true`, a level, or a strength; raised only |
 | `as` | `"div"` | The element to render |

@@ -107,7 +107,7 @@ export default function LivingDesktop() {
           transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
           onPointerDown={() => setFocused(id)}
         >
-          <Window style={{ width: "100%", height: "100%" }} material="full">
+          <Window style={{ width: "100%", height: "100%" }} material="frosted">
             <Window.Header active={focused === id}>
               <Window.Header.Identity title={programs[id].title} />
               <Window.Header.Center />
@@ -125,7 +125,7 @@ export default function LivingDesktop() {
     </AnimatePresence>
 
 
-    <Surface className="taskbar" material="full" radius="full" style={{ position: "absolute" }}>
+    <Surface className="taskbar" material="frosted" radius="full" style={{ position: "absolute" }}>
       {order.map(id => <Button
         key={id}
         size="small"

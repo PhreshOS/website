@@ -59,7 +59,7 @@ function Hero() {
 
 /** The same Terminal window as on the hero desktop, so every terminal on the page looks alike. */
 function TerminalWindow({ children, style }: Readonly<{ children: ReactNode, style?: CSSProperties }>) {
-  return <Window material="full" style={style}>
+  return <Window material="frosted" style={style}>
     <Window.Header>
       <Window.Header.Identity title="Terminal" />
       <Window.Header.Center />
@@ -87,7 +87,7 @@ function Agents() {
           <Tabs.Tab id="agent"><Bot />Your agent</Tabs.Tab>
         </Tabs.List>
         <Tabs.Panel id="you">
-          <Window material="full" style={{ height: 250, marginTop: 14 }}>
+          <Window material="frosted" style={{ height: 250, marginTop: 14 }}>
             <Window.Header>
               <Window.Header.Identity title="Deploys" />
               <Window.Header.Center />
@@ -215,7 +215,7 @@ function Comparison() {
       <p className="section-lede">PhreshOS is about the system underneath: how apps run, reach each other, and shape the desktop. An honest map, not a scoreboard; some of these projects do things PhreshOS does not set out to do.</p>
     </Reveal>
     <Reveal delay={0.1}>
-      <Surface className="comparison" radius="xlarge" material="full">
+      <Surface className="comparison" radius="xlarge" material="frosted">
         <div className="comparison-scroll">
         <table>
           <thead>
@@ -283,7 +283,7 @@ function Install() {
       <p className="section-lede">Install the <code>phresh</code> command, then the System. You need Node.js 24.15 or newer.</p>
     </Reveal>
     <Reveal delay={0.1}>
-      <Surface className="install-card" material="full" radius="xlarge">
+      <Surface className="install-card" material="frosted" radius="xlarge">
         <ol className="steps">
           <li>
             <span>Install the command</span>

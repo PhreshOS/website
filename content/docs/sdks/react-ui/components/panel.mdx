@@ -40,16 +40,16 @@ Leave out `Panel.Header` and the content sits evenly inside the frame:
 The frame and the content are two Surfaces, each with its own props:
 
 ```tsx
-<Panel material="basic">
+<Panel material="opaque">
   <Panel.Header>Processes</Panel.Header>
-  <Panel.Content color="background:soft" material="basic">
+  <Panel.Content color="background:soft" material="opaque">
     <ProcessList />
   </Panel.Content>
 </Panel>
 ```
 
-By default the frame uses the `full` material and the content takes the
-frame's `color`, raised, with the `extended` material. The content is set apart
+By default the frame uses the `frosted` material and the content takes the
+frame's `color`, raised, with the default `translucent` material. The content is set apart
 by its material rather than a different color, and fields inside it, which are
 recessed, stand out from it.
 
@@ -67,6 +67,6 @@ For a single painted area without this structure, use
 
 | Part | Is |
 | --- | --- |
-| `Panel` | The frame, `full` material by default. Accepts Surface props |
+| `Panel` | The frame, `frosted` material by default. Accepts Surface props |
 | `Panel.Header` | A row for a title and actions. Accepts `div` props |
-| `Panel.Content` | The content area, in the frame's color with `extended` material. Accepts Surface props |
+| `Panel.Content` | The content area, in the frame's color with the default `translucent` material. Accepts Surface props |

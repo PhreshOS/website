@@ -10,7 +10,7 @@ import { ControlSelect, ControlSwitch, Showcase, attribute, colorOptions, materi
 export function DateFieldShowcase() {
   const [size, setSize] = useState<ScaleLevel>('medium');
   const [color, setColor] = useState<string>(unset);
-  const [material, setMaterial] = useState<MaterialMode>('basic');
+  const [material, setMaterial] = useState<MaterialMode>('translucent');
   const [radius, setRadius] = useState<string>(unset);
   const [disabled, setDisabled] = useState(false);
   const [readOnly, setReadOnly] = useState(false);
@@ -26,7 +26,7 @@ export function DateFieldShowcase() {
   size="${size}"${color ? `
  ${attribute('color', color)}` : ''}${radius ? `
  ${attribute('radius', radius)}` : ''}
-  material="${material}"${disabled ? '\n  disabled' : ''}${readOnly ? '\n  readOnly' : ''}${invalid ? '\n  invalid\n  errorMessage="Choose an available date."' : ''}
+${material === 'translucent' ? '' : `\n  material="${material}"`}${disabled ? '\n  disabled' : ''}${readOnly ? '\n  readOnly' : ''}${invalid ? '\n  invalid\n  errorMessage="Choose an available date."' : ''}
 />`}
       controls={
         <>
@@ -62,7 +62,7 @@ export function DateFieldShowcase() {
 export function TimeFieldShowcase() {
   const [size, setSize] = useState<ScaleLevel>('medium');
   const [color, setColor] = useState<string>(unset);
-  const [material, setMaterial] = useState<MaterialMode>('basic');
+  const [material, setMaterial] = useState<MaterialMode>('translucent');
   const [radius, setRadius] = useState<string>(unset);
   const [granularity, setGranularity] = useState<'hour' | 'minute' | 'second'>('minute');
   const [hourCycle, setHourCycle] = useState<'locale' | '12' | '24'>('locale');
@@ -83,7 +83,7 @@ export function TimeFieldShowcase() {
   size="${size}"${color ? `
  ${attribute('color', color)}` : ''}${radius ? `
  ${attribute('radius', radius)}` : ''}
-  material="${material}"${disabled ? '\n  disabled' : ''}${readOnly ? '\n  readOnly' : ''}${invalid ? '\n  invalid\n  errorMessage="Choose an available time."' : ''}
+${material === 'translucent' ? '' : `\n  material="${material}"`}${disabled ? '\n  disabled' : ''}${readOnly ? '\n  readOnly' : ''}${invalid ? '\n  invalid\n  errorMessage="Choose an available time."' : ''}
 />`}
       controls={
         <>
@@ -131,7 +131,7 @@ export function TimeFieldShowcase() {
 export function DatePickerShowcase() {
   const [size, setSize] = useState<ScaleLevel>('medium');
   const [color, setColor] = useState<string>(unset);
-  const [material, setMaterial] = useState<MaterialMode>('basic');
+  const [material, setMaterial] = useState<MaterialMode>('translucent');
   const [radius, setRadius] = useState<string>(unset);
   const [disabled, setDisabled] = useState(false);
   const [readOnly, setReadOnly] = useState(false);
@@ -147,7 +147,7 @@ export function DatePickerShowcase() {
   size="${size}"${color ? `
  ${attribute('color', color)}` : ''}${radius ? `
  ${attribute('radius', radius)}` : ''}
-  material="${material}"${disabled ? '\n  disabled' : ''}${readOnly ? '\n  readOnly' : ''}${invalid ? '\n  invalid\n  errorMessage="Choose an available date."' : ''}
+${material === 'translucent' ? '' : `\n  material="${material}"`}${disabled ? '\n  disabled' : ''}${readOnly ? '\n  readOnly' : ''}${invalid ? '\n  invalid\n  errorMessage="Choose an available date."' : ''}
 />`}
       controls={
         <>
@@ -278,7 +278,7 @@ export function RangeCalendarShowcase() {
 export function DateRangePickerShowcase() {
   const [size, setSize] = useState<ScaleLevel>('medium');
   const [color, setColor] = useState<string>(unset);
-  const [material, setMaterial] = useState<MaterialMode>('basic');
+  const [material, setMaterial] = useState<MaterialMode>('translucent');
   const [radius, setRadius] = useState<string>(unset);
   const [disabled, setDisabled] = useState(false);
   const [readOnly, setReadOnly] = useState(false);
@@ -297,7 +297,7 @@ export function DateRangePickerShowcase() {
   size="${size}"${color ? `
  ${attribute('color', color)}` : ''}${radius ? `
  ${attribute('radius', radius)}` : ''}
-  material="${material}"${disabled ? '\n  disabled' : ''}${readOnly ? '\n  readOnly' : ''}${invalid ? '\n  invalid\n  errorMessage="Choose an available range."' : ''}
+${material === 'translucent' ? '' : `\n  material="${material}"`}${disabled ? '\n  disabled' : ''}${readOnly ? '\n  readOnly' : ''}${invalid ? '\n  invalid\n  errorMessage="Choose an available range."' : ''}
 />`}
       controls={
         <>
