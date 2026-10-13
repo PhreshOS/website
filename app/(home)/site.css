@@ -64,6 +64,16 @@ a:not(.phreshos-surface) {
     backdrop-filter: blur(14px) saturate(1.4);
 }
 
+/* What opens outside the page, such as a menu, reads in the page's own type. */
+body { font-family: var(--font-sans), system-ui, sans-serif; }
+
+.navigation-menu { display: none; }
+
+@media (max-width: 600px) {
+    .navigation-links { display: none !important; }
+    .navigation-menu { display: contents; }
+}
+
 .brand {
     display: flex;
     align-items: center;
