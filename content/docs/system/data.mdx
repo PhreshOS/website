@@ -79,6 +79,11 @@ await program.clearStorage()   // ends its Processes, then empties data, cache, 
 Clearing its storage keeps what the owner decided about it, such as its
 permissions, startup, and pin, and its logs.
 
+Uninstalling with `purge` leaves nothing in the System that names the
+Program: its data, its logs, what the owner decided about it, and the
+[defaults](/docs/system/opening) that open types with it. Only the System's
+own logs still mention it.
+
 ## From the terminal
 
 ```sh

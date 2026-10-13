@@ -45,12 +45,14 @@ await system.program.list({ opens: "image/png" })
   opens with that.
 - Otherwise the owner chooses one of the Programs that open the type, and can
   make it the default.
-- When no installed Program opens it, `open()` rejects.
+- When no installed Program opens it, the owner still sees the request, with no
+  Program to offer, and closes it.
 
-`open()` resolves once a Process is started for it, and rejects when nothing is
-chosen. A request ends when the Endpoint that asked stops, or after two minutes.
-Asking needs no permission: what opens is always the owner's default or the
-owner's choice.
+`open()` hands the target over: it resolves once the System has taken it, and
+rejects only for a target or options it cannot read. What opens, if anything,
+is between the System and the owner. A request waits for the owner's decision,
+for at most two minutes. Asking needs no permission: what opens is always the
+owner's default or the owner's choice.
 
 ## Where its Window opens
 
@@ -83,7 +85,8 @@ running, and end. Reading a `file:` address goes through
 ## Decide for the owner
 
 A Program that replaces the Shell decides requests and defaults through
-`system.opening`, with the `all` [permission](/docs/system/permissions):
+`system.opening`, with the `all` [permission](/docs/system/permissions). A
+request's `programs` may be empty, when nothing installed opens it:
 
 ```ts
 system.opening.subscribe("openRequest", async request => {
@@ -97,6 +100,11 @@ await system.opening.clearDefault("image/png")
 
 system.opening.subscribe("changeDefault", ({ type, program }) => {})   // program is null once cleared
 ```
+
+A default counts while its Program is on the System and opens that type.
+Otherwise it stays chosen but is left out of `defaults()`, and the owner is
+asked; it counts again once its Program is back or opens that type again.
+Uninstalling a Program with `purge` clears every default that names it.
 
 ## From the terminal
 
