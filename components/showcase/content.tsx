@@ -126,7 +126,7 @@ export function AvatarShowcase() {
   return (
     <Showcase
       code={`<Avatar name="Ada Lovelace"${attribute('size', size === 'medium' ? undefined : size)} />
-<Avatar name="Lemo" color="info"><Bot /></Avatar>`}
+<Avatar name="Agent" color="info"><Bot /></Avatar>`}
       controls={<ControlSelect label="Size" value={size} options={sizeOptions} onChange={next => setSize(next as ScaleLevel)} />}
     >
       <WindowScene title="Avatar">
@@ -134,7 +134,7 @@ export function AvatarShowcase() {
           <Avatar name="Ada Lovelace" size={size} />
           <Avatar name="Grace Hopper" size={size} />
           <Avatar name="Alan Turing" size={size} />
-          <Avatar name="Lemo" color="info" size={size}><Bot /></Avatar>
+          <Avatar name="Agent" color="info" size={size}><Bot /></Avatar>
         </Flex>
       </WindowScene>
     </Showcase>

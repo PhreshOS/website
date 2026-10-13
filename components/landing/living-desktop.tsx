@@ -5,20 +5,20 @@ import { AnimatePresence, motion } from "motion/react"
 import { Bot, PenTool, Terminal } from "@phreshos/react-ui/icons"
 import { Button, Flex, Surface, Window, usePreferences } from "@phreshos/react-ui"
 
-type ProgramId = "terminal" | "tilo" | "lemo"
+type ProgramId = "terminal" | "trellis" | "agent"
 
 const programs: Readonly<Record<ProgramId, Readonly<{ title: string, icon: ReactNode }>>> = {
   terminal: { title: "Terminal", icon: <Terminal size={16} /> },
-  tilo: { title: "Tilo", icon: <PenTool size={16} /> },
-  lemo: { title: "Lemo", icon: <Bot size={16} /> }
+  trellis: { title: "Trellis", icon: <PenTool size={16} /> },
+  agent: { title: "Agent", icon: <Bot size={16} /> }
 }
 
-const order: readonly ProgramId[] = ["tilo", "terminal", "lemo"]
+const order: readonly ProgramId[] = ["trellis", "terminal", "agent"]
 
 const terminalLines = [
   "$ phresh program list",
-  "tilo       running   1 process",
-  "lemo       running   1 process",
+  "trellis    running   1 process",
+  "files      running   1 process",
   "terminal   running   1 process",
   "$ phresh system status",
   "System running · up 41 days"
@@ -42,10 +42,10 @@ function TerminalContent() {
   </pre>
 }
 
-function TiloContent() {
+function TrellisContent() {
   return <div className="board">
     <Surface className="note" color="warning:soft" radius="small" style={{ rotate: "-3deg" }}>Launch<br /><small>Friday</small></Surface>
-    <Surface className="note" color="primary:soft" radius="small" style={{ rotate: "2deg" }}>Ask Lemo to draft the notes</Surface>
+    <Surface className="note" color="primary:soft" radius="small" style={{ rotate: "2deg" }}>Ask an agent to draft the notes</Surface>
     <Surface className="note" color="success:soft" radius="small" style={{ rotate: "-1deg" }}>Garden photos ✓</Surface>
     <svg className="board-ink" viewBox="0 0 200 80" aria-hidden="true">
       <path d="M8 60 C 50 10, 90 90, 140 30 S 190 40, 196 20" />
@@ -53,17 +53,17 @@ function TiloContent() {
   </div>
 }
 
-function LemoContent() {
+function AgentContent() {
   return <Flex direction="column" gap="small" className="chat">
     <Surface className="bubble mine" color="primary:base" radius="large">What changed on the board today?</Surface>
-    <Surface className="bubble" color="background:strong" radius="large">Three new notes on Tilo. I grouped them under <b>Launch</b> and left you a summary.</Surface>
+    <Surface className="bubble" color="background:strong" radius="large">Three new notes on Trellis. I grouped them under <b>Launch</b> and left you a summary.</Surface>
   </Flex>
 }
 
 const contents: Readonly<Record<ProgramId, () => ReactNode>> = {
   terminal: TerminalContent,
-  tilo: TiloContent,
-  lemo: LemoContent
+  trellis: TrellisContent,
+  agent: AgentContent
 }
 
 /**
@@ -74,7 +74,7 @@ const contents: Readonly<Record<ProgramId, () => ReactNode>> = {
 export default function LivingDesktop() {
   const [running, setRunning] = useState<readonly ProgramId[]>(order)
   const [open, setOpen] = useState<readonly ProgramId[]>(order)
-  const [focused, setFocused] = useState<ProgramId>("lemo")
+  const [focused, setFocused] = useState<ProgramId>("agent")
 
   function minimize(id: ProgramId) {
     setOpen(current => current.filter(item => item !== id))

@@ -211,7 +211,7 @@ h1 em,
     position: absolute;
 }
 
-.desktop-window-tilo {
+.desktop-window-trellis {
     left: 5%;
     top: 7%;
     width: 50%;
@@ -225,7 +225,7 @@ h1 em,
     height: 36%;
 }
 
-.desktop-window-lemo {
+.desktop-window-agent {
     right: 4%;
     top: 10%;
     width: 34%;
@@ -479,7 +479,7 @@ h1 em,
         aspect-ratio: 3 / 4;
     }
 
-    .desktop-window-tilo {
+    .desktop-window-trellis {
         left: 4%;
         top: 3%;
         width: 86%;
@@ -493,7 +493,7 @@ h1 em,
         height: 32%;
     }
 
-    .desktop-window-lemo {
+    .desktop-window-agent {
         left: 4%;
         right: auto;
         top: 55%;
