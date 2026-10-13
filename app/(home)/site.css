@@ -16,7 +16,9 @@ html {
 
 body {
     margin: 0;
-    overflow-x: hidden;
+    /* Clipped, not hidden: hidden would make the body a scroller of its own whenever an open menu
+       locks the page's scrolling, taking the sticky navigation and that menu off the screen. */
+    overflow-x: clip;
 }
 
 .page {
