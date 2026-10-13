@@ -24,7 +24,7 @@ Add `--json` to any of them for the full result as JSON.
 | `session` | `list`, `inspect`, `connections`, `sign-out`, `wait` |
 | `process` | `list`, `inspect`, `create`, `find-or-create`, `exit`, `wait` |
 | `endpoint` | `inspect`, `start`, `stop`, `wait-ready`, `ask`, `publish`, `wait`, `wait-lifecycle`, `memory get/set/delete/entries` |
-| `service` | `list`, `inspect`, `wait-ready`, `ask`, `publish`, `wait`, `wait-lifecycle`, `wait-discovery` |
+| `service` | `inspect`, `wait-ready`, `ask`, `publish`, `wait`, `wait-lifecycle` |
 | `window` | `inspect`, `move`, `resize`, `set-geometry`, `minimize`, `maximize`, `set-title`, `set-header`, `raise`, `wait` |
 | `appearance` | `get`, `update`, `wait` |
 | `opening` | `defaults`, `set-default`, `clear-default`, `requests`, `choose`, `cancel`, `wait` |
@@ -68,7 +68,9 @@ phresh process wait --event exit --program notes --process main
 ```
 
 `--server` and `--client` start an Endpoint; `--no-server` and `--no-client`
-keep it stopped. `--server-service` and `--client-service` make it a Service.
+keep it stopped. `--server-service <name>` and `--client-service <name>` offer
+it as a Service under that name; `--no-server-service` and `--no-client-service`
+offer none, whatever the Program declares.
 `--replace` replaces a Process with the same name. See
 [Processes](/docs/program/processes).
 
@@ -98,8 +100,12 @@ phresh endpoint ask --program notes --process main --endpoint server --event not
 phresh endpoint publish --program notes --process main --endpoint client --event theme.changed
 phresh endpoint wait-lifecycle --program notes --process main --endpoint server
 
-phresh service list --name editor
+phresh service ask --name file-picker-v1 --event open --payload '{}'
+phresh service wait-ready --name file-picker-v1 --endpoint server
 ```
+
+A Service is reached by its name alone; `phresh process list` shows which
+Process holds each name.
 
 Read or change the memory of a running Client:
 

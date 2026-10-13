@@ -55,7 +55,7 @@ import type { Launch, Process, Appearance } from "@phreshos/core"
 A parser returns a clean value or throws; a guard returns `true` or `false`:
 
 ```ts
-import { isServiceAddress, parseLaunch } from "@phreshos/core"
+import { isServiceName, parseLaunch } from "@phreshos/core"
 
 const launch = parseLaunch(JSON.parse(input))
 ```
@@ -134,7 +134,7 @@ server: {
 | `command` / `worker` / `sandbox` | Exactly one: how it runs. See [Execution](/docs/system/execution) |
 | `devCommand` | The command `phresh dev` runs instead |
 | `start` | Whether a new Process starts it by default. Defaults to `true` |
-| `service` | Whether it is a [Service](/docs/program/services) by default. Defaults to `false` |
+| `service` | The [Service](/docs/program/services) name it holds unless a launch says otherwise, or `false`. Defaults to `false` |
 | `installCommand`, `uninstallCommand` | Run in `location` when installing and uninstalling |
 
 `worker` and `sandbox` are module paths inside `location`. `command`,
@@ -211,7 +211,9 @@ installLaunch: true                             // the Endpoint defaults
 ```
 
 Leave it out to start nothing. The install itself can override it; see
-[Install and uninstall](/docs/program/programs). To start a
+[Install and remove it](/docs/program/programs#install-and-remove-it). A named launch whose Process
+already runs after installing, such as the one that starts with the System,
+is that Process. To start a
 Process each time the System starts, use
 [`program.startup`](/docs/program/processes)
 instead.
@@ -235,7 +237,7 @@ export default defineConfig({
   server: {
     location: "dist/server",
     sandbox: "main.js",
-    service: true,
+    service: "notes-v1",
     devCommand: "vite-node server/main.ts",
   },
   client: {
@@ -335,7 +337,7 @@ const result = await system.execute(request)
 | `program` | `list`, `find`, `agent`, `definition`, `getStartup`, `setStartup`, `removeStartup`, `pinnedAt`, `pin`, `getPermission`, `listPermissions`, `allowsPermission`, `allowPermission`, `denyPermission`, `resetPermission`, `storeGet`, `storeSet`, `storeDelete`, `query`, `exitProcesses`, `clearStorage`, `storageSize`, `forget`, `logs`, `wait` |
 | `process` | `list`, `find`, `create`, `findOrCreate`, `exit`, `wait` |
 | `endpoint` | `inspect`, `start`, `stop`, `waitReady`, `ask`, `publish`, `wait`, `waitLifecycle`, `memoryGet`, `memorySet`, `memoryDelete`, `memoryEntries` |
-| `service` | `list`, `inspect`, `waitReady`, `ask`, `publish`, `wait`, `waitLifecycle`, `waitDiscovery` |
+| `service` | `inspect`, `waitReady`, `ask`, `publish`, `wait`, `waitLifecycle` |
 | `window` | `inspect`, `move`, `resize`, `setGeometry`, `minimize`, `maximize`, `setTitle`, `setHeader`, `raise`, `wait` |
 
 `system.logs` and `program.logs` take a read-only SQL statement over the `logs`

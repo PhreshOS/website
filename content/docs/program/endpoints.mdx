@@ -16,7 +16,7 @@ handle, so you can follow an Endpoint before it starts and across restarts.
 
 ```ts
 await process.client.running()
-await process.client.isService()   // whether this run is a Service
+await process.client.service()     // the Service name this run holds, or false
 ```
 
 ## Start and stop

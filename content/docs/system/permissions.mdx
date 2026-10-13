@@ -15,7 +15,8 @@ always have the same ones.
 | Permission | Allows | Values |
 | --- | --- | --- |
 | `programs` | Seeing and managing other Programs | Program identities |
-| `services` | Reaching [Services](/docs/program/services) | Service names |
+| `consumeServices` | Reaching [Services](/docs/program/services) | Service names |
+| `provideServices` | Offering Services | Service names |
 | `layers` | Starting a Client outside `window` | Layers |
 | `network` | [Requests](/docs/system/network) | URL patterns |
 | `storage` | [Files on the machine](/docs/system/files#the-files-on-the-machine) | Paths and operations |
@@ -39,6 +40,13 @@ permissions: {
 
 `true` asks for the whole permission; a list asks for some of it. A
 declaration is a default: once the owner decides, the decision applies.
+
+## Who answers for a launch
+
+Whoever starts a Process answers for everything its launch will do, including
+what the Program declares by default: a Client in another layer needs
+`layers`, a Service name needs `provideServices`. That holds for a Program
+starting itself. The Desktop and the System act for the owner.
 
 ## Check and ask while running
 

@@ -32,12 +32,43 @@ running, the message is lost.
 
 ## Listen
 
-Inside an Endpoint, messages sent to you arrive through `context`, with their
-sender:
+Inside an Endpoint, messages sent to you arrive through `context`, with who
+sent them:
 
 ```ts
 context.subscribe("theme.changed", ({ from, payload }) => {})
 ```
+
+## Who sent it
+
+`from` describes the sender: the same values for every receiver, whatever
+it may see. It is `null` when the sender is no Program, such as a script or
+the terminal acting for the owner.
+
+| Field | Is |
+| --- | --- |
+| `program` | Its Program's `identity` and `name` |
+| `process` | The identity of its Process |
+| `endpoint` | `"server"` or `"client"` |
+
+```ts
+context.answer("open", async ({ from }) => {
+  if (from === null) return "a script"
+  if (from.program.identity === (await context.program()).identity) return "one of mine"
+  return from.program.name
+})
+```
+
+A message never carries the sender itself. To reach it, find its Process,
+which needs permission to see it:
+
+```ts
+const sender = await system.process.find(from.process)   // null when you may not see it
+sender?.[from.endpoint].publish("welcome")
+```
+
+A Process identity is never reused, so it can key what you keep for one
+caller.
 
 From outside, listening to an Endpoint or a Service hears what it publishes:
 
@@ -75,6 +106,22 @@ context.answer("notes.list", () => loadNotes())   // in the Server
 A question fails when the Server is not available, stops before answering,
 throws, or runs out of time.
 
+## When the asker stops waiting
+
+A question carries a `signal`, aborted once its asker stops waiting: its time
+ran out, it stopped, or it went away. Stop what no one waits for any more, or
+hand the signal to whatever takes one:
+
+```ts
+context.answer("page.fetch", async ({ payload, signal }) => {
+  signal.addEventListener("abort", () => closePreview())
+  const response = await fetch(payload.url, { signal })
+  return await response.text()
+})
+```
+
+An answer given after that reaches no one.
+
 ## Types
 
 ```ts
@@ -104,8 +151,8 @@ process.client.traffic.subscribeAsks(({ event, questionId, message }) => {})
 process.server.traffic.subscribeAnswers(({ event, questionId, message }) => {})
 ```
 
-`to` is the Endpoint it went to, or `null` when that Endpoint is outside
-what you can see. An answer carries its question's `questionId`, and its
+`to` describes where it went, as `from` describes a sender, or is `null`
+when it went to no Program, such as an answer to a script. An answer carries its question's `questionId`, and its
 `outcome` holds either the `result` or the `error`. Questions and answers
 also come one by one through `asks()` and `answers()`.
 

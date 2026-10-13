@@ -1,73 +1,74 @@
 ---
 title: Services
-description: Offer one of your Endpoints to other Programs, and reach theirs.
+description: Offer one of your Endpoints to other Programs under a name, and reach theirs.
 icon: Waypoints
 ---
 
-A Service is an [Endpoint](/docs/program/endpoints) other Programs reach by
+A Service is an [Endpoint](/docs/program/endpoints) other Programs reach by a
 name, without seeing your Program or its Processes. It is not a separate thing
-that runs: it is a named Process whose Endpoint chose to be reached.
+that runs: it is an Endpoint holding a Service name.
 
-## The address
+## The name
 
-| Part | Is |
-| --- | --- |
-| `program` | The identity of the Program offering it |
-| `process` | The name of its Process: the Service name |
-| `endpoint` | `"server"` or `"client"` |
+A Service name, such as `file-picker-v1`, is one word or several joined by
+hyphens, in lowercase letters and digits. It is the contract: whoever holds it
+answers what it promises. A contract that changes takes a new name, so the
+version goes in the name.
 
-The address names a role, not a run: when the Endpoint restarts, or the named
-Process is replaced, the same address reaches it again.
+A name is public across the System and held by one Endpoint at a time, a Server
+or a Client. It is apart from the Process name, which stays local to its
+Program: a Process named `picker` can hold `file-picker-v1`.
 
 ## Offer one
 
 ```ts
-await program.createProcess({ name: "editor", server: { service: true } })
+await program.createProcess({ name: "picker", server: { service: "file-picker-v1" } })
 ```
 
-A Program can also make an Endpoint a Service by default, in its
-[configuration](/docs/sdks/core#program-configuration). The Service is available
-while that Endpoint runs and is ready.
+A Program can also declare the name in its
+[configuration](/docs/sdks/core#program-configuration), and every launch takes
+it unless it says otherwise. `service: false` in a launch offers none, whatever
+is declared. The Service is available while its Endpoint runs and is ready.
+
+Starting an Endpoint with a name another Endpoint holds takes the name: the
+holder's whole Process ends first.
 
 ## Reach one
 
 ```ts
-const editor = system.service.prepare({ program: "text-studio", process: "editor", endpoint: "server" })
+const picker = system.service({ name: "file-picker-v1", endpoint: "server" })
 
-await editor.waitReady()
-const document = await editor.ask("document.open", { path: "welcome.txt" })
-editor.subscribe("document.changed", change => {})
+await picker.waitReady()
+const chosen = await picker.ask("open", { types: ["text/plain"] })
+picker.subscribe("changed", change => {})
 ```
 
-`prepare()` contacts nobody: whether the Service exists and you may reach it is
-checked when you use it. Only Server Services answer questions.
+The handle is returned at once and contacts nobody: whether something holds the
+name, and whether you may reach it, is checked when you use it. The same name
+reaches its next holder.
 
-## Find them
+| `endpoint` | Reaches |
+| --- | --- |
+| `"server"` | A Server holding the name. Only a Server answers questions. |
+| `"client"` | A Client holding the name. |
+| Left out | Whichever holds it, for what both share: publishing, subscribing, waiting. |
 
-```ts
-await system.service.list({ name: "editor" })
-system.service.subscribe("available", service => {})
-```
+## Who holds them
 
-Several Programs can offer a Service with the same name.
+The [Process](/docs/program/processes) list shows which Endpoint holds each
+name. A Service never tells its callers who provides it.
 
-## Who offers it
+## Permissions
 
-```ts
-await editor.programMetadata()   // { name, version } of the Program behind it
-await editor.programIcon("small")
-```
-
-## Permission
-
-Reaching a Service needs the `services` [permission](/docs/system/permissions)
-for its name, which covers every Service with that name. It does not reveal
-the Program behind it, and seeing a Program does not grant its Services.
+Reaching a Service needs the `consumeServices`
+[permission](/docs/system/permissions) for its name. Offering one needs
+`provideServices` for its name, checked against whoever starts the Endpoint:
+the name a launch passes, or the one the Program declares.
 
 ## From the terminal
 
 ```sh
-phresh service list --name editor
-phresh service ask --program text-studio --process editor --endpoint server --event document.list
-phresh service wait-ready --program text-studio --process editor --endpoint server
+phresh service ask --name file-picker-v1 --event open --payload '{}'
+phresh service wait-ready --name file-picker-v1 --endpoint server
+phresh process list   # which Process holds each name
 ```

@@ -72,12 +72,16 @@ for await (const chunk of program.uninstall()) console.log(chunk.text)
 ```
 
 Installing replaces its files; its running Processes end just before the new
-files take effect. After installing, the System can start one Process:
+files take effect, and the one that starts with the System starts again. After
+installing, the System can start one Process:
 
 ```ts
 program.install({ launch: { name: "main" } })   // this launch
 program.install({ launch: false })              // nothing
 ```
+
+A launch whose named Process is already running, such as the one that starts
+with the System, finds it instead, unless it says `replace`.
 
 | Call | Removes |
 | --- | --- |

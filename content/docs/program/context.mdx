@@ -15,7 +15,7 @@ await context.program()     // your Program
 await context.process()     // this run
 await context.name()        // its name, or null
 await context.parent()      // the Process that started it, or null
-await context.isService()   // whether this run is a Service
+await context.service()     // the Service name this run holds, or false
 ```
 
 ## What you were started with
