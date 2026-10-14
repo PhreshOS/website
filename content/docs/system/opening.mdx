@@ -84,9 +84,9 @@ running, and end. Reading a `file:` address goes through
 
 ## Decide for the owner
 
-A Program with the `all` [permission](/docs/system/permissions) decides
-requests and defaults through `system.opening`. A request's `programs` may be
-empty, when nothing installed opens it:
+Requests and defaults are decided through `system.opening`, with the `all`
+[permission](/docs/system/permissions). A request's `programs` may be empty,
+when nothing installed opens it:
 
 ```ts
 system.opening.subscribe("openRequest", async request => {
