@@ -97,7 +97,7 @@ await program.permissions.reset("network")   // undecided again: the declaration
 program.permissions.subscribe("change", permissions => {})   // the complete new value
 ```
 
-With `all`, it also decides requests as they come:
+A Program with `all` decides requests as they come:
 
 ```ts
 system.permissions.subscribe("permissionRequest", async request => {
