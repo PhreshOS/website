@@ -842,3 +842,45 @@ h1 em,
     border-bottom: 1px solid var(--line);
     text-align: start;
 }
+
+/* ——— The plane, as the Map shows it ——— */
+
+.plane {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-rows: repeat(5, minmax(0, 1fr));
+    gap: 6px;
+    padding: 14px;
+    aspect-ratio: 16 / 10;
+}
+
+.plane-view {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-content: center;
+    gap: 4px;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    background: color-mix(in oklab, var(--foreground) 3%, transparent);
+}
+
+.plane-view.current {
+    border: 2px solid color-mix(in oklab, var(--peach) 70%, var(--foreground));
+    background: color-mix(in oklab, var(--peach) 14%, transparent);
+}
+
+.plane-window {
+    display: inline-grid;
+    place-items: center;
+    width: clamp(20px, 3.4vw, 30px);
+    height: clamp(20px, 3.4vw, 30px);
+    border-radius: 7px;
+    background: color-mix(in oklab, var(--background) 80%, var(--foreground));
+    color: var(--foreground);
+    font-size: clamp(12px, 1.8vw, 16px);
+}
+
+.plane-window.focused {
+    background: color-mix(in oklab, var(--peach) 40%, var(--background));
+}

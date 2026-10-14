@@ -6,14 +6,20 @@ import {
   BookOpen,
   Bot,
   Check,
-  Cpu,
+  Feather,
   HardDrive,
   KeyRound,
+  Layers,
   Network,
+  Palette,
+  PenTool,
   PlugZap,
+  Server,
   ShieldCheck,
+  Terminal,
   User,
-  Workflow
+  Workflow,
+  Wrench
 } from "@phreshos/react-ui/icons"
 import { site } from "../site/links"
 import LivingDesktop from "./living-desktop"
@@ -30,9 +36,10 @@ function Hero() {
     </Reveal>
     <Reveal delay={0.16}>
       <p className="lede">
-        PhreshOS runs programs built with web technology on a machine you control. It runs their
-        servers, signs you in, connects them, and opens your machine to them only as far as you
-        allow. You use them from a desktop in your browser; your agents use the very same System.
+        PhreshOS runs apps built with web technology on a machine you control. It runs their
+        servers, signs you in, connects them to each other, and opens your machine to them only as
+        far as you allow. You use them from a desktop in your browser; your agents use the very
+        same apps.
       </p>
     </Reveal>
     <Reveal delay={0.24}>
@@ -51,7 +58,7 @@ function Hero() {
 
     <Reveal delay={0.36} className="hero-stage">
       <LivingDesktop />
-      <p className="hint">Minimize a window and its program keeps running. Close it, and the program ends.</p>
+      <p className="hint">Minimize a window and its app keeps running. Close it, and the app ends.</p>
     </Reveal>
     <Roots className="hero-roots" />
   </header>
@@ -75,9 +82,9 @@ function Agents() {
     <Reveal className="split-text">
       <h2 className="section-title">Built for you<br /><em>and your agents.</em></h2>
       <p className="section-lede">
-        PhreshOS was designed from its core to be used by AI. An agent reaches the System, talks to
-        its programs, and uses them the way you do: the same programs, the same state, through the
-        same APIs. Nobody works on a copy.
+        PhreshOS was designed from its core to be used by AI. Your agent connects to your System
+        with your authority and uses each app through what the app offers: its services, its
+        questions, its notes for agents. The same apps, the same state. Nobody works on a copy.
       </p>
     </Reveal>
     <Reveal delay={0.1}>
@@ -103,9 +110,7 @@ function Agents() {
         </Tabs.Panel>
         <Tabs.Panel id="agent">
           <TerminalWindow style={{ height: 250, marginTop: 14 }}>
-            <span className="prompt">$ phresh program list</span>{"\n"}
-            {"deploys    running\nbackups    running\n"}
-            <span className="prompt">$ phresh endpoint ask --program deploys --event tasks.list</span>{"\n"}
+            <span className="prompt">$ phresh service ask --name deploys --event tasks.list</span>{"\n"}
             {"backup · renew certificates · disk check\n"}
             <span className="comment"># the same tasks you see on the desktop</span>
           </TerminalWindow>
@@ -115,22 +120,85 @@ function Agents() {
   </section>
 }
 
+/** Where each window stands on the plane of 5 × 5 views, as the Map shows it. */
+const plane: readonly Readonly<{ view: number, icon: ReactNode, label: string, focused?: boolean }>[] = [
+  { view: 12, icon: <PenTool />, label: "Trellis", focused: true },
+  { view: 12, icon: <Terminal />, label: "Terminal" },
+  { view: 13, icon: <HardDrive />, label: "Files" },
+  { view: 7, icon: <Server />, label: "Deploys" },
+  { view: 4, icon: <Bot />, label: "Your agent's work" }
+]
+
+function Plane() {
+  return <Surface className="plane" radius="xlarge" material="frosted" role="img" aria-label="The Map: 25 views, the current one in the middle, windows in some of them">
+    {Array.from({ length: 25 }, (_, view) => <div key={view} className={view === 12 ? "plane-view current" : "plane-view"}>
+      {plane.filter(window => window.view === view).map(window => <span key={window.label} className={window.focused ? "plane-window focused" : "plane-window"} title={window.label}>{window.icon}</span>)}
+    </div>)}
+  </Surface>
+}
+
+function Room() {
+  return <section className="section split reverse">
+    <Reveal className="split-text">
+      <h2 className="section-title">Room to spread out.</h2>
+      <p className="section-lede">
+        Windows live on a plane of 5 × 5 views. The Map in the taskbar shows every window where it
+        is: drag the view anywhere, jump to a window, carry windows between views, or hold one at
+        the edge of the screen to take it along. Keep each piece of work in its own place, and
+        give your agent a view of its own.
+      </p>
+    </Reveal>
+    <Reveal delay={0.1}>
+      <Plane />
+    </Reveal>
+  </section>
+}
+
+function Shape() {
+  return <section className="section split">
+    <Reveal className="split-text">
+      <h2 className="section-title">The desktop<br /><em>is grown too.</em></h2>
+      <p className="section-lede">
+        The taskbar, the start menu, and the wallpaper form a shell, and an app can take the
+        shell’s place through the same System every other app uses. Appearances set the colors,
+        materials, corners, and motion of the desktop and of its apps at once.
+      </p>
+    </Reveal>
+    <Reveal delay={0.1}>
+      <Grid columns="repeat(auto-fit, minmax(min(100%, 14rem), 1fr))" gap="medium" className="uses">
+        {[
+          [<Layers key="icon" />, "A shell of your own", "Replace the taskbar, the start menu, or the wallpaper with an app."],
+          [<Palette key="icon" />, "Appearances", "One choice restyles the desktop and every app built with React UI."]
+        ].map(([icon, title, body]) => <Surface key={title as string} className="use" radius="large">
+          <span className="principle-icon">{icon}</span>
+          <h3>{title}</h3>
+          <p>{body}</p>
+        </Surface>)}
+      </Grid>
+    </Reveal>
+  </section>
+}
+
 type Nutrient = Readonly<{ icon: ReactNode, title: string, body: string }>
 
 const soil: readonly Nutrient[] = [
-  { icon: <Cpu />, title: "Processes", body: "Each program's server runs as a process the System manages on your machine." },
-  { icon: <KeyRound />, title: "Sign-in", body: "One owner, signed in once. Programs never handle passwords." },
-  { icon: <Network />, title: "Communication", body: "Programs talk through messages and services, and their windows talk to their servers." },
-  { icon: <HardDrive />, title: "Storage", body: "Files, key-value state, and SQLite, reachable from a program's window directly." },
-  { icon: <ShieldCheck />, title: "Permissions", body: "A program asks; you decide. Nothing crosses a boundary unless you allow it." },
+  { icon: <Feather />, title: "Servers", body: "Each app's server runs as a process the System manages, often as a worker inside its own, so many apps share one small machine." },
+  { icon: <KeyRound />, title: "Sign-in", body: "One owner, signed in once. Apps never handle passwords." },
+  { icon: <Network />, title: "Communication", body: "Each window talks to its own server, and apps reach each other through named services." },
+  { icon: <HardDrive />, title: "Storage", body: "Files, key-value data, and SQLite, reachable from an app's window directly." },
+  { icon: <ShieldCheck />, title: "Permissions", body: "An app asks; you decide what it may reach in the System." },
   { icon: <PlugZap />, title: "Your machine", body: "Controlled access to the host underneath: its files, its network, its commands." }
 ]
 
 function Soil() {
   return <section className="section">
     <Reveal>
-      <h2 className="section-title">Every program gets<br /><em>the same soil.</em></h2>
-      <p className="section-lede">A program brings only its own logic. The System provides the rest, the same way for every program you install.</p>
+      <h2 className="section-title">Every app gets<br /><em>the same soil.</em></h2>
+      <p className="section-lede">
+        A small web tool used to mean the same groundwork every time: sign-in, WebSockets, ports, a
+        server to keep alive. The System does that groundwork once, the same way for every app, so
+        an app brings only its own logic. Small enough to build with an agent in one sitting.
+      </p>
     </Reveal>
     <Grid columns="repeat(auto-fit, minmax(min(100%, 18rem), 1fr))" gap="large" className="principles">
       {soil.map((nutrient, index) => <Reveal key={nutrient.title} delay={index * 0.05}>
@@ -149,22 +217,21 @@ function Growth() {
     <Reveal className="split-text">
       <h2 className="section-title">What grows<br /><em>is up to you.</em></h2>
       <p className="section-lede">
-        PhreshOS is neutral: the programs you install decide what your System becomes. It is made
-        first for automation and for running servers, and it reaches as far as your programs do,
-        from a home server to the automations around your house.
+        PhreshOS is neutral: the apps you install decide what your System becomes. Each of them can
+        be used by your agents, and can use the others.
       </p>
       <p className="section-note">
         Servers run on your machine, not in a browser tab. Work that must carry on after you close
-        the browser lives in a program’s server; the desktop is how you look in on it.
+        the browser lives in an app’s server; the desktop is how you look in on it.
       </p>
     </Reveal>
     <Reveal delay={0.1}>
       <Grid columns="repeat(auto-fit, minmax(min(100%, 12rem), 1fr))" gap="medium" className="uses">
         {[
-          [<Workflow key="icon" />, "Automation", "Workflows that run on a schedule or on an event."],
-          [<Cpu key="icon" />, "Servers", "The services on a machine, watched and managed."],
-          [<HardDrive key="icon" />, "Home servers", "Storage, media, and backups under your own roof."],
-          [<PlugZap key="icon" />, "Your own", "Anything a web program can do, with the System behind it."]
+          [<Wrench key="icon" />, "Everyday tools", "The small tools you rent one subscription at a time, kept on your own machine."],
+          [<Server key="icon" />, "Servers", "Sites, services, and databases, each run by an app of its own."],
+          [<Workflow key="icon" />, "Automation", "Workflows on a schedule or an event, at work or around the house."],
+          [<PlugZap key="icon" />, "Your own", "Anything a web app can do, with the System behind it."]
         ].map(([icon, title, body]) => <Surface key={title as string} className="use" radius="large">
           <span className="principle-icon">{icon}</span>
           <h3>{title}</h3>
@@ -240,17 +307,19 @@ function Developers() {
     <Reveal className="split-text">
       <h2 className="section-title">Grow your own.</h2>
       <p className="section-lede">
-        A program is a web project with a window and a server. Build it with the tools you already
+        An app is a web project with a window and a server. Build it with the tools you already
         know; the SDKs connect it to the System, and React UI gives it the look of the desktop.
       </p>
       <Flex gap="small" wrap className="split-actions">
-        <Button href={site.documentation}><BookOpen />Your first program</Button>
+        <Button href={site.documentation}><BookOpen />Your first app</Button>
       </Flex>
     </Reveal>
     <Reveal delay={0.1}>
       <TerminalWindow>
-        <span className="prompt">$ phresh create my-program</span>{"\n"}
-        <span className="comment"># a window and a server, ready to run</span>{"\n\n"}
+        <span className="prompt">$ phresh create my-app</span>{"\n"}
+        <span className="comment"># a window and a server, ready to run</span>{"\n"}
+        <span className="prompt">$ phresh dev</span>{"\n"}
+        <span className="comment"># runs it in your System while you edit</span>{"\n\n"}
         {"import { context } from \"@phreshos/client\"\n\n"}
         {"const tasks = await context.server.ask(\"tasks.list\")\n"}
       </TerminalWindow>
@@ -262,8 +331,8 @@ function Store() {
   return <section className="section store">
     <Reveal>
       <p className="eyebrow"><span className="pulse" /> Coming soon</p>
-      <h2 className="section-title">A garden of programs,<br /><em>on its way.</em></h2>
-      <p className="section-lede">A store of official programs for running servers and automating work, each installed in one step.</p>
+      <h2 className="section-title">A garden of apps,<br /><em>on its way.</em></h2>
+      <p className="section-lede">A store of official apps, each installed in one step.</p>
     </Reveal>
   </section>
 }
@@ -310,7 +379,7 @@ function Install() {
       <Flex justify="center" gap="small" wrap>
         <Button href={`${site.documentation}/installation`}><BookOpen />Installation guide</Button>
       </Flex>
-      <p className="footnote">Windows is not fully supported yet: some programs do not work there.</p>
+      <p className="footnote">Windows is not fully supported yet: some apps do not work there.</p>
     </Reveal>
   </section>
 }
@@ -319,8 +388,10 @@ function Install() {
 export default function Landing() {
   return <>
     <Hero />
-    <Agents />
     <Soil />
+    <Agents />
+    <Room />
+    <Shape />
     <Growth />
     <Comparison />
     <Developers />
