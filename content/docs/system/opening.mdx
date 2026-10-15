@@ -26,6 +26,18 @@ Anything is a media type and a URI:
 
 The type is exact: `image/png`, not `image/*`.
 
+A path becomes its address, and an address its path, with `addressOf` and
+`pathOf`, spelled as the System's machine spells them:
+
+```ts
+import { addressOf, pathOf } from "@phreshos/core"
+
+addressOf("/Users/me/leaf.png")             // "file:///Users/me/leaf.png"
+addressOf("C:\\Users\\me\\leaf.png")        // "file:///C:/Users/me/leaf.png"
+addressOf("/Users/me/Projects", "terminal") // "terminal:///Users/me/Projects"
+pathOf("file:///C:/Users/me/leaf.png")      // "C:\\Users\\me\\leaf.png"
+```
+
 ## Declare what you open
 
 ```ts title="phresh.config.ts"
